@@ -52,7 +52,7 @@ export default {
   methods: {
     handleSubmit(bet) {
       this.$inertia.post(this.route("bet.store"), bet, {
-        preserveScroll: true, // bets are not added to frontend
+        preserveScroll: true,
       });
     },
     setPageTitle() {

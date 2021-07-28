@@ -283,7 +283,7 @@ export default {
   },
 
   created() {
-    if(this.showFilter == true){
+    if (this.showFilter == true) {
       this.filterStatus = true;
     }
   },
