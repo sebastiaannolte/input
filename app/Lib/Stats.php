@@ -188,12 +188,8 @@ class Stats
             }
         }
 
-        // $tableValues = array_column($table['body'], 'Type');
-
         $vals = [];
         foreach ($labels as $date => $values) {
-            // $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
-            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($values as $key => $value) {
                 $vals[$key][] = $value;
             }

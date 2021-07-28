@@ -87,7 +87,7 @@
               </div>
               <div class="col-span-4 sm:col-span-1">
                 <text-input
-                  v-model="filters.maxStake.value"
+                  v-model="filters.sport.value"
                   :error="errors"
                   class="
                     mt-1
@@ -282,6 +282,28 @@
             >
               Reset
             </button>
+            <button
+              @click.prevent="filter"
+              class="
+                mr-2
+                bg-gray-800
+                border border-transparent
+                rounded-md
+                shadow-sm
+                py-2
+                px-4
+                inline-flex
+                justify-center
+                text-sm
+                font-medium
+                text-white
+                hover:bg-gray-900
+                focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
+              "
+            >
+              Filter
+            </button>
           </div>
         </div>
       </form>
@@ -355,7 +377,7 @@ export default {
         sport: {
           value: null,
           type: "match",
-          col: "date",
+          col: "sport",
         },
         bookie: {
           value: null,
@@ -388,7 +410,6 @@ export default {
 
   methods: {
     filter() {
-      console.log('FiLTer');
       this.$emit("filterSubmit", this.filters);
     },
 
@@ -397,14 +418,6 @@ export default {
         this.filters[key].value = null;
       }
       this.filter();
-    },
-  },
-  watch: {
-    filters: {
-      deep: true,
-      handler: throttle(function () {
-        this.filter();
-      }, 150),
     },
   },
 

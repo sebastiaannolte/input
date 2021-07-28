@@ -330,6 +330,7 @@ export default {
         this.route("stats.index", this.$page.props.auth.user.username),
         pickBy({ filters: localFilters, showFilter: this.filterStatus }),
         {
+          preserveScroll: true,
           preserveState: true,
         }
       );

@@ -15,9 +15,16 @@
       "
     >
       <div
-        class="flex justify-center items-center p-0 m-auto text-center box-border"
+        class="
+          flex
+          justify-center
+          items-center
+          p-0
+          m-auto
+          text-center
+          box-border
+        "
       >
-        <!-- profile image -->
         <img
           class="
             inline-block
@@ -30,8 +37,6 @@
           src="https://s3.eu-central-1.amazonaws.com/cdn.bettin.gs/img/noprofileimage.png"
           style="max-height: 40px; border-radius: 35px"
         />
-        <!-- /profile image -->
-
         <div
           class="
             flex-shrink
@@ -41,7 +46,6 @@
             box-border
           "
         >
-          <!-- alias -->
           <h4
             class="
               py-0
@@ -57,17 +61,11 @@
               md:text-2xl
             "
           >
-            {{stats.username}}
+            {{ stats.username }}
           </h4>
-          <!-- /alias -->
-
-          <!-- pro icon -->
           <div class="p-0 m-0 cursor-default box-border"></div>
-          <!-- /pro icon -->
         </div>
       </div>
-
-      <!-- followers -->
       <div
         id="followers-count-container"
         class="
@@ -119,9 +117,7 @@
           ></a
         >
       </div>
-      <!-- /followers -->
     </div>
-
     <div
       class="
         px-4
