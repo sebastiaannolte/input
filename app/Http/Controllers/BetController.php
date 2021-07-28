@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Lib\Stats;
 use App\Models\Bet;
 use App\Models\User;
 use Carbon\Carbon;
@@ -24,8 +23,8 @@ class BetController extends Controller
         $userId = $user->id;
    
         $filters = Request::get('filters');
-        $showFilter = Request::get('showFilter') === 'true' ? true : false;
 
+        $showFilter = Request::get('showFilter') === 'true' ? true : false;
         $bets = Bet::user($userId);
         return Inertia::render('Profile', [
             'stats' => [

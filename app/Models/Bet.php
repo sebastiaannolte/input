@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -137,10 +138,17 @@ class Bet extends Model
             if ($filter['type'] == 'match') {
                 $query->where($filter['col'], $filter['value']);
             } elseif ($filter['type'] == 'max') {
-
-                $query->where($filter['col'], '<=', $filter['value']);
+                if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
+                    $query->where($filter['col'], '<=', Carbon::parse($filter['value'])->endOfDay());
+                } else {
+                    $query->where($filter['col'], '<=', $filter['value']);
+                }
             } elseif ($filter['type'] == 'min') {
-                $query->where($filter['col'], '>=', $filter['value']);
+                if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
+                    $query->where($filter['col'], '>=', Carbon::parse($filter['value'])->startOfDay());
+                } else {
+                    $query->where($filter['col'], '>=', $filter['value']);
+                }
             }
         }
         return $query;
