@@ -11,17 +11,12 @@ use Inertia\Inertia;
 
 class StatsController extends Controller
 {
-
     public function index($username)
     {
         $userId = User::where('username', $username)->first()->id;
-        $start = now()->subDays(200)->startOfDay();
-        $end = now();
-        $interval = $this->calculateInterval($start, $end);
-        $stats = new Stats($userId, $start, $end, $interval);
         $filters = FacadesRequest::get('filters');
+        $stats = new Stats($userId, $filters);
         $showFilter = FacadesRequest::get('showFilter') === 'true' ? true : false;
-
 
         $bets = Bet::user($userId)->filters($filters);
         return Inertia::render('Stats', [

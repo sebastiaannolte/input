@@ -54,6 +54,7 @@ class Stats
     public function oddsGraph()
     {
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
+
         $intervalFunctions = reset($this->filters['interval'])['days'];
         $addFunction = $intervalFunctions['function'];
         $labels = [];
