@@ -41,4 +41,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function userSettings()
+    {
+        return $this->hasMany(UserSetting::class);
+    }
+
+    public function userSettingsFormatted()
+    {
+
+        $userSettings = $this->userSettings()->get();
+        $userSettings = $userSettings->mapWithKeys(function ($setting) {
+          return [$setting->setting_id => $setting->value];
+        });
+        $settings = Setting::get();
+        
+        return $settings->mapWithKeys(function ($setting) use ($userSettings) {
+          return [$setting->name => array_key_exists($setting->id, $userSettings->toArray()) ? $userSettings[$setting->id] : null];
+        });
+    }
 }

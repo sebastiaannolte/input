@@ -131,6 +131,12 @@
           {{ bet.tipster }}
         </div>
       </div>
+      <div class="col-span-2">
+        <div class="p-2">Status</div>
+        <div class="p-2 mb-2 font-bold">
+          {{ bet.status }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -138,7 +144,7 @@
 
 
 <script>
-import Layout from "@/Layouts/Layout";
+import Layout from "@/Layouts/Authenticated";
 
 export default {
   layout: Layout,

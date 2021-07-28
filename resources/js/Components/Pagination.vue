@@ -1,19 +1,9 @@
 <template>
   <div class="mt-3 -mb-1 flex flex-wrap">
-    <div
-      @click="toPage(modelValue - 1)"
-      class="mr-1 mb-1 px-4 py-1 text-sm border rounded bg-white"
-      :class="{
-        'opacity-50 cursor-default': modelValue == 1,
-        'cursor-pointer': modelValue != 1,
-      }"
-    >
-      «
-    </div>
-
-    <template v-for="index in pages" :key="index">
+    <template v-for="(link, key) in links" :key="key">
       <div
-        v-if="index"
+        v-if="link.url === null"
+        v-html="link.label"
         class="
           mr-1
           mb-1
@@ -22,55 +12,50 @@
           text-sm
           border
           rounded
+          text-gray-400
+          bg-gray-100
+        "
+        :class="{ 'ml-auto': link.label === 'Next' }"
+      ></div>
+      <div
+        v-else-if="!hasData"
+        v-html="link.label"
+        class="mr-1 mb-1 px-4 py-1 text-sm border rounded text-back bg-gray-200"
+        :class="{ 'ml-auto': link.label === 'Next' }"
+      ></div>
+      <inertia-link
+        v-else
+        :key="key"
+        class="
+          mr-1
+          mb-1
+          px-4
+          py-1
+          text-sm
+          border
+          rounded
+          hover:bg-white
           bg-white
-          cursor-pointer
+          focus:border-indigo-500
+          focus:text-indigo-500
         "
         :class="{
-          'bg-indigo-500 text-white pointer-events-none': index == modelValue,
+          'bg-gray-300': link.active,
+          'ml-auto': link.label === 'Next',
         }"
-        @click="toPage(index)"
+        :href="link.url"
+        preserve-scroll
+        >{{ link.label }}</inertia-link
       >
-        {{ index }}
-      </div>
     </template>
-    <div
-      @click="toPage(modelValue + 1)"
-      class="mr-1 mb-1 px-4 py-1 text-sm border rounded bg-white"
-      :class="{
-        'opacity-50 cursor-default': modelValue == pages,
-        'cursor-pointer': modelValue != pages,
-      }"
-    >
-      »
-    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    itemCount: Number,
-    perPage: Number,
-    modelValue: String,
-  },
-
-  emits: ["update:modelValue"],
-
-  data() {
-    return {
-      currentPage: 1,
-      pages: Math.ceil(this.itemCount / this.perPage),
-    };
-  },
-
-  methods: {
-    toPage(pageNumber) {
-      if (pageNumber > this.pages || pageNumber < 1) {
-        return;
-      }
-      this.currentPage = pageNumber;
-      this.$emit("update:modelValue", pageNumber);
-    },
+    links: Array,
+    hasData: Boolean,
   },
 };
 </script>

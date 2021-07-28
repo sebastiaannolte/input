@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Lib\Stats;
 use App\Models\Bet;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 use Inertia\Inertia;
 
 class StatsController extends Controller
@@ -18,14 +19,15 @@ class StatsController extends Controller
         $end = now();
         $interval = $this->calculateInterval($start, $end);
         $stats = new Stats($userId, $start, $end, $interval);
+        $filters = FacadesRequest::get('filters');
+        $showFilter = FacadesRequest::get('showFilter') === 'true' ? true : false;
 
 
-        $bets = Bet::user($userId);
+        $bets = Bet::user($userId)->filters($filters);
         return Inertia::render('Stats', [
-            // 'graphs' =>
-            // $stats->renderStats(),
-           
             'tabs' => $stats->getTabs(),
+            'filters' => $filters,
+            'showFilter' => $showFilter,
             'stats' => [
                 'roi' => $bets->clone()->roi(2),
                 'bets' => $bets->clone()->betCount(),
@@ -74,14 +76,31 @@ class StatsController extends Controller
         }
     }
 
-    public function stats($key)
+    public function stats(Request $request)
     {
-        // $userId = Auth::user()->id;
-        $userId = 1;
+        $key = $request->get('key');
+        $filters = $request->get('filters');
+
         $start = now()->subDays(200)->startOfDay();
         $end = now();
-        $interval = $this->calculateInterval($start, $end);
-        $stats = new Stats($userId, $start, $end, $interval);
-        return $stats->renderStats($key);
+
+        $defaultFilters = [
+            'from' => [
+                'value' => now()->subDays(200)->startOfDay(),
+                'type' => 'min',
+                'col' => 'date',
+            ],
+            'to' => [
+                'value' =>  now(),
+                'type' => 'max',
+                'col' => 'date',
+            ],
+            'interval' => $this->calculateInterval($start, $end),
+        ];
+
+        $filters = array_merge($filters, $defaultFilters);
+        $userId = 1;
+        $stats = new Stats($userId, $filters);
+        return $stats->renderStats($key, $request);
     }
 }

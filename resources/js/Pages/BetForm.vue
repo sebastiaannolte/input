@@ -163,8 +163,8 @@
               </div>
               <div class="col-span-4 sm:col-span-1" v-show="more">
                 <text-input
-                  v-model="betData.tipster"
-                  :error="errors.tipster"
+                  v-model="betData.sport"
+                  :error="errors.sport"
                   label="Sport"
                   type="text"
                   id="time"
@@ -226,13 +226,14 @@
 
 
 <script>
-import Layout from "@/Layouts/Layout";
+import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import Events from "@/Components/Events.vue";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Bets from "@/Components/Bets.vue";
 import Stats from "@/Components/Stats.vue";
+import moment from "moment";
 
 export default {
   components: { Button, Events, TextInput, Bets, Stats, TextInputWithAddOn },
@@ -250,10 +251,11 @@ export default {
   },
 
   created() {
+    this.moment = moment;
     this.emitter.on("event:search", (event) => {
       this.betData.event = event.event;
       if (event.match) {
-        this.betData.date = event.match.date + " " + event.match.time;
+        this.betData.date = moment(event.match.date).format("YYYY-MM-DDTHH:mm");
         this.betData.match_id = event.match.id;
       } else {
         this.betData.date = null;
@@ -269,13 +271,23 @@ export default {
         stake: null,
         odds: null,
         tipster: null,
+        sport: null,
       });
     } else {
       this.betData = this.bet;
     }
+
+    this.setUserSettings();
   },
 
   methods: {
+    setUserSettings() {
+      var userSettings = this.$page.props.auth.settings;
+      for (const key in userSettings) {
+        var setting = userSettings[key];
+        this.betData[key] = setting;
+      }
+    },
     save() {
       this.$emit("betFormSubmit", this.betData);
     },

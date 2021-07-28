@@ -21,13 +21,13 @@
 
 <script>
     import BreezeButton from '@/Components/Button'
-    import BreezeGuestLayout from "@/Layouts/Layout"
+    import Layout from "@/Layouts/Guest"
     import BreezeInput from '@/Components/Input'
     import BreezeLabel from '@/Components/Label'
     import BreezeValidationErrors from '@/Components/ValidationErrors'
 
     export default {
-        layout: BreezeGuestLayout,
+        layout: Layout,
 
         components: {
             BreezeButton,

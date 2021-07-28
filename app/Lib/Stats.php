@@ -10,17 +10,13 @@ class Stats
 {
     protected $userId = null;
     protected $odds = null;
-    protected $start = null;
-    protected $end = null;
-    protected $interval = null;
+    protected $filters = null;
     protected $tabs = null;
 
-    public function __construct($userId, $start, $end, $interval)
+    public function __construct($userId, $filters)
     {
         $this->userId = $userId;
-        $this->start = $start;
-        $this->end = $end;
-        $this->interval = $interval;
+        $this->filters = $filters;
         $this->odds = [
             '< 1.50' => [
                 'min' => 1,
@@ -51,13 +47,14 @@ class Stats
             'stake',
             'sport',
             'bookie',
+            'profit'
         ];
     }
 
     public function oddsGraph()
     {
-        $carbonDates = CarbonPeriod::create($this->start, key($this->interval), $this->end);
-        $intervalFunctions = reset($this->interval)['days'];
+        $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
+        $intervalFunctions = reset($this->filters['interval'])['days'];
         $addFunction = $intervalFunctions['function'];
         $labels = [];
         $odds = $this->odds;
@@ -71,12 +68,14 @@ class Stats
         foreach ($labels as $date => $values) {
             foreach ($values as $key => $value) {
                 $minMaxOdds = $odds[$key];
-                $bets = Bet::user($this->userId)->where('odds', '>', $minMaxOdds['min'])
+                $bets = Bet::user($this->userId)
+                    ->filters($this->filters)
+                    ->where('odds', '>', $minMaxOdds['min'])
                     ->where('odds', '<=', $minMaxOdds['max'])
-                    ->where('created_at', '>=', $date)
-                    ->where('created_at', '<', Carbon::parse($date)->$addFunction());
+                    ->where('date', '>=', $date)
+                    ->where('date', '<', Carbon::parse($date)->$addFunction());
                 if ($bets->count() > 0) {
-                    $labels[$date][$key] = $bets->units();
+                    $labels[$date][$key] = $bets->units(2);
                 }
             }
         }
@@ -86,7 +85,7 @@ class Stats
         $values = [];
         $vals = [];
         foreach ($labels as $date => $values) {
-            $formattedLabels[Carbon::parse($date)->format(reset($this->interval)['days']['format'])] = $values;
+            $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
             $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($sortedLabels as $key => $value) {
                 $vals[$key][] = $value;
@@ -100,6 +99,7 @@ class Stats
         ];
     }
 
+
     public function createGraphAndTable($type)
     {
         return $this->simpleGraph($type, $this->simpleTable($type));
@@ -107,10 +107,10 @@ class Stats
 
     public function simpleGraph($column, $table)
     {
-        $intervalFunctions = reset($this->interval)['days'];
+        $intervalFunctions = reset($this->filters['interval'])['days'];
         $addFunction = $intervalFunctions['function'];
 
-        $carbonDates = CarbonPeriod::create($this->start, key($this->interval), $this->end);
+        $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
 
         $labels = [];
         $columns = Bet::user($this->userId)->select($column)->distinct()->pluck($column)->sort();
@@ -123,33 +123,89 @@ class Stats
 
         foreach ($labels as $date => $values) {
             foreach ($values as $columnValue => $value) {
-                $bets = Bet::user($this->userId)->where($column, $columnValue)
-                    ->where('created_at', '>=', $date)
-                    ->where('created_at', '<', Carbon::parse($date)->$addFunction());
+                $bets = Bet::user($this->userId)
+                    ->filters($this->filters)
+                    ->where($column, $columnValue)
+                    ->where('date', '>=', $date)
+                    ->where('date', '<', Carbon::parse($date)->$addFunction());
                 if ($bets->count() > 0) {
-                    $labels[$date][$columnValue] = $bets->units();
+                    $labels[$date][$columnValue] = $bets->units(2);
                 }
             }
         }
 
-        $table = $this->simpleTable($column);
         $tableValues = array_column($table['body'], 'Type');
 
         $vals = [];
         foreach ($labels as $date => $values) {
-            $formattedLabels[Carbon::parse($date)->format(reset($this->interval)['days']['format'])] = $values;
+            $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
             $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($sortedLabels as $key => $value) {
                 $vals[$key][] = $value;
             }
         }
-        // dd(array_keys($labels));
+
         return [
             'labels' => array_keys($formattedLabels),
             'values' => $vals,
             'table' => $table,
         ];
     }
+
+    public function profitPerDayGraph()
+    {
+        $intervalFunctions = reset($this->filters['interval'])['days'];
+        $addFunction = $intervalFunctions['function'];
+
+        $carbonDates = CarbonPeriod::create(now()->subMonth(), '1 day', now());
+
+        $labels = [];
+        $columns = [
+            'Profit per day',
+            'Total profit',
+        ];
+
+        foreach ($carbonDates as $key => $date) {
+            foreach ($columns as $columnValue) {
+                $labels[$date->format('Y-m-d')][(string)$columnValue] = 0;
+            }
+        }
+        $totalProfit = 0;
+        foreach ($labels as $date => $values) {
+            foreach ($values as $columnValue => $value) {
+                $bets = Bet::user($this->userId)
+                    ->filters($this->filters)
+                    ->where('date', '>=', $date)
+                    ->where('date', '<', Carbon::parse($date)->addDay());
+                if ($bets->count() > 0) {
+                    if ($columnValue == 'Profit per day') {
+                        $labels[$date]['Profit per day'] = $bets->units(2);
+                    } else {
+                        $totalProfit += $labels[$date]['Profit per day'];
+                        $labels[$date][$columnValue] += $totalProfit;
+                    }
+                }
+            }
+        }
+
+        // $tableValues = array_column($table['body'], 'Type');
+
+        $vals = [];
+        foreach ($labels as $date => $values) {
+            // $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
+            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
+            foreach ($values as $key => $value) {
+                $vals[$key][] = $value;
+            }
+        }
+
+        return [
+            'labels' => array_keys($labels),
+            'values' => $vals,
+            'table' => [],
+        ];
+    }
+
 
     public function getFormattedDate($date, $i)
     {
@@ -164,14 +220,13 @@ class Stats
 
     public function selectionGraph()
     {
-        $carbonDates = CarbonPeriod::create($this->start, key($this->interval), $this->end);
-        $intervalFunctions = reset($this->interval)['days'];
+        $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
+        $intervalFunctions = reset($this->filters['interval'])['days'];
         $addFunction = $intervalFunctions['function'];
 
         $labels = [];
-        $selections = Bet::user($this->userId)->get();
-        $bets = $this->selectionMapping($selections);
-
+        $selections1 = Bet::user($this->userId);
+        $bets = $this->selectionMapping($selections1);
         $selections = $bets;
         foreach ($carbonDates as $key => $date) {
             foreach (array_keys($selections) as $selection) {
@@ -180,29 +235,27 @@ class Stats
         }
 
         foreach ($labels as $date => $values) {
-            foreach ($values as $sel => $value) {
-                $bets = $selections[$sel];
-                $ids = [];
-                foreach ($bets as $key => $bet) {
-                    $ids[] = $bet->id;
-                }
-
-                $bets = Bet::user($this->userId)->where('created_at', '>=', $date)
-                    ->where('created_at', '<', Carbon::parse($date)->$addFunction()) //correct?
-                    ->whereIn('id', $ids);
-
+            foreach ($values as $columnValue => $value) {
+                $bets = $selections[$columnValue]->clone()
+                    ->filters($this->filters)
+                    ->where('date', '>=', Carbon::parse($date)->startOfMonth())
+                    ->where('date', '<=', Carbon::parse($date)->startOfMonth()->addMonth());
                 if ($bets->count() > 0) {
-                    $labels[$date][$sel] = $bets->units();
+                    $labels[$date][$columnValue] = $bets->units(2);
                 }
             }
         }
-        $table = $this->selectionTable();
-        $tableValues = array_column($table['body'], 'Type');
 
+        foreach ($selections as $key => $selection) {
+            $output[$key] = $this->tableBody($key, $selection)[$key];
+        }
+
+        $table = $this->selectionTable($selections);
+        $tableValues = array_column($table['body'], 'Type');
 
         $vals = [];
         foreach ($labels as $date => $values) {
-            $formattedLabels[Carbon::parse($date)->format(reset($this->interval)['days']['format'])] = $values;
+            $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
             $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($sortedLabels as $key => $value) {
                 $vals[$key][] = $value;
@@ -275,33 +328,41 @@ class Stats
                     ]
                 ]
             ],
+            'Booking points' => [
+                'type' => [
+                    'match' => [
+                        'booking points'
+                    ]
+                ]
+            ],
+            'AH' => [
+                'type' => [
+                    'match' => [
+                        'ah'
+                    ]
+                ]
+            ],
         ];
         $bets = [];
-        foreach ($selections as $key => $bet) {
-
-            foreach ($selectionMapping as $keyer => $type) {
-                foreach ($type as $type => $types) {
-                    foreach ($types as $type => $typeValues) {
-                        if ($type == 'start') {
-                            foreach ($typeValues as $key => $typeValue) {
-                                if (str_starts_with(strtolower($bet->selection), strtolower($typeValue))) {
-                                    $bets[$keyer][] = $bet;
-                                    break;
-                                }
-                            }
-                        } elseif ($type == 'end') {
-                            foreach ($typeValues as $key => $typeValue) {
-                                if (str_ends_with(strtolower($bet->selection), strtolower($typeValue))) {
-                                    $bets[$keyer][] = $bet;
-                                    break;
-                                }
-                            }
-                        } elseif ($type == 'match') {
-                            foreach ($typeValues as $key => $typeValue) {
-                                if (strtolower($bet->selection) == strtolower($typeValue)) {
-                                    $bets[$keyer][] = $bet;
-                                    break;
-                                }
+        foreach ($selectionMapping as $keyer => $type) {
+            foreach ($type as $type => $types) {
+                foreach ($types as $type => $typeValues) {
+                    if ($type == 'start') {
+                        foreach ($typeValues as $key => $typeValue) {
+                            $bets[$keyer] = $selections->clone()->where('selection', 'like', strtolower($typeValue) . '%');
+                            break;
+                        }
+                    } elseif ($type == 'end') {
+                        foreach ($typeValues as $key => $typeValue) {
+                            $bets[$keyer] = $selections->clone()->where('selection', 'like', '%' . strtolower($typeValue));
+                            break;
+                        }
+                    } elseif ($type == 'match') {
+                        foreach ($typeValues as $key => $typeValue) {
+                            if ($key == 0) {
+                                $bets[$keyer] = $selections->clone()->where('selection', strtolower($typeValue));
+                            } else {
+                                $bets[$keyer] = $bets[$keyer]->orWhere('selection', strtolower($typeValue));
                             }
                         }
                     }
@@ -344,11 +405,13 @@ class Stats
     {
         $type = $column;
         $head = $this->tableHeader($type);
-
-        $query = Bet::user($this->userId)->where('created_at', '>=', $this->start)
-            ->where('created_at', '<', $this->end);
+        // dd($this->filters);
+        $query = Bet::user($this->userId)
+            ->filters($this->filters)
+            ->where('date', '>=', $this->filters['from']['value'])
+            ->where('date', '<', $this->filters['to']['value']);
         $bets = clone $query;
-        $types = $query->select($type)->distinct()->pluck($type)->sort();
+        $types = $query->select($type)->distinct()->pluck($type)->sort(); // not efficient
         $output = [];
         foreach ($types as $key => $typeValue) {
             $output[(string)$typeValue] = $this->tableBody($typeValue, $bets->clone()->where($type, $typeValue))[$typeValue];
@@ -361,32 +424,18 @@ class Stats
         return ['head' => $head, 'body' => array_values($output)];
     }
 
-    public function selectionTable()
+    public function selectionTable($selections)
     {
         $type = 'selection';
         $head = $this->tableHeader($type);
 
-        $query = Bet::user($this->userId)->where('created_at', '>=', $this->start)
-            ->where('created_at', '<', $this->end);
-        $bets = clone $query;
-        $selections = $this->selectionMapping($query->get());
-
-        $types = array_keys($selections);
-
         $output = [];
-        foreach ($types as $key => $typeValue) {
-            $betz = $selections[$typeValue];
-            $ids = [];
-            foreach ($betz as $key => $bet) {
-                $ids[] = $bet->id;
-            }
 
-            $bets = Bet::user($this->userId)->where('created_at', '>=', $this->start)
-                ->where('created_at', '<', $this->end)
-                ->whereIn('id', $ids);
-
-            $output[$typeValue] = $this->tableBody($typeValue, $bets)[$typeValue];
+        foreach ($selections as $key => $selection) {
+            $output[$key] = $this->tableBody($key, $selection->filters($this->filters))[$key];
         }
+
+
         usort($output, function ($a, $b) {
             return $b['Bets'] <=> $a['Bets'];
         });
@@ -400,17 +449,19 @@ class Stats
         $type = 'odds';
         $head = $this->tableHeader($type);
 
-        $query = Bet::user($this->userId)->where('created_at', '>=', $this->start)
-            ->where('created_at', '<', $this->end);
-        $bets = clone $query;
+        $query = Bet::user($this->userId)->where('date', '>=', $this->filters['from']['value'])
+            ->where('date', '<', $this->filters['to']['value']);
+        $bets = $query;
 
         foreach ($this->odds as $typeValue => $odd) {
             $minMaxOdds = $odd;
-            $bets = Bet::user($this->userId)->where('odds', '>', $minMaxOdds['min'])
+            $bet1s = $bets->clone()
+                ->filters($this->filters)
+                ->where('odds', '>', $minMaxOdds['min'])
                 ->where('odds', '<=', $minMaxOdds['max'])
-                ->where('created_at', '>=', now()->subMonth())
-                ->where('created_at', '<', now());
-            $output[$typeValue] = $this->tableBody($typeValue, $bets)[$typeValue];
+                ->where('date', '>=', now()->subMonth())
+                ->where('date', '<', now());
+            $output[$typeValue] = $this->tableBody($typeValue, $bet1s)[$typeValue];
         }
 
         usort($output, function ($a, $b) {
@@ -427,6 +478,8 @@ class Stats
             $current = $this->oddsGraph();
         } elseif ($key == 'selection') {
             $current =  $this->selectionGraph();
+        } elseif ($key == 'profit') {
+            $current = $this->profitPerDayGraph();
         } else {
             $current =  $this->createGraphAndTable($key);
         }
@@ -476,7 +529,7 @@ class Stats
         ];
 
         $graphs[$key]['table'] = $current['table'];
- 
+
         return $graphs;
     }
 

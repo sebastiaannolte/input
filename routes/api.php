@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StatsController;
 use App\Lib\GamesApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,3 +26,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/search/{search}', function ($search) {
     return GamesApi::search($search);
 })->name('event.search');
+
+Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
