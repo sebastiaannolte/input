@@ -1,16 +1,16 @@
 <template>
   <Head :title="title" />
-  <stats :bets="bets" />
+  <stats :stats="stats" />
   <bet-form
     v-if="$page.props.userInfo.myPage"
     :errors="errors"
     @betFormSubmit="handleSubmit"
   ></bet-form>
-  <bets :bets="bets"/>
+  <bets :bets="bets" :filters="filters" :showFilter="showFilter" />
 </template>
 
 <script>
-import Layout from "@/Layouts/Layout";
+import Layout from "@/Layouts/Authenticated";
 import Bets from "@/Components/Bets.vue";
 import Stats from "@/Components/Stats.vue";
 import BetForm from "@/Pages/BetForm.vue";
@@ -26,6 +26,9 @@ export default {
   props: {
     errors: Object,
     bets: Object,
+    stats: Object,
+    filters: Array,
+    showFilter: Boolean,
   },
   data() {
     return {

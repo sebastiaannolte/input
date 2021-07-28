@@ -190,12 +190,13 @@ export default {
         this.$http.get(this.route("event.match", matchId)).then((response) => {
           if (response.data) {
             this.betData.match = response.data;
-            var now = new Date(this.betData.match.date);
-            var date = now.toLocaleDateString();
-            var time = now.toLocaleTimeString();
+            console.log(this.betData.match);
+            // var now = new Date(this.betData.match.date);
+            // var date = now.toLocaleDateString();
+            // var time = now.toLocaleTimeString();
 
-            this.betData.match.date = date;
-            this.betData.match.time = time;
+            // this.betData.match.date = date;
+            // this.betData.match.time = time;
             this.setBet();
             return;
           }

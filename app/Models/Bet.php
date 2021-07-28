@@ -19,7 +19,7 @@ class Bet extends Model
 
     public function scopeBets($query)
     {
-        return $query->orderByDesc('date')->orderByDesc('id')->get();
+        return $query->orderByDesc('date')->orderByDesc('id');
     }
 
     public function scopeBetCount($query)
@@ -56,7 +56,7 @@ class Bet extends Model
                 $wonUnits -= $bet->stake;
             }
         }
-        if($round){
+        if ($round) {
             return round($wonUnits, $round);
         }
         return  $wonUnits;
@@ -123,5 +123,26 @@ class Bet extends Model
     public function scopeRound($query)
     {
         return round($query, 2);
+    }
+
+    public function scopeFilters($query, $filters)
+    {
+        $filtersWithValue = collect($filters)->filter(function ($filter) {
+            if (is_array($filter) && array_key_exists('value', $filter) && $filter['value'] != null) {
+                return $filter;
+            }
+        });
+
+        foreach ($filtersWithValue as $key => $filter) {
+            if ($filter['type'] == 'match') {
+                $query->where($filter['col'], $filter['value']);
+            } elseif ($filter['type'] == 'max') {
+
+                $query->where($filter['col'], '<=', $filter['value']);
+            } elseif ($filter['type'] == 'min') {
+                $query->where($filter['col'], '>=', $filter['value']);
+            }
+        }
+        return $query;
     }
 }

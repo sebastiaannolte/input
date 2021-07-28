@@ -7,6 +7,7 @@ use App\Models\Bet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -16,24 +17,28 @@ class BetController extends Controller
     public function index($username)
     {
         $user = User::where('username', $username)->first();
+
         if ($user === null) {
             return;
         }
         $userId = $user->id;
+   
+        $filters = Request::get('filters');
+        $showFilter = Request::get('showFilter') === 'true' ? true : false;
 
-        $start = now()->subYear()->startOfMonth();
-        $end = now();
-        $stats = new Stats($userId, $start, $end, '1 month');
-
+        $bets = Bet::user($userId);
         return Inertia::render('Profile', [
-            'bets' => [
-                'bets' => Bet::user($userId)->bets(),
-                'wonbets' => Bet::user($userId)->wonBets(),
-                'winprecentage' => Bet::user($userId)->winprecentage(2),
-                'units' => Bet::user($userId)->units(2),
-                'roi' => Bet::user($userId)->roi(2),
+            'stats' => [
+                'totalBets' => $bets->clone()->count(),
+                'wonbets' => $bets->clone()->wonBets(),
+                'winprecentage' => $bets->clone()->winprecentage(2),
+                'units' => $bets->clone()->units(2),
+                'roi' => $bets->clone()->roi(2),
                 'username' => $username,
             ],
+            'bets' => $bets->bets()->filters($filters)->paginate(20)->withQueryString(),
+            'filters' => $filters,
+            'showFilter' => $showFilter,
         ]);
     }
 
@@ -45,6 +50,7 @@ class BetController extends Controller
             'bookie' => ['required', 'max:50'],
             'stake' => ['required', 'max:50'],
             'odds' => ['required', 'max:50'],
+            'sport' => ['required', 'max:50'],
         ]);
 
         Bet::create([
@@ -55,7 +61,7 @@ class BetController extends Controller
             'stake' => Request::get('stake'),
             'odds' => Request::get('odds'),
             'tipster' => Request::get('tipster'),
-            'sport' => 'Football',
+            'sport' => Request::get('sport'),
             'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
             'user_id' => Auth::user()->id,
             'status' => 'new',
@@ -72,6 +78,7 @@ class BetController extends Controller
             'bookie' => ['required', 'max:50'],
             'stake' => ['required', 'max:50'],
             'odds' => ['required', 'max:50'],
+            'sport' => ['required', 'max:50'],
         ]);
 
         Bet::updateOrCreate(
@@ -86,6 +93,7 @@ class BetController extends Controller
                 'stake' => Request::get('stake'),
                 'odds' => Request::get('odds'),
                 'tipster' => Request::get('tipster'),
+                'sport' => Request::get('sport'),
                 'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
                 'user_id' => Auth::user()->id,
                 'result' => Request::get('result'),

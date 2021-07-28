@@ -57,7 +57,7 @@
               md:text-2xl
             "
           >
-            {{bets.username}}
+            {{stats.username}}
           </h4>
           <!-- /alias -->
 
@@ -139,20 +139,20 @@
       <div class="flex justify-center items-center flex-row h-full">
         <div class="flex flex-col flex-1">
           <span>Bets</span>
-          <span class="pt-3 font-bold">{{ bets.bets.length }}</span>
+          <span class="pt-3 font-bold">{{ stats.totalBets }}</span>
         </div>
         <div class="flex flex-col flex-1">
           <span>ROI</span>
-          <span class="pt-3 font-bold">{{ bets.roi }}%</span>
+          <span class="pt-3 font-bold">{{ stats.roi }}%</span>
         </div>
         <div class="flex flex-col flex-1">
           <span>Profit</span>
-          <span class="pt-3 font-bold">{{ bets.units }} units</span>
+          <span class="pt-3 font-bold">{{ stats.units }} units</span>
         </div>
         <div class="flex flex-col flex-1">
           <span>Won bets</span>
           <span class="pt-3 font-bold"
-            >{{ bets.wonbets }} ({{ bets.winprecentage }}%)</span
+            >{{ stats.wonbets }} ({{ stats.winprecentage }}%)</span
           >
         </div>
       </div>
@@ -163,13 +163,13 @@
 
 
 <script>
-import Layout from "@/Layouts/Layout";
+import Layout from "@/Layouts/Authenticated";
 
 export default {
   layout: Layout,
 
   props: {
-    bets: Object,
+    stats: Object,
   },
   data() {
     return {};

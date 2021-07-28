@@ -3,7 +3,7 @@
   <div>
     <label
       v-if="label"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-400"
+      class="block text-sm font-medium text-gray-700 dark:text-gray-400 capitalize"
       :for="id"
       >{{ label }}:</label
     >

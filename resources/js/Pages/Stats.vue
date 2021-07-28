@@ -76,6 +76,46 @@
       </div>
     </div>
   </div>
+  <div
+    class="
+      px-4
+      w-full
+      font-light
+      leading-4
+      text-gray-800
+      cursor-default
+      flex
+      justify-end
+    "
+  >
+    <p
+      align="right"
+      class="p-0 mx-0 mt-0 mb-5 text-base text-gray-800 box-border"
+    >
+      <button
+        type="button"
+        @click.prevent="showFilter"
+        id="filterswitch"
+        class="
+          m-0
+          text-red-500
+          no-underline
+          box-border
+          hover:text-red-500
+          focus:text-red-500
+        "
+      >
+        <template v-if="!filterStatus">Show filter</template>
+        <template v-else>Hide filter</template>
+      </button>
+      >
+    </p>
+  </div>
+  <Filters
+    :prop-filters="filters"
+    @filterSubmit="handleFilter"
+    v-show="filterStatus"
+  />
   <div class="flex flex-col items-center">
     <div
       class="
@@ -142,7 +182,7 @@
           </nav>
         </div>
       </div>
-      <div class="relative" style="height: 500px;" v-if="loading">
+      <div class="relative" style="height: 500px" v-if="loading">
         <loading v-model:active="loading" :is-full-page="false" />
       </div>
       <vue3-chart-js
@@ -209,20 +249,25 @@
 
 
 <script>
-import Layout from "@/Layouts/Layout";
+import Layout from "@/Layouts/Authenticated";
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
+import Filters from "@/Components/Filters";
+import pickBy from "lodash/pickBy";
 
 export default {
   layout: Layout,
   components: {
     Vue3ChartJs,
     Loading,
+    Filters,
   },
   props: {
     stats: Object,
     tabs: Array,
+    filters: Array,
+    showFilter: Boolean,
   },
 
   data() {
@@ -231,6 +276,8 @@ export default {
       currentTable: null,
       generatedTabs: [],
       loading: false,
+      localFilters: {},
+      filterStatus: false,
     };
   },
 
@@ -238,21 +285,56 @@ export default {
     this.createTabs();
     this.getStats("tipster");
     this.setPageTitle();
+
+    if (this.showFilter == true) {
+      this.filterStatus = true;
+    }
   },
 
   methods: {
     getStats(key) {
       this.loading = true;
-      this.$http.get(this.route("stats.stats", key)).then((response) => {
-        console.log(response);
-        if (response.data) {
-          this.selectedTab = response.data[key].graph;
-          console.log(response.data[key]);
-          this.currentTable = response.data[key].table;
-          this.loading = false;
-        }
-      });
+      this.$http
+        .post(this.route("stats.stats"), {
+          key: key,
+          filters: this.localFilters,
+        })
+        .then((response) => {
+          if (response.data) {
+            this.selectedTab = response.data[key].graph;
+            this.currentTable = response.data[key].table;
+            this.loading = false;
+          }
+        });
     },
+
+    handleFilter(filters) {
+      var localFilters = {};
+      this.localFilters = filters;
+      var currentTab = this.generatedTabs.find((tab) => tab.current == true);
+      this.getStats(currentTab.option);
+
+      for (const key in this.localFilters) {
+        var filter = this.localFilters[key];
+
+        if (filter.value) {
+          localFilters[key] = filter;
+        }
+      }
+
+      if (Object.keys(localFilters).length == 0) {
+        this.filterStatus = false;
+      }
+
+      this.$inertia.get(
+        this.route("stats.index", this.$page.props.auth.user.username),
+        pickBy({ filters: localFilters, showFilter: this.filterStatus }),
+        {
+          preserveState: true,
+        }
+      );
+    },
+
     setPageTitle() {
       this.title = "Your stats";
       if (!this.$page.props.userInfo.myPage) {
@@ -261,6 +343,9 @@ export default {
     },
     openTab(value) {
       this.changeTab(value);
+    },
+    showFilter() {
+      this.filterStatus = !this.filterStatus;
     },
 
     onDropdownTabChange(event) {
@@ -280,7 +365,6 @@ export default {
     createTabs() {
       for (const key in this.tabs) {
         var tab = this.tabs[key];
-        console.log(tab);
         this.generatedTabs.push({ option: tab, current: false });
       }
 
