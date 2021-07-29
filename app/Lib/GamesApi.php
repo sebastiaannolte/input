@@ -17,7 +17,7 @@ class GamesApi
             'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
             'x-rapidapi-key' => 'd6161131a5msh70042df8c8732dbp158a44jsn4011b4c5834b'
         ])->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'date' => '2021-07-29',
+            'date' => '2021-07-30',
             "timezone" => "Europe/Amsterdam"
         ]);
 
@@ -105,7 +105,7 @@ class GamesApi
 
     public static function search($keyword)
     {
-        $fixtures = Fixture::with(['homeTeam', 'awayTeam'])->where('date', '>', now()->subDays(4)->format('Y-m-d H:i:s'))->get();
+        $fixtures = Fixture::with(['homeTeam', 'awayTeam'])->where('date', '>', now()->subDays(1)->startOfDay()->format('Y-m-d H:i:s'))->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
             $hasV = array_filter(explode(' v ', $keyword));

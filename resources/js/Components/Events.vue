@@ -9,7 +9,6 @@
     @keydown.down.prevent="onArrowDown"
     @keydown.up.prevent="onArrowUp"
     @keydown.enter.prevent="onEnter"
-    @input="onChange"
     @focus="onChange(betData.event)"
     ref="input"
     class="
@@ -104,19 +103,13 @@ export default {
       this.$refs.input.focus();
     },
     onChange(searchValue) {
-      console.log(searchValue);
       this.setBet();
-      if (this.isAsync) {
-        this.isLoading = true;
-      } else {
-        this.matchId = null;
-        this.getResults(searchValue);
-        this.findGame();
-      }
+      this.matchId = null;
+      this.getResults(searchValue);
+      this.findGame();
     },
 
     getResults(searchValue) {
-      this.results = false;
       if (searchValue && searchValue.length >= 3) {
         this.$http
           .get(this.route("event.search", searchValue))
@@ -124,8 +117,11 @@ export default {
             if (response.data) {
               this.results = Object.values(response.data);
               if (this.results.length > 0) {
-                this.checkWithoutSelect(searchValue);
-                if (!this.isFirstLoad && !this.selected) {
+                if (this.isFirstLoad) {
+                  this.checkWithoutSelect(searchValue);
+                }
+
+                if (!this.selected) {
                   this.isOpen = true;
                 }
                 this.isFirstLoad = false;
@@ -156,7 +152,6 @@ export default {
       }
     },
     fixScrolling() {
-      console.log(this.$refs["card-" + this.arrowCounter]);
       const liH = this.$refs["card-" + this.arrowCounter].clientHeight;
       this.$refs.scrollContainer.scrollTop = liH * this.arrowCounter;
     },
@@ -190,14 +185,8 @@ export default {
         this.$http.get(this.route("event.match", matchId)).then((response) => {
           if (response.data) {
             this.betData.match = response.data;
-            console.log(this.betData.match);
-            // var now = new Date(this.betData.match.date);
-            // var date = now.toLocaleDateString();
-            // var time = now.toLocaleTimeString();
-
-            // this.betData.match.date = date;
-            // this.betData.match.time = time;
             this.setBet();
+            this.isOpen = false;
             return;
           }
         });
