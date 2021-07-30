@@ -76,7 +76,6 @@ export default {
 
   methods: {
     saveSettings() {
-      this.loading = true;
       this.newSettings.post(
         this.route("userSettings.store", this.$page.props.auth.user.username),
         this.newSettings,

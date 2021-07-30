@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BetController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\UserSettingController;
 use App\Lib\GamesApi;
@@ -38,24 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/bet/{id}/edit', [BetController::class, 'edit'])->name('bet.edit');
 
     Route::get('{username}/stats', [StatsController::class, 'index'])->name('stats.index');
-    // Route::post('{username}/stats', [StatsController::class, 'filter'])->name('stats.filter');
-
-
     Route::get('{username}/settings', [UserSettingController::class, 'index'])->name('userSettings.index');
     Route::post('{username}/settings', [UserSettingController::class, 'store'])->name('userSettings.store');
-
-
-
-    Route::get('/match/{matchId}', function ($matchId) {
-        return GamesApi::match($matchId);
-    })->name('event.match');
-
-    Route::post('/details', [BetController::class, 'details'])->name('bet.details');
-
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('{username}/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('{username}/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/{username}', [BetController::class, 'index'])->name('userhome');
-    // Route::post('/{username}', [BetController::class, 'filter'])->name('userhome.filter');
 });

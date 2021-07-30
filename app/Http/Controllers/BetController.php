@@ -24,7 +24,7 @@ class BetController extends Controller
 
         $showFilter = Request::get('showFilter') === 'true' ? true : false;
         $bets = Bet::user($userId);
-        return Inertia::render('Profile', [
+        return Inertia::render('Home', [
             'stats' => [
                 'totalBets' => $bets->clone()->count(),
                 'wonbets' => $bets->clone()->wonBets(),

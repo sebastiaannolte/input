@@ -1,59 +1,81 @@
 <template>
-  <Head :title="title" />
-  <stats :stats="stats" />
-  <bet-form
-    v-if="$page.props.userInfo.myPage"
-    :errors="errors"
-    @betFormSubmit="handleSubmit"
-    :processing="betForm.processing"
-  ></bet-form>
-  <bets :bets="bets" :filters="filters" :showFilter="showFilter" />
+  <Head title="Profile" />
+  <div class="shadow sm:rounded-md sm:overflow-hidden">
+    <div class="bg-white py-6 px-4 sm:p-6">
+      <div>
+        <h2
+          id="payment-details-heading"
+          class="text-xl leading-6 font-medium text-gray-900 font-bold"
+        >
+          Profile
+        </h2>
+        <p class="mt-1 text-sm text-gray-500">
+          The default setting are used when adding new bets
+        </p>
+      </div>
+      <div class="mt-6 grid grid-cols-4 gap-6">
+        <div class="col-span-4 sm:col-span-2">
+          <text-input
+            v-model="userData.username"
+            :error="errors.username"
+            label="Username"
+          />
+        </div>
+
+        <div class="col-span-4 sm:col-span-2">
+          <text-input
+            v-model="userData.name"
+            :error="errors.name"
+            label="Name"
+          />
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <text-input
+            v-model="userData.email"
+            :error="errors.email"
+            label="Email"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <loading-button @click.prevent="save" :loading="userData.processing">
+        Save
+      </loading-button>
+    </div>
+  </div>
 </template>
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import Bets from "@/Components/Bets.vue";
-import Stats from "@/Components/Stats.vue";
-import BetForm from "@/Pages/BetForm.vue";
+import Button from "@/Components/Button.vue";
+import TextInput from "@/Components/TextInput.vue";
+import LoadingButton from "@/Components/LoadingButton";
 
 export default {
-  components: {
-    Bets,
-    Stats,
-    BetForm,
-  },
+  components: { Button, TextInput, LoadingButton },
   layout: Layout,
 
   props: {
     errors: Object,
-    bets: Object,
-    stats: Object,
-    filters: Array,
-    showFilter: Boolean,
   },
   data() {
-    return {
-      betForm: this.$inertia.form(this.bet),
-      title: null,
-    };
+    return {};
   },
 
   created() {
-    this.setPageTitle();
+    this.userData = this.$inertia.form(this.$page.props.auth.user);
   },
 
   methods: {
-    handleSubmit(bet) {
-      this.betForm = this.$inertia.form(bet);
-      this.betForm.post(this.route("bet.store"), bet, {
-        preserveScroll: true,
-      });
-    },
-    setPageTitle() {
-      this.title = "Your bets";
-      if (!this.$page.props.userInfo.myPage) {
-        this.title = "Bets by " + this.$page.props.userInfo.user.name;
-      }
+    save() {
+      this.userData.put(
+        this.route("profile.update", this.$page.props.auth.user.username),
+        this.userData,
+        {
+          preserveScroll: true, // bets are not added to frontend
+        }
+      );
     },
   },
 };

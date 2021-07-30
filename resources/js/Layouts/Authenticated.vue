@@ -1,7 +1,7 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
 <flash-messages/>
-  <Disclosure as="nav" class="bg-indigo-500 shadow" v-slot="{ open }">
+  <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex">
@@ -23,9 +23,9 @@
               :href="'/' + item.url"
               class="
                 border-transparent
-                text-white
+                text-gray-500
                 hover:border-gray-300
-                hover:text-white
+                hover:text-gray-700
                 inline-flex
                 items-center
                 px-1
@@ -35,7 +35,7 @@
                 font-medium
               "
               :class="{
-                'border-white text-white': url() == item.url,
+                'border-indigo-500 text-white': url() == item.url,
               }"
             >
               {{ item.name }}
@@ -48,9 +48,9 @@
               <MenuButton
                 class="
                   border-transparent
-                  text-white
+                  text-gray-500
                   hover:border-gray-300
-                  hover:text-white
+                  hover:text-gray-700
                   inline-flex
                   items-center
                   px-1
@@ -88,13 +88,13 @@
                 "
               >
                 <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
+                  <inertia-link
+                    :href="route('profile.index', user.username)"
                     :class="[
                       active ? 'bg-gray-100' : '',
                       'block px-4 py-2 text-sm text-gray-700',
                     ]"
-                    >Your Profile</a
+                    >Your Profile</inertia-link
                   >
                 </MenuItem>
                 <MenuItem v-slot="{ active }">

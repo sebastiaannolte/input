@@ -16,15 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/test', function (Request $request) {  
-//     dd('123');
-//     return $request->user();
-// });
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/match/{matchId}', function ($matchId) {
+        return GamesApi::match($matchId);
+    })->name('event.match');
 
+    Route::get('/search/{search}', function ($search) {
+        return GamesApi::search($search);
+    })->name('event.search');
 
-
-Route::get('/search/{search}', function ($search) {
-    return GamesApi::search($search);
-})->name('event.search');
-
-Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
+    Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
+});
