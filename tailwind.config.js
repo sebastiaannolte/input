@@ -33,6 +33,7 @@ module.exports = {
         extend: {
             opacity: ['disabled'],
             fontWeight: ['first'],
+            fontSize: ['first'],
         },
     },
 

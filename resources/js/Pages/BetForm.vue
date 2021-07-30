@@ -194,11 +194,59 @@
                 />
               </div>
             </div>
-            <div class="flex justify-end cursor-pointer" @click="more = !more">
-              + more
+            <div
+              class="
+                flex
+                justify-end
+                cursor-pointer
+                text-indigo-500
+                no-underline
+                box-border
+                hover:text-indigo-600
+                focus:text-indigo-600
+              "
+              @click="more = !more"
+            >
+              <template v-if="!more">+ more</template>
+              <template v-else>- less</template>
             </div>
           </div>
-          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+
+          <div
+            class="
+              flex
+              justify-end
+              items-center
+              px-4
+              py-3
+              bg-gray-50
+              text-right
+              sm:px-6
+            "
+          >
+            <div class="flex mr-5">
+              <div class="text-sm">
+                <label for="comments" class="font-medium text-gray-700 mr-2"
+                  >Clear inputs</label
+                >
+              </div>
+              <div class="flex items-center h-5">
+                <input
+                  id="comments"
+                  aria-describedby="comments-description"
+                  name="comments"
+                  type="checkbox"
+                  class="
+                    focus:ring-indigo-500
+                    h-4
+                    w-4
+                    text-indigo-600
+                    border-gray-300
+                    rounded
+                  "
+                />
+              </div>
+            </div>
             <loading-button @click.prevent="save" :loading="processing">
               Save
             </loading-button>

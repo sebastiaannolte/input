@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth', 'verified'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
     Route::get('/match/{matchId}', function ($matchId) {
         return GamesApi::match($matchId);
     })->name('event.match');
@@ -26,4 +26,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('event.search');
 
     Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
-});
+// });
