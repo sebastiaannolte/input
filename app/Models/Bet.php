@@ -137,6 +137,8 @@ class Bet extends Model
         foreach ($filtersWithValue as $key => $filter) {
             if ($filter['type'] == 'match') {
                 $query->where($filter['col'], $filter['value']);
+            } elseif ($filter['type'] == 'like') {
+                $query->where($filter['col'], 'LIKE', "%{$filter['value']}%");
             } elseif ($filter['type'] == 'max') {
                 if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
                     $query->where($filter['col'], '<=', Carbon::parse($filter['value'])->endOfDay());

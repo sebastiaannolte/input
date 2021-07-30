@@ -20,7 +20,6 @@ class BetController extends Controller
             return;
         }
         $userId = $user->id;
-   
         $filters = Request::get('filters');
 
         $showFilter = Request::get('showFilter') === 'true' ? true : false;
@@ -67,7 +66,7 @@ class BetController extends Controller
             'status' => 'new',
         ]);
 
-        return Redirect::route('userhome', Auth::user()->username);
+        return Redirect::route('userhome', Auth::user()->username)->with('success', 'Bet created');;
     }
 
     public function update()
@@ -103,7 +102,7 @@ class BetController extends Controller
             ]
         );
 
-        return Redirect::route('bet.show', Request::get('id'));
+        return Redirect::route('bet.show', Request::get('id'))->with('success', 'Bet updated');;
     }
 
     public function updateStatus()
@@ -141,7 +140,6 @@ class BetController extends Controller
     public function delete($id)
     {
         Bet::find($id)->delete();
-
-        return Redirect::route('userhome', Auth::user()->username);
+        return Redirect::route('userhome', Auth::user()->username)->with('success', 'Bet deleted');;
     }
 }

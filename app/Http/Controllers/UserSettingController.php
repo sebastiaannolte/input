@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bet;
 use App\Models\Setting;
 use App\Models\UserSetting;
 use Illuminate\Support\Facades\Request;
@@ -26,7 +25,6 @@ class UserSettingController extends Controller
                 ['value' => $value]
             );
         }
-
-        return Redirect::route('userSettings.index', Auth::user()->username);
+        return Redirect::back()->with('success', 'Settings updated');
     }
 }
