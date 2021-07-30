@@ -116,26 +116,11 @@
               </div>
 
               <div class="col-span-4 sm:col-span-1">
-                <text-input
-                  v-model="betData.tipster"
-                  :error="errors.tipster"
-                  label="Tipster"
-                  type="text"
-                  id="tipster"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
+                <dropdown
+                  v-model="betData.type"
+                  :error="errors.type"
+                  label="Type"
+                  :options="{ prematch: 'Prematch', inplay: 'Inplay' }"
                 />
               </div>
               <div class="col-span-4 sm:col-span-1" v-show="more">
@@ -185,13 +170,32 @@
                 />
               </div>
 
-              <div
-                class="text-right cursor-pointer"
-                :class="{ 'col-span-4': !more, 'col-span-2': more }"
-                @click="more = !more"
-              >
-                + more
+              <div class="col-span-4 sm:col-span-1" v-show="more">
+                <text-input
+                  v-model="betData.tipster"
+                  :error="errors.tipster"
+                  label="Tipster"
+                  type="text"
+                  id="tipster"
+                  class="
+                    mt-1
+                    block
+                    w-full
+                    border border-gray-300
+                    rounded-md
+                    shadow-sm
+                    py-2
+                    px-3
+                    focus:outline-none
+                    focus:ring-gray-900
+                    focus:border-gray-900
+                    sm:text-sm
+                  "
+                />
               </div>
+            </div>
+            <div class="flex justify-end cursor-pointer" @click="more = !more">
+              + more
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -230,13 +234,22 @@ import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import Events from "@/Components/Events.vue";
 import TextInput from "@/Components/TextInput.vue";
+import Dropdown from "@/Components/Dropdown";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Bets from "@/Components/Bets.vue";
 import Stats from "@/Components/Stats.vue";
 import moment from "moment";
 
 export default {
-  components: { Button, Events, TextInput, Bets, Stats, TextInputWithAddOn },
+  components: {
+    Button,
+    Events,
+    TextInput,
+    Bets,
+    Stats,
+    TextInputWithAddOn,
+    Dropdown,
+  },
   layout: Layout,
 
   props: {
@@ -272,12 +285,12 @@ export default {
         odds: null,
         tipster: null,
         sport: null,
+        type: null,
       });
+      this.setUserSettings();
     } else {
       this.betData = this.bet;
     }
-
-    this.setUserSettings();
   },
 
   methods: {

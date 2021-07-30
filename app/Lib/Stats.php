@@ -47,7 +47,8 @@ class Stats
             'stake',
             'sport',
             'bookie',
-            'profit'
+            'profit',
+            'type',
         ];
     }
 
@@ -118,6 +119,10 @@ class Stats
 
         foreach ($carbonDates as $key => $date) {
             foreach ($columns as $columnValue) {
+                if(!$columnValue){
+                    continue;
+                }
+                $columnValue = ucfirst($columnValue);
                 $labels[$date->format('Y-m-d')][(string)$columnValue] = 0;
             }
         }
@@ -402,7 +407,7 @@ class Stats
     {
         $type = $column;
         $head = $this->tableHeader($type);
-        // dd($this->filters);
+
         $query = Bet::user($this->userId)
             ->filters($this->filters)
             ->where('date', '>=', $this->filters['from']['value'])
@@ -411,6 +416,10 @@ class Stats
         $types = $query->select($type)->distinct()->pluck($type)->sort(); // not efficient
         $output = [];
         foreach ($types as $key => $typeValue) {
+            if(!$typeValue){
+                continue;
+            }
+            $typeValue = ucfirst($typeValue);
             $output[(string)$typeValue] = $this->tableBody($typeValue, $bets->clone()->where($type, $typeValue))[$typeValue];
         }
 

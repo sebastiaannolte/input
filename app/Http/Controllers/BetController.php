@@ -6,7 +6,6 @@ use App\Models\Bet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -50,6 +49,7 @@ class BetController extends Controller
             'stake' => ['required', 'max:50'],
             'odds' => ['required', 'max:50'],
             'sport' => ['required', 'max:50'],
+            'type' => ['required', 'max:50'],
         ]);
 
         Bet::create([
@@ -61,6 +61,7 @@ class BetController extends Controller
             'odds' => Request::get('odds'),
             'tipster' => Request::get('tipster'),
             'sport' => Request::get('sport'),
+            'type' => Request::get('type'),
             'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
             'user_id' => Auth::user()->id,
             'status' => 'new',
@@ -78,6 +79,7 @@ class BetController extends Controller
             'stake' => ['required', 'max:50'],
             'odds' => ['required', 'max:50'],
             'sport' => ['required', 'max:50'],
+            'type' => ['required', 'max:50'],
         ]);
 
         Bet::updateOrCreate(
@@ -93,6 +95,7 @@ class BetController extends Controller
                 'odds' => Request::get('odds'),
                 'tipster' => Request::get('tipster'),
                 'sport' => Request::get('sport'),
+                'type' => Request::get('type'),
                 'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
                 'user_id' => Auth::user()->id,
                 'result' => Request::get('result'),

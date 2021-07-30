@@ -11,7 +11,7 @@ class Bet extends Model
 {
     use HasFactory;
 
-    public $fillable = ['match_id', 'event', 'selection', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result'];
+    public $fillable = ['match_id', 'event', 'selection', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result', 'type'];
 
     public function scopeUser($query, $id)
     {
