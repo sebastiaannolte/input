@@ -95,14 +95,13 @@
       <button
         type="button"
         @click.prevent="showFilter"
-        id="filterswitch"
         class="
           m-0
           text-red-500
           no-underline
           box-border
-          hover:text-red-500
-          focus:text-red-500
+          hover:text-red-600
+          focus:text-red-600
         "
       >
         <template v-if="!filterStatus">Show filter</template>
