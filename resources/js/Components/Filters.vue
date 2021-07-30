@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9 mb-5">
     <section aria-labelledby="payment-details-heading">
-      <form action="#" method="POST">
+      <form @submit.prevent="filter">
         <div class="shadow sm:rounded-md sm:overflow-hidden">
           <div class="bg-white py-6 px-4 sm:p-6">
             <div>
@@ -282,7 +282,7 @@
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button
+            <a
               @click.prevent="resetFilters"
               class="
                 mr-2
@@ -300,10 +300,11 @@
                 hover:bg-gray-100
                 focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+                cursor-pointer
               "
             >
               Reset
-            </button>
+            </a>
             <button
               @click.prevent="filter"
               class="
