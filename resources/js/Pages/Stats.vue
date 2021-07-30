@@ -96,18 +96,17 @@
         type="button"
         @click.prevent="showFilter"
         class="
-          m-0
-          text-red-500
+          text-indigo-500
           no-underline
           box-border
-          hover:text-red-600
-          focus:text-red-600
+          hover:text-indigo-600
+          focus:text-indigo-600
         "
       >
         <template v-if="!filterStatus">Show filter</template>
         <template v-else>Hide filter</template>
+        >
       </button>
-      >
     </p>
   </div>
   <Filters
