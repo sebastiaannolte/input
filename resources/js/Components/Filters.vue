@@ -17,6 +17,28 @@
               </p>
             </div>
             <div class="mt-6 grid grid-cols-6 gap-4">
+              <div class="col-span-4 sm:col-span-2">
+                <text-input
+                  v-model="filters.event.value"
+                  :error="errors"
+                  type="text"
+                  class="
+                    mt-1
+                    block
+                    w-full
+                    border border-gray-300
+                    rounded-md
+                    shadow-sm
+                    py-2
+                    px-3
+                    focus:outline-none
+                    focus:ring-gray-900
+                    focus:border-gray-900
+                    sm:text-sm
+                  "
+                  label="Event"
+                />
+              </div>
               <div class="col-span-4 sm:col-span-1">
                 <text-input
                   v-model="filters.from.value"
@@ -318,7 +340,6 @@ import Layout from "@/Layouts/Authenticated";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/Components/Pagination";
-import throttle from "lodash/throttle";
 
 export default {
   layout: Layout,
@@ -342,6 +363,11 @@ export default {
       pageNumber: 1,
       perPage: 25,
       testFilters: {
+        event: {
+          value: null,
+          type: "like",
+          col: "event",
+        },
         from: {
           value: null,
           type: "min",
@@ -404,8 +430,6 @@ export default {
       ...this.testFilters,
       ...this.propFilters,
     };
-
-    console.log(this.filters);
   },
 
   methods: {

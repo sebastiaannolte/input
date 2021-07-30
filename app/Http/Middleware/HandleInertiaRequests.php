@@ -44,7 +44,13 @@ class HandleInertiaRequests extends Middleware
             [
                 'myPage' => $request->user() ? $request->user()->username ==  explode("/", $request->path())[0] : false,
                 'user' => $request->user() ? $request->user() : User::where('username',  explode("/", $request->path())[0])->first(),
-            ]
+            ],
+            'flash' => function () use ($request) {
+                return [
+                    'success' => $request->session()->get('success'),
+                    'error' => $request->session()->get('error'),
+                ];
+            },
         ]);
     }
 }

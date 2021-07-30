@@ -1,5 +1,6 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
+<flash-messages/>
   <Disclosure as="nav" class="bg-indigo-500 shadow" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
@@ -316,6 +317,7 @@ import {
 } from "@headlessui/vue";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
 import Logo from "@/Components/Logo";
+import FlashMessages from "@/Components/FlashMessages";
 import { computed } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
 
@@ -332,6 +334,7 @@ export default {
     MenuIcon,
     XIcon,
     Logo,
+    FlashMessages,
   },
 
   setup() {

@@ -7,6 +7,7 @@ import { InertiaProgress } from '@inertiajs/progress';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import mitt from 'mitt';
+import Toaster from "@meforma/vue-toaster";
 const emitter = mitt();
 
 const el = document.getElementById('app');
@@ -20,7 +21,8 @@ createInertiaApp({
             .use(plugin)
             .component('Head', Head)
             .component('InertiaLink', Link)
-            .use(VueAxios, axios);
+            .use(VueAxios, axios)
+            .use(Toaster);
 
         apps.config.globalProperties.emitter = emitter;
         apps.mount(el);
