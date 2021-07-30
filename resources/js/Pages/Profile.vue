@@ -5,6 +5,7 @@
     v-if="$page.props.userInfo.myPage"
     :errors="errors"
     @betFormSubmit="handleSubmit"
+    :processing="betForm.processing"
   ></bet-form>
   <bets :bets="bets" :filters="filters" :showFilter="showFilter" />
 </template>
@@ -32,15 +33,7 @@ export default {
   },
   data() {
     return {
-      bet: this.$inertia.form({
-        event: null,
-        selection: null,
-        bookie: null,
-        stake: null,
-        odds: null,
-        tipster: null,
-        match: null,
-      }),
+      betForm: this.$inertia.form(this.bet),
       title: null,
     };
   },
@@ -51,7 +44,8 @@ export default {
 
   methods: {
     handleSubmit(bet) {
-      this.$inertia.post(this.route("bet.store"), bet, {
+      this.betForm = this.$inertia.form(bet);
+      this.betForm.post(this.route("bet.store"), bet, {
         preserveScroll: true,
       });
     },

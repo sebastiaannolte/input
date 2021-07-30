@@ -238,6 +238,6 @@ WHR4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQAeG1wLmRpZDo3MDlhMTkzMy0wNTBmLWVmNDAtYmFj
 OC1kMTk0YTg5ZjgxNmKizMKUAAAAAElFTkSuQmCC" />
 </svg> -->
 
-<img src="/img/logo.png" alt="">
+<img src="/img/logo-red.png" alt="">
 
 </template>

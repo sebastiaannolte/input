@@ -20,7 +20,21 @@ export default {
             Object.keys(this.$page.props.errors).length > 0) &&
           this.show
         ) {
-          this.$toast.error(this.$page.props.flash.error);
+          var errorMessage = "";
+          if (this.$page.props.flash.error) {
+            errorMessage = this.$page.props.flash.error;
+          } else {
+            if (Object.keys(this.$page.props.errors).length === 1) {
+              errorMessage = "There is one form error";
+            } else {
+              errorMessage =
+                "There are " +
+                Object.keys(this.$page.props.errors).length +
+                " form errors";
+            }
+          }
+
+          this.$toast.error(errorMessage);
         }
       },
       deep: true,

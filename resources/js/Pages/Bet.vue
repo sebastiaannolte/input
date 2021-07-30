@@ -34,21 +34,21 @@
         :href="route('bet.delete', bet.id)"
         method="delete"
         class="
-          bg-gray-800
-          border border-transparent
+          mr-2
+          bg-white
+          border border-gray-300
           rounded-md
           shadow-sm
           py-2
           px-4
-          mr-2
           inline-flex
           justify-center
           text-sm
           font-medium
-          text-white
-          hover:bg-gray-900
+          text-black
+          hover:bg-gray-100
           focus:outline-none
-          focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
+          focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
         "
       >
         Delete
@@ -56,7 +56,7 @@
       <inertia-link
         :href="route('bet.edit', bet.id)"
         class="
-          bg-gray-800
+          bg-red-500
           border border-transparent
           rounded-md
           shadow-sm
@@ -68,7 +68,7 @@
           text-sm
           font-medium
           text-white
-          hover:bg-gray-900
+          hover:bg-red-600
           focus:outline-none
           focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
         "

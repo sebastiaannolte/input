@@ -4,7 +4,7 @@
     class="
       flex
       items-center
-      bg-indigo-600
+      bg-red-500
       border border-transparent
       rounded-md
       shadow-sm
@@ -15,7 +15,7 @@
       text-sm
       font-medium
       text-white
-      hover:bg-indigo-700
+      hover:bg-red-600
       focus:outline-none
       focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
     "
