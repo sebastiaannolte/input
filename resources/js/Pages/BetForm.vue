@@ -199,27 +199,9 @@
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button
-              @click.prevent="save"
-              class="
-                bg-gray-800
-                border border-transparent
-                rounded-md
-                shadow-sm
-                py-2
-                px-4
-                inline-flex
-                justify-center
-                text-sm
-                font-medium
-                text-white
-                hover:bg-gray-900
-                focus:outline-none
-                focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
-              "
-            >
+            <loading-button @click.prevent="save" :loading="processing">
               Save
-            </button>
+            </loading-button>
           </div>
         </div>
       </form>
@@ -234,6 +216,7 @@ import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import Events from "@/Components/Events.vue";
 import TextInput from "@/Components/TextInput.vue";
+import LoadingButton from "@/Components/LoadingButton";
 import Dropdown from "@/Components/Dropdown";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Bets from "@/Components/Bets.vue";
@@ -249,12 +232,14 @@ export default {
     Stats,
     TextInputWithAddOn,
     Dropdown,
+    LoadingButton,
   },
   layout: Layout,
 
   props: {
     errors: Object,
     bet: Object,
+    processing: Boolean,
   },
   data() {
     return {

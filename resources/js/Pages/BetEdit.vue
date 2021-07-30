@@ -1,9 +1,10 @@
 <template>
 <Head :title="'Edit '+bet.event " />
   <bet-form
-    :bet="bet"
+    :bet="betForm"
     :errors="errors"
     @betFormSubmit="handleSubmit"
+    :processing="betForm.processing"
   ></bet-form>
 </template>
 
@@ -23,14 +24,16 @@ export default {
     errors: Object,
   },
   data() {
-    return {};
+    return {
+      betForm: this.$inertia.form(this.bet),
+    };
   },
 
   created() {},
 
   methods: {
     handleSubmit(bet) {
-      this.$inertia.put(this.route("bet.update"), bet, {
+      this.betForm.put(this.route("bet.update"), bet, {
         preserveScroll: true, // bets are not added to frontend
       });
     },
