@@ -275,6 +275,7 @@ export default {
       this.setUserSettings();
     } else {
       this.betData = this.bet;
+      this.betData.date = moment(this.betData.date).format("YYYY-MM-DDTHH:mm");
     }
   },
 
