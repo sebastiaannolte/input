@@ -137,6 +137,12 @@
           {{ bet.status }}
         </div>
       </div>
+      <div class="col-span-2">
+        <div class="p-2">Type</div>
+        <div class="p-2 mb-2 font-bold capitalize">
+          {{ bet.type }}
+        </div>
+      </div>
     </div>
   </div>
 </template>

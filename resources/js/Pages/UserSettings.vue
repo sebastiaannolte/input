@@ -10,8 +10,7 @@
          Default settings
         </h2>
         <p class="mt-1 text-sm text-gray-500">
-          Update your billing information. Please note that updating your
-          location could affect your tax rates.
+         The default setting are used when adding new bets
         </p>
       </div>
       <div class="mt-6 grid grid-cols-4 gap-6">
@@ -40,27 +39,12 @@
       </div>
     </div>
     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-      <button
+      <loading-button
         @click.prevent="saveSettings"
-        class="
-          bg-gray-800
-          border border-transparent
-          rounded-md
-          shadow-sm
-          py-2
-          px-4
-          inline-flex
-          justify-center
-          text-sm
-          font-medium
-          text-white
-          hover:bg-gray-900
-          focus:outline-none
-          focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
-        "
+        :loading="newSettings.processing"
       >
         Save
-      </button>
+      </loading-button>
     </div>
   </div>
 </template>
@@ -71,9 +55,10 @@
 import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import TextInput from "@/Components/TextInput.vue";
+import LoadingButton from '@/Components/LoadingButton';
 
 export default {
-  components: { Button, TextInput },
+  components: { Button, TextInput, LoadingButton },
   layout: Layout,
 
   props: {},
@@ -86,12 +71,13 @@ export default {
 
   created() {
     this.settings = this.$page.props.auth.settings;
-    this.newSettings = this.settings;
+    this.newSettings = this.$inertia.form(this.settings);
   },
 
   methods: {
     saveSettings() {
-      this.$inertia.post(
+      this.loading = true;
+      this.newSettings.post(
         this.route("userSettings.store", this.$page.props.auth.user.username),
         this.newSettings,
         {

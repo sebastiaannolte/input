@@ -23,6 +23,7 @@ class CreateBetsTable extends Migration
             $table->double('odds');
             $table->string('tipster')->nullable();
             $table->string('sport');
+            $table->string('type')->nullable();
             $table->timestamp('date');
             $table->string('result')->nullable();
             $table->string('status');

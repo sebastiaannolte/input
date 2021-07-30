@@ -1,5 +1,5 @@
 <template>
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1671px" height="874px" viewBox="0 0 1671 874" enable-background="new 0 0 1671 874" xml:space="preserve">  <image id="image0" width="1671" height="874" x="0" y="0"
+<!-- <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1671px" height="874px" viewBox="0 0 1671 874" enable-background="new 0 0 1671 874" xml:space="preserve">  <image id="image0" width="1671" height="874" x="0" y="0"
     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABocAAANqCAMAAAB4vmK6AAAAAXNSR0IArs4c6QAAAnxQTFRFY2bx
 bXDyfYDzi430lpj1oaL2q6z3tLb3vr/4xcb5zs/609T62dn73+D85ub86en98PD99vb++Pj+/Pz/
 /////v7/9PT+5+j85eb82tv71tf7ycr5xMX5vL34t7j4r7D3pqf2nJ71kpT0iIr0fX/zcHPyZGfx
@@ -236,8 +236,8 @@ OTMzLTA1MGYtZWY0MC1iYWM4LWQxOTRhODlmODE2Yq4RrGcAAAA9dEVYdHhtcE1NOkluc3RhbmNl
 SUQAeG1wLmlpZDozMTNmNDAwMS01MzcxLTkyNDktOTdlMi0wY2Q2ZTZiYjAzN2Jw0PXhAAAARXRF
 WHR4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQAeG1wLmRpZDo3MDlhMTkzMy0wNTBmLWVmNDAtYmFj
 OC1kMTk0YTg5ZjgxNmKizMKUAAAAAElFTkSuQmCC" />
-</svg>
+</svg> -->
 
-<!-- <img src="/img/logo.png" alt=""> -->
+<img src="/img/logo.png" alt="">
 
 </template>

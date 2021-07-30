@@ -1,6 +1,6 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
+  <Disclosure as="nav" class="bg-indigo-500 shadow" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex">
@@ -22,9 +22,9 @@
               :href="'/' + item.url"
               class="
                 border-transparent
-                text-gray-500
+                text-white
                 hover:border-gray-300
-                hover:text-gray-700
+                hover:text-white
                 inline-flex
                 items-center
                 px-1
@@ -34,7 +34,7 @@
                 font-medium
               "
               :class="{
-                'border-indigo-500 text-gray-900': url() == item.url,
+                'border-white text-white': url() == item.url,
               }"
             >
               {{ item.name }}
@@ -47,9 +47,9 @@
               <MenuButton
                 class="
                   border-transparent
-                  text-gray-500
+                  text-white
                   hover:border-gray-300
-                  hover:text-gray-700
+                  hover:text-white
                   inline-flex
                   items-center
                   px-1
