@@ -1,6 +1,6 @@
 <template>
   <Head :title="title" />
-  <stats :stats="stats" />
+  <stats :stats="stats" :upcommingBets="upcommingBets" />
   <bet-form
     v-if="$page.props.userInfo.myPage"
     :errors="errors"
@@ -30,6 +30,7 @@ export default {
     stats: Object,
     filters: Array,
     showFilter: Boolean,
+    upcommingBets: Object,
   },
   data() {
     return {
