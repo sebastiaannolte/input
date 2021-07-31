@@ -45,11 +45,16 @@ export default {
 
   methods: {
     handleSubmit(bet) {
+      console.log(bet.clearInputs);
       this.betForm = this.$inertia.form(bet);
-      this.betForm.post(this.route("bet.store"), bet, {
+      this.betForm.post(this.route("bet.store"), {
         preserveScroll: true,
+        onSuccess: () =>
+          this.betForm.clearInputs ? this.emitter.emit("event:clear") : "",
       });
+      console.log(this.betForm.clearInputs);
     },
+
     setPageTitle() {
       this.title = "Your bets";
       if (!this.$page.props.userInfo.myPage) {

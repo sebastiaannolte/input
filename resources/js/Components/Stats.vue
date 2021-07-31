@@ -21,7 +21,9 @@
           :key="key"
           class="first:text-lg first:font-bold"
         >
-          {{ moment(bet.date).format("MMM DD HH:mm") }} - {{ bet.event }}
+          <span class="cursor-pointer hover:text-gray-700" @click="scrollToElement(bet.id)"
+            >{{ moment(bet.date).format("MMM DD HH:mm") }} - {{ bet.event }}
+          </span>
         </div>
       </div>
     </div>
@@ -84,7 +86,12 @@ export default {
     this.moment = moment;
   },
 
-  methods: {},
+  methods: {
+    scrollToElement(id) {
+      console.log('scroll');
+      this.emitter.emit("event:scroll", id);
+    },
+  },
 
   computed: {
     firstBets() {

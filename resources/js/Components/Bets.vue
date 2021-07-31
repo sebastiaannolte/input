@@ -136,12 +136,13 @@
             <tbody>
               <tr
                 v-for="(bet, key) in bets.data"
+                :ref="'bet-' + bet.id"
                 :key="key"
-                :class="
-                  key % 2 === 0
-                    ? 'bg-white ' + statusColor(bet.status)
-                    : 'bg-gray-50 ' + statusColor(bet.status)
-                "
+                :class="[
+                  key % 2 === 0 ? 'bg-white ' : 'bg-gray-50 ',
+                  highlighted == bet.id ? ' bg-indigo-200' : '',
+                  statusColor(bet.status),
+                ]"
                 @click="openBetDetail(bet.id)"
                 class="cursor-pointer"
               >
@@ -251,7 +252,6 @@ import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/Components/Pagination";
 import Filters from "@/Components/Filters";
-import throttle from "lodash/throttle";
 import pickBy from "lodash/pickBy";
 
 export default {
@@ -277,6 +277,7 @@ export default {
       },
       filterStatus: false,
       localFilters: {},
+      highlighted: null,
     };
   },
 
@@ -284,6 +285,9 @@ export default {
     if (this.showFilter == true) {
       this.filterStatus = true;
     }
+    this.emitter.on("event:scroll", (id) => {
+      this.scrollAndHighlight(id);
+    });
   },
 
   methods: {
@@ -306,7 +310,7 @@ export default {
       if (removePage) {
         pageNumber = 1;
       }
-      console.log(localFilters);
+
       if (Object.keys(localFilters).length == 0) {
         this.filterStatus = false;
       }
@@ -380,6 +384,18 @@ export default {
       setTimeout(() => {
         this.activeKey = -1;
       }, 1);
+    },
+
+    scrollAndHighlight(id) {
+      const el = this.$refs["bet-" + id];
+
+      if (el) {
+        this.highlighted = id;
+        setTimeout(() => {
+          this.highlighted = null;
+        }, 3000);
+        el.scrollIntoView({ behavior: "smooth" });
+      }
     },
   },
 
