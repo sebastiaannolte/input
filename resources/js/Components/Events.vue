@@ -92,6 +92,11 @@ export default {
     if (this.bet.event) {
       this.betData = this.bet;
     }
+
+    this.emitter.on("event:clear", () => {
+      this.betData.event = null;
+      this.betData.match = null;
+    });
   },
 
   methods: {
@@ -99,9 +104,11 @@ export default {
       this.$refs.input.focus();
     },
     onChange(searchValue) {
+      if (!this.isFirstLoad) {
+        this.matchId = null;
+        this.getResults(searchValue);
+      }
       this.isFirstLoad = false;
-      this.matchId = null;
-      this.getResults(searchValue);
     },
 
     getResults(searchValue) {
@@ -197,10 +204,12 @@ export default {
     document.removeEventListener("click", this.handleClickOutside);
   },
   watch: {
-    "betData.event": function (val) {
-      if (!this.isFirstLoad) {
-        this.onChange(val);
+    "betData.event": function (newVal, oldVal) {
+      if (newVal != oldVal && oldVal) {
+        this.betData.match = null;
+        this.setBet();
       }
+      this.onChange(newVal);
     },
   },
 };

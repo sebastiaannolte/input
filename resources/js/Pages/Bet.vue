@@ -30,9 +30,8 @@
       >
         {{ bet.event }}
       </h2>
-      <inertia-link
-        :href="route('bet.delete', bet.id)"
-        method="delete"
+      <button
+        @click="destroy"
         class="
           mr-2
           bg-white
@@ -52,7 +51,7 @@
         "
       >
         Delete
-      </inertia-link>
+      </button>
       <inertia-link
         :href="route('bet.edit', bet.id)"
         class="
@@ -164,6 +163,12 @@ export default {
 
   created() {},
 
-  methods: {},
+  methods: {
+    destroy() {
+      if (confirm("Are you sure you want to delete this bet?")) {
+        this.$inertia.delete(this.route("bet.delete", this.bet.id));
+      }
+    },
+  },
 };
 </script>

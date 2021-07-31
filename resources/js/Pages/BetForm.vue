@@ -1,4 +1,5 @@
 <template>
+  {{ betData.match_id }}
   <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9 mb-5">
     <section aria-labelledby="payment-details-heading">
       <form action="#" method="POST">
@@ -224,7 +225,7 @@
               sm:px-6
             "
           >
-            <div class="flex mr-5">
+            <div class="flex mr-5" v-if="hideClearInputs">
               <div class="text-sm">
                 <label for="comments" class="font-medium text-gray-700 mr-2"
                   >Clear inputs</label
@@ -232,6 +233,7 @@
               </div>
               <div class="flex items-center h-5">
                 <input
+                  v-model="betData.clearInputs"
                   id="comments"
                   aria-describedby="comments-description"
                   name="comments"
@@ -293,6 +295,7 @@ export default {
     return {
       betData: {},
       more: false,
+      hideClearInputs: false,
     };
   },
 
@@ -309,7 +312,7 @@ export default {
       }
     });
 
-    if (!this.bet) {
+    this.emitter.on("event:clear", (event) => {
       this.betData = this.$inertia.form({
         event: null,
         selection: null,
@@ -319,6 +322,23 @@ export default {
         tipster: null,
         sport: null,
         type: null,
+        clearInputs: true,
+      });
+      this.setUserSettings();
+    });
+
+    if (!this.bet) {
+      this.hideClearInputs = true;
+      this.betData = this.$inertia.form({
+        event: null,
+        selection: null,
+        bookie: null,
+        stake: null,
+        odds: null,
+        tipster: null,
+        sport: null,
+        type: null,
+        clearInputs: true,
       });
       this.setUserSettings();
     } else {
