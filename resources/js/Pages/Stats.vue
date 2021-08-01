@@ -222,7 +222,7 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="(values, key) in currentTable.body"
+                  v-for="(values, key) in sortTable"
                   :key="key"
                   :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
                 >
