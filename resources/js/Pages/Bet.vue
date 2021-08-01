@@ -16,65 +16,119 @@
     "
   >
     <div class="sm:flex pb-5">
-      <h2
-        id="payment-details-heading"
-        class="
-          text-2xl
-          leading-6
-          font-medium
-          text-gray-900
-          font-bold
-          text-left
-          p-2
-          flex-1
-        "
-      >
-        {{ bet.event }}
-      </h2>
-      <button
-        @click="destroy"
-        class="
-          mr-2
-          bg-white
-          border border-gray-300
-          rounded-md
-          shadow-sm
-          py-2
-          px-4
-          inline-flex
-          justify-center
-          text-sm
-          font-medium
-          text-black
-          hover:bg-gray-100
-          focus:outline-none
-          focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
-        "
-      >
-        Delete
-      </button>
-      <inertia-link
-        :href="route('bet.edit', bet.id)"
-        class="
-          bg-red-500
-          border border-transparent
-          rounded-md
-          shadow-sm
-          py-2
-          px-4
-          mr-2
-          inline-flex
-          justify-center
-          text-sm
-          font-medium
-          text-white
-          hover:bg-red-600
-          focus:outline-none
-          focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
-        "
-      >
-        Edit
-      </inertia-link>
+      <div class="hidden sm:block">
+        <inertia-link
+          :href="route('userhome', $page.props.auth.user.username)"
+          class="
+            bg-white
+            border border-gray-300
+            rounded-md
+            shadow-sm
+            py-2
+            px-4
+            inline-flex
+            justify-center
+            text-sm
+            font-medium
+            text-black
+            hover:bg-gray-100
+            focus:outline-none
+            focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+          "
+        >
+          🠔 All bets
+        </inertia-link>
+      </div>
+      <div class="flex sm:flex-row flex-grow flex-col-reverse">
+        <h2
+          id="payment-details-heading"
+          class="
+            text-2xl
+            leading-6
+            font-medium
+            text-gray-900
+            font-bold
+            text-left
+            p-2
+            flex-1
+          "
+        >
+          {{ bet.event }}
+        </h2>
+        <div class="flex justify-between">
+          <div>
+            <inertia-link
+              :href="route('userhome', $page.props.auth.user.username)"
+              class="
+                block
+                sm:hidden
+                bg-white
+                border border-gray-300
+                rounded-md
+                shadow-sm
+                py-2
+                px-4
+                inline-flex
+                justify-center
+                text-sm
+                font-medium
+                text-black
+                hover:bg-gray-100
+                focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+              "
+            >
+              🠔 All bets
+            </inertia-link>
+          </div>
+          <div>
+            <button
+              @click="destroy"
+              class="
+                mr-2
+                bg-white
+                border border-gray-300
+                rounded-md
+                shadow-sm
+                py-2
+                px-4
+                inline-flex
+                justify-center
+                text-sm
+                font-medium
+                text-black
+                hover:bg-gray-100
+                focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+              "
+            >
+              Delete
+            </button>
+            <inertia-link
+              :href="route('bet.edit', bet.id)"
+              class="
+                bg-red-500
+                border border-transparent
+                rounded-md
+                shadow-sm
+                py-2
+                px-4
+                mr-2
+                inline-flex
+                justify-center
+                text-sm
+                font-medium
+                text-white
+                hover:bg-red-600
+                focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
+              "
+            >
+              Edit
+            </inertia-link>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="grid grid-cols-8 gap-4 text-left">
       <div class="col-span-8 sm:col-span-4">

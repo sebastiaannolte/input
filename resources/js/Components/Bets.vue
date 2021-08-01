@@ -239,7 +239,7 @@
         </div>
       </div>
     </div>
-    <pagination :links="bets.links" :hasData="bets.data.length > 0" />
+    <pagination :links="bets.links" />
   </div>
 </template>
 
