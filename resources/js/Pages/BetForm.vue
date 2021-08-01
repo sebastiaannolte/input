@@ -45,7 +45,8 @@
               </div>
 
               <div class="col-span-4 sm:col-span-1">
-                <text-input
+                <autocomplete-input
+                :options='["Unibet", "Bwin", "Betfair", "William hill"]'
                   v-model="betData.bookie"
                   :error="errors.bookie"
                   label="Bookie"
@@ -266,6 +267,7 @@ import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import Events from "@/Components/Events.vue";
 import TextInput from "@/Components/TextInput.vue";
+import AutocompleteInput from "@/Components/AutocompleteInput";
 import LoadingButton from "@/Components/LoadingButton";
 import Dropdown from "@/Components/Dropdown";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
@@ -283,6 +285,7 @@ export default {
     TextInputWithAddOn,
     Dropdown,
     LoadingButton,
+    AutocompleteInput
   },
   layout: Layout,
 

@@ -200,6 +200,7 @@
                 <th
                   scope="col"
                   class="
+                    t-header
                     px-6
                     py-3
                     text-left text-xs
@@ -210,6 +211,11 @@
                   "
                   :key="keys"
                   v-for="(values, keys) in currentTable.head"
+                  :class="{
+                    'arrow-down': sortType == values && isReverse,
+                    'arrow-up': sortType == values && !isReverse,
+                  }"
+                  @click="sortHeader(values)"
                 >
                   {{ values }}
                 </th>
@@ -276,6 +282,9 @@ export default {
       loading: false,
       localFilters: {},
       filterStatus: false,
+      sortType: "",
+      isReverse: false,
+      sortIcon: null,
     };
   },
 
@@ -368,6 +377,32 @@ export default {
       }
 
       this.generatedTabs[0].current = true;
+    },
+
+    sortHeader(tableHeader) {
+      if (this.currentTable.body.length < 2) {
+        return;
+      }
+      this.sortType = tableHeader;
+      this.isReverse = !this.isReverse;
+    },
+  },
+  computed: {
+    sortTable: function () {
+      var app = this;
+      this.currentTable.body = Object.values(this.currentTable.body).sort(
+        function (a, b) {
+          if (a[app.sortType] < b[app.sortType]) {
+            if (app.isReverse) return 1;
+            else return -1;
+          } else {
+            if (app.isReverse) return -1;
+            else return 1;
+          }
+        }
+      );
+
+      return this.currentTable.body;
     },
   },
 };
