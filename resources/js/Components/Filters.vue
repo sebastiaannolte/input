@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9 mb-5">
+  <div class="space-y-6 lg:px-0 lg:col-span-9 mb-5">
     <section aria-labelledby="payment-details-heading">
       <form @submit.prevent="filter">
         <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -17,7 +17,7 @@
               </p>
             </div>
             <div class="mt-6 grid grid-cols-6 gap-4">
-              <div class="col-span-4 sm:col-span-2">
+              <div class="col-span-6 sm:col-span-2">
                 <text-input
                   v-model="filters.event.value"
                   :error="errors"
@@ -39,7 +39,7 @@
                   label="Event"
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.from.value"
                   :error="errors"
@@ -62,7 +62,7 @@
                 />
               </div>
 
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.minOdds.value"
                   :error="errors"
@@ -83,7 +83,7 @@
                   label="Min odds"
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input-with-add-on
                   v-model="filters.minStake.value"
                   :error="errors"
@@ -107,7 +107,7 @@
                   "
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.sport.value"
                   :error="errors"
@@ -128,7 +128,7 @@
                   label="Sport"
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.bookie.value"
                   :error="errors"
@@ -149,7 +149,7 @@
                   label="Bookie"
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <label
                   class="
                     block
@@ -189,7 +189,7 @@
                   </option>
                 </select>
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.to.value"
                   :error="errors"
@@ -211,7 +211,7 @@
                   label="To"
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.maxOdds.value"
                   :error="errors"
@@ -232,7 +232,7 @@
                   label="Max odds"
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input-with-add-on
                   v-model="filters.maxStake.value"
                   :error="errors"
@@ -256,7 +256,7 @@
                   "
                 />
               </div>
-              <div class="col-span-4 sm:col-span-1">
+              <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.tipster.value"
                   :error="errors"

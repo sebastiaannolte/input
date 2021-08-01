@@ -10,7 +10,8 @@
         shadow
         rounded-md
         sm:overflow-hidden
-        w-2/3
+        w-full
+        sm:w-2/3
       "
     >
       <div class="mb-4 text-sm text-gray-600">

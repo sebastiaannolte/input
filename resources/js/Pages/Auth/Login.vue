@@ -11,7 +11,8 @@
         shadow
         rounded-md
         sm:overflow-hidden
-        w-2/3
+        w-full
+        sm:w-2/3
       "
     >
       <breeze-validation-errors class="mb-4" />

@@ -1,10 +1,9 @@
 <template>
   <Head :title="title" />
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
     <div
       class="
         px-4
-        mb-5
         leading-4
         text-center
         bg-white
@@ -41,7 +40,6 @@
     <div
       class="
         px-4
-        mb-5
         leading-4
         text-center
         bg-white
@@ -115,20 +113,7 @@
     v-show="filterStatus"
   />
   <div class="flex flex-col items-center">
-    <div
-      class="
-        mb-5
-        leading-4
-        text-center
-        bg-white
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-        md:w-2/3
-      "
-    >
-      <div class="sm:hidden mb-5">
+          <div class="sm:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
         <select
           id="tabs"
@@ -147,6 +132,7 @@
             focus:border-indigo-500
             sm:text-sm
             rounded-md
+            mb-5
           "
         >
           <option
@@ -159,6 +145,20 @@
           </option>
         </select>
       </div>
+    <div
+      class="
+        mb-5
+        leading-4
+        text-center
+        bg-white
+        shadow
+        rounded-md
+        sm:overflow-hidden
+        w-full
+        md:w-2/3
+      "
+    >
+
       <div class="hidden sm:block mb-5">
         <div class="border-b border-gray-200">
           <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
