@@ -33,7 +33,7 @@ class BetController extends Controller
                 'roi' => $bets->clone()->roi(2),
                 'username' => $username,
             ],
-            'bets' => $bets->clone()->bets()->filters($filters)->paginate(20)->withQueryString(),
+            'bets' => $bets->clone()->bets()->filters($filters)->paginate()->withQueryString(),
             'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->take(3)->get(),
             'filters' => $filters,
             'showFilter' => $showFilter,
