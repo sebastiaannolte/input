@@ -1,6 +1,6 @@
 <template>
   {{ betData.match_id }}
-  <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9 mb-5">
+  <div class="space-y-6 lg:col-span-9 mb-5">
     <section aria-labelledby="payment-details-heading">
       <form action="#" method="POST">
         <div class="shadow sm:rounded-md sm:overflow-hidden">

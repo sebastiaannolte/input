@@ -1,11 +1,11 @@
 <template>
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div
       class="
         px-4
         mb-5
         w-full
-        leading-4
+        leading-5
         text-center
         bg-white
         p-4
@@ -21,9 +21,9 @@
           :key="key"
           class="first:text-lg first:font-bold"
         >
-          <span class="cursor-pointer hover:text-gray-700" @click="scrollToElement(bet.id)"
+          <div class="cursor-pointer hover:text-gray-700 truncate overflow-hidden" @click="scrollToElement(bet.id)"
             >{{ moment(bet.date).format("MMM DD HH:mm") }} - {{ bet.event }}
-          </span>
+          </div>
         </div>
       </div>
     </div>

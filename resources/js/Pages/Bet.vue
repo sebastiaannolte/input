@@ -6,7 +6,8 @@
       mb-5
       w-full
       leading-4
-      text-center
+      text-right
+      sm:text-center
       bg-white
       p-4
       shadow
@@ -14,7 +15,7 @@
       sm:overflow-hidden
     "
   >
-    <div class="flex pb-5">
+    <div class="sm:flex pb-5">
       <h2
         id="payment-details-heading"
         class="
@@ -76,67 +77,67 @@
       </inertia-link>
     </div>
     <div class="grid grid-cols-8 gap-4 text-left">
-      <div class="col-span-4">
+      <div class="col-span-8 sm:col-span-4">
         <div class="p-2">Event</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.event }}
         </div>
       </div>
-      <div class="col-span-4">
+      <div class="col-span-8 sm:col-span-4">
         <div class="p-2">Selection</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.selection }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Bookie</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.bookie }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Stake</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.stake }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Odds</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.odds }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Result</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.result }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Date</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.date.split(" ")[0] }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Time</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.date.split(" ")[1] }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Tipster</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.tipster }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Status</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.status }}
         </div>
       </div>
-      <div class="col-span-2">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Type</div>
         <div class="p-2 mb-2 font-bold capitalize">
           {{ bet.type }}
@@ -145,8 +146,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 import Layout from "@/Layouts/Authenticated";

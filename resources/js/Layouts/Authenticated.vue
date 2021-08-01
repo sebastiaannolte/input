@@ -1,16 +1,13 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-<flash-messages/>
+  <flash-messages />
   <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex">
           <div class="flex-shrink-0 flex items-center">
             <inertia-link v-if="user" :href="route('userhome', user.username)">
-              <logo class="hidden lg:block h-8 w-auto"></logo>
-            </inertia-link>
-            <inertia-link v-else :href="route('index')">
-              <logo class="hidden lg:block h-8 w-auto"></logo>
+              <logo class="h-8 w-auto"></logo>
             </inertia-link>
           </div>
         </div>
@@ -151,138 +148,47 @@
     <DisclosurePanel class="sm:hidden">
       <div class="pt-2 pb-3 space-y-1">
         <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
-        <a
-          href="#"
-          class="
-            bg-indigo-50
-            border-indigo-500
-            text-indigo-700
-            block
-            pl-3
-            pr-4
-            py-2
-            border-l-4
-            text-base
-            font-medium
-          "
-          >Dashboard</a
-        >
-        <a
-          href="#"
-          class="
-            border-transparent
-            text-gray-500
-            hover:bg-gray-50
-            hover:border-gray-300
-            hover:text-gray-700
-            block
-            pl-3
-            pr-4
-            py-2
-            border-l-4
-            text-base
-            font-medium
-          "
-          >Team</a
-        >
-        <a
-          href="#"
-          class="
-            border-transparent
-            text-gray-500
-            hover:bg-gray-50
-            hover:border-gray-300
-            hover:text-gray-700
-            block
-            pl-3
-            pr-4
-            py-2
-            border-l-4
-            text-base
-            font-medium
-          "
-          >Projects</a
-        >
-        <a
-          href="#"
-          class="
-            border-transparent
-            text-gray-500
-            hover:bg-gray-50
-            hover:border-gray-300
-            hover:text-gray-700
-            block
-            pl-3
-            pr-4
-            py-2
-            border-l-4
-            text-base
-            font-medium
-          "
-          >Calendar</a
+        <inertia-link
+          v-for="(item, key) in menu"
+          :key="key"
+          :href="'/' + item.url"
+          :class="{
+            'bg-indigo-50 border-indigo-500 text-indigo-700': url() == item.url,
+          }"
+          class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          >{{ item.name }}</inertia-link
         >
       </div>
       <div class="pt-4 pb-3 border-t border-gray-200">
         <div class="flex items-center px-4">
-          <div class="flex-shrink-0">
-            <img
-              class="h-10 w-10 rounded-full"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
+          <div class="text-base font-medium text-gray-800">
+            {{ $page.props.auth.user.name }}
           </div>
-          <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">Tom Cook</div>
-            <div class="text-sm font-medium text-gray-500">tom@example.com</div>
-          </div>
-          <button
-            class="
-              ml-auto
-              flex-shrink-0
-              bg-white
-              p-1
-              rounded-full
-              text-gray-400
-              hover:text-gray-500
-              focus:outline-none
-              focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-            "
-          >
-            <span class="sr-only">View notifications</span>
-            <BellIcon class="h-6 w-6" aria-hidden="true" />
-          </button>
         </div>
         <div class="mt-3 space-y-1">
-          <a
-            href="#"
-            class="
-              block
-              px-4
-              py-2
-              text-base
-              font-medium
-              text-gray-500
-              hover:text-gray-800
-              hover:bg-gray-100
-            "
-            >Your Profile</a
+          <inertia-link
+            :href="route('profile.index', user.username)"
+            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            :class="{
+              'bg-indigo-50 border-indigo-500 text-indigo-700':
+                url() == user.username + '/profile',
+            }"
           >
-          <a
-            href="#"
-            class="
-              block
-              px-4
-              py-2
-              text-base
-              font-medium
-              text-gray-500
-              hover:text-gray-800
-              hover:bg-gray-100
-            "
-            >Settings</a
+            Your profile
+          </inertia-link>
+          <inertia-link
+            :href="route('userSettings.index', user.username)"
+            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+            :class="{
+              'bg-indigo-50 border-indigo-500 text-indigo-700':
+                url() == user.username + '/settings',
+            }"
           >
-          <a
-            href="#"
+            Settings
+          </inertia-link>
+          <inertia-link
+            href="/logout"
+            method="post"
             class="
               block
               px-4
@@ -293,7 +199,7 @@
               hover:text-gray-800
               hover:bg-gray-100
             "
-            >Sign out</a
+            >Sign out</inertia-link
           >
         </div>
       </div>

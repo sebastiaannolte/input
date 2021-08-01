@@ -31,6 +31,7 @@
     ref="scrollContainer"
     class="
       absolute
+      z-10
       mt-2
       w-80
       rounded-md
