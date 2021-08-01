@@ -113,38 +113,38 @@
     v-show="filterStatus"
   />
   <div class="flex flex-col items-center">
-          <div class="sm:hidden">
-        <label for="tabs" class="sr-only">Select a tab</label>
-        <select
-          id="tabs"
-          name="tabs"
-          @change="onDropdownTabChange"
-          class="
-            block
-            w-full
-            pl-3
-            pr-10
-            py-2
-            text-base
-            border-gray-300
-            focus:outline-none
-            focus:ring-indigo-500
-            focus:border-indigo-500
-            sm:text-sm
-            rounded-md
-            mb-5
-          "
+    <div class="sm:hidden w-full mb-2">
+      <label for="tabs" class="sr-only">Select a tab</label>
+      <select
+        id="tabs"
+        name="tabs"
+        @change="onDropdownTabChange"
+        class="
+          capitalize
+          block
+          w-full
+          pl-3
+          pr-10
+          py-2
+          text-base
+          border-gray-300
+          focus:outline-none
+          focus:ring-indigo-500
+          focus:border-indigo-500
+          sm:text-sm
+          rounded-md
+        "
+      >
+        <option
+          v-for="tab in generatedTabs"
+          :key="tab.option"
+          class="capitalize"
+          :selected="tab.current"
         >
-          <option
-            v-for="tab in generatedTabs"
-            :key="tab.option"
-            class="capitalize"
-            :selected="tab.current"
-          >
-            {{ tab.option }}
-          </option>
-        </select>
-      </div>
+          {{ tab.option }}
+        </option>
+      </select>
+    </div>
     <div
       class="
         mb-5
@@ -158,7 +158,6 @@
         md:w-2/3
       "
     >
-
       <div class="hidden sm:block mb-5">
         <div class="border-b border-gray-200">
           <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
