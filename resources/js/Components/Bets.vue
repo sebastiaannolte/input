@@ -141,10 +141,10 @@
                 :class="[
                   key % 2 === 0 ? 'bg-white ' : 'bg-gray-50 ',
                   highlighted == bet.id ? ' bg-indigo-200' : '',
-                  statusColor(bet.status),
+                  statusColor(bet.status, 'border'),
                 ]"
                 @click="openBetDetail(bet.id)"
-                class="cursor-pointer"
+                class="cursor-pointer border-r-8"
               >
                 <td
                   class="
@@ -180,13 +180,35 @@
                         v-if="bet.result"
                         class="flex justify-between items-center"
                       >
-                        <div>
+                        <span
+                          class="
+                            px-2
+                            inline-flex
+                            text-xs
+                            leading-5
+                            font-semibold
+                            rounded-full
+                          "
+                          :class="[statusColor(bet.status, 'label')]"
+                        >
                           {{ bet.result }}
-                        </div>
+                        </span>
                       </div>
-                      <div v-else>
+                      <span
+                        v-else
+                        class="
+                          px-2
+                          inline-flex
+                          text-xs
+                          leading-5
+                          font-semibold
+                          rounded-full
+                          bg-yellow-100
+                          text-yellow-800
+                        "
+                      >
                         {{ bet.status }}
-                      </div>
+                      </span>
                     </div>
                   </div>
                   <select
@@ -270,10 +292,22 @@ export default {
       selectedStatus: false,
       activeKey: -1,
       statuses: {
-        new: "",
-        won: "border-r-8 border-green-500",
-        lost: "border-r-8 border-red-500",
-        void: "border-r-8 border-gray-200",
+        new: {
+          border: "",
+          label: "bg-yellow-100 text-yellow-800",
+        },
+        won: {
+          border: "border-green-500",
+          label: "bg-green-100 text-green-800",
+        },
+        lost: {
+          border: "border-red-500",
+          label: "bg-red-100 text-red-800",
+        },
+        void: {
+          border: "border-gray-300",
+          label: "bg-gray-100 text-gray-800",
+        },
       },
       filterStatus: false,
       localFilters: {},
@@ -351,8 +385,8 @@ export default {
       Inertia.visit(this.route("bet.show", id), { method: "get" });
     },
 
-    statusColor(status) {
-      return this.statuses[status];
+    statusColor(status, type) {
+      return this.statuses[status][type];
     },
 
     selectStatus(selectedStatus) {
