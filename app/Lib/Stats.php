@@ -119,7 +119,7 @@ class Stats
 
         foreach ($carbonDates as $key => $date) {
             foreach ($columns as $columnValue) {
-                if(!$columnValue){
+                if (!$columnValue) {
                     continue;
                 }
                 $columnValue = ucfirst($columnValue);
@@ -186,10 +186,11 @@ class Stats
                 if ($bets->count() > 0) {
                     if ($columnValue == 'Profit per day') {
                         $labels[$date]['Profit per day'] = $bets->units(2);
-                    } else {
-                        $totalProfit += $labels[$date]['Profit per day'];
-                        $labels[$date][$columnValue] += $totalProfit;
+                        $totalProfit += $bets->units();
                     }
+                }
+                if ($columnValue == 'Total profit') {
+                    $labels[$date][$columnValue] += round($totalProfit, 2);
                 }
             }
         }
@@ -416,7 +417,7 @@ class Stats
         $types = $query->select($type)->distinct()->pluck($type)->sort(); // not efficient
         $output = [];
         foreach ($types as $key => $typeValue) {
-            if(!$typeValue){
+            if (!$typeValue) {
                 continue;
             }
             $typeValue = ucfirst($typeValue);
@@ -494,7 +495,7 @@ class Stats
             "#EF4444",
             "#10B981",
             "#F59E0B",
-            "#2563EB", 
+            "#2563EB",
             "#EC4899",
             "#6B7280",
             "#84CC16",

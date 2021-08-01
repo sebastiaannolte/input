@@ -389,14 +389,18 @@ export default {
   },
   computed: {
     sortTable: function () {
-      var app = this;
+      var self = this;
+      if (!this.currentTable.body) {
+        return;
+      }
+
       this.currentTable.body = Object.values(this.currentTable.body).sort(
         function (a, b) {
-          if (a[app.sortType] < b[app.sortType]) {
-            if (app.isReverse) return 1;
+          if (a[self.sortType] < b[self.sortType]) {
+            if (self.isReverse) return 1;
             else return -1;
           } else {
-            if (app.isReverse) return -1;
+            if (self.isReverse) return -1;
             else return 1;
           }
         }
