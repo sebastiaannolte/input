@@ -184,7 +184,7 @@
                           {{ bet.result }}
                         </div>
                       </div>
-                      <div v-else>
+                      <div class="capitalize" v-else>
                         {{ bet.status }}
                       </div>
                     </div>
@@ -202,6 +202,7 @@
                       focus:border-indigo-500
                       sm:text-sm
                       rounded-md
+                      capitalize
                     "
                     @change.prevent="selectStatus(bet.status)"
                     v-show="activeKey == key"
