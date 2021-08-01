@@ -34,7 +34,7 @@ class BetController extends Controller
                 'username' => $username,
             ],
             'bets' => $bets->clone()->bets()->filters($filters)->paginate(20)->withQueryString(),
-            'upcommingBets' => $bets->clone()->where('date', '>', now()->subMinutes(90))->whereNull('result')->orderBy('date')->get(),
+            'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->take(3)->get(),
             'filters' => $filters,
             'showFilter' => $showFilter,
         ]);
