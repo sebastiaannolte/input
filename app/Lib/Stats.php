@@ -276,9 +276,9 @@ class Stats
     {
         $ordered = array();
         foreach ($orderArray as $key) {
-            if (array_key_exists($key, $array)) {
-                $ordered[$key] = $array[$key];
-                unset($array[$key]);
+            if (array_key_exists($key['value'], $array)) {
+                $ordered[$key['value']] = $array[$key['value']];
+                unset($array[$key['value']]);
             }
         }
         return $ordered + $array;
@@ -393,12 +393,12 @@ class Stats
     public function tableBody($typeValue, $bets)
     {
         $output[$typeValue] = [
-            'Type' => $typeValue,
-            'Bets' => $bets->clone()->betCount(),
-            'Won' => $bets->clone()->wonBets(),
-            'Staked' => $bets->clone()->totalStaked(2),
-            'Profit' => $bets->clone()->units(2),
-            'ROI' => $bets->clone()->roi(2) . '%',
+            'Type' => ['value' => $typeValue, 'type' => ''],
+            'Bets' => ['value' => $bets->clone()->betCount(), 'type' => ''],
+            'Won' => ['value' => $bets->clone()->wonBets(), 'type' => ''],
+            'Staked' => ['value' => $bets->clone()->totalStaked(2), 'type' => ''],
+            'Profit' => ['value' => $bets->clone()->units(2), 'type' => ''],
+            'ROI' => ['value' => $bets->clone()->roi(2), 'type' => '%'],
         ];
 
         return $output;
