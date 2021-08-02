@@ -205,7 +205,7 @@
                     v-for="(values, key) in values"
                     :key="key"
                   >
-                    {{ values }}
+                    {{ values.value }}{{values.type}}
                   </td>
                 </tr>
               </tbody>
@@ -315,6 +315,7 @@ export default {
     },
 
     changeTab(value) {
+      this.sortType = null;
       this.getStats(value);
       this.generatedTabs.forEach((tab) => {
         if (tab.option == value) {
@@ -337,6 +338,9 @@ export default {
       if (this.currentTable.body.length < 2) {
         return;
       }
+      if(this.sortType != tableHeader){
+        this.isReverse = false;
+      }
       this.sortType = tableHeader;
       this.isReverse = !this.isReverse;
     },
@@ -348,9 +352,13 @@ export default {
         return;
       }
 
+      if(!this.sortType){
+        return this.currentTable.body;
+      }
+
       this.currentTable.body = Object.values(this.currentTable.body).sort(
         function (a, b) {
-          if (a[self.sortType] < b[self.sortType]) {
+          if (a[self.sortType].value < b[self.sortType].value) {
             if (self.isReverse) return 1;
             else return -1;
           } else {
