@@ -1,5 +1,86 @@
 <template>
-  <div class="space-y-6 lg:px-0 lg:col-span-9 mb-5">
+  <div class="flex">
+    <div class="flex-grow">
+      <span
+        v-for="(filter, key) in activeFilters"
+        :key="key"
+        class="
+          inline-flex
+          flex-grow
+          rounded-full
+          items-center
+          py-0.5
+          pl-2.5
+          pr-1
+          text-sm
+          font-medium
+          bg-indigo-100
+          text-indigo-700
+          mr-2
+        "
+      >
+        <span class="capitalize font-bold">{{ key }}</span
+        >: {{ filter }}
+        <button
+          @click="removeFilter(key)"
+          type="button"
+          class="
+            flex-shrink-0
+            ml-0.5
+            h-4
+            w-4
+            rounded-full
+            inline-flex
+            items-center
+            justify-center
+            text-indigo-400
+            hover:bg-indigo-200
+            hover:text-indigo-500
+            focus:outline-none
+            focus:bg-indigo-500
+            focus:text-white
+          "
+        >
+          <span class="sr-only">Remove large option</span>
+          <svg
+            class="h-2 w-2"
+            stroke="currentColor"
+            fill="none"
+            viewBox="0 0 8 8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-width="1.5"
+              d="M1 1l6 6m0-6L1 7"
+            />
+          </svg>
+        </button>
+      </span>
+    </div>
+    <div class="px-4 font-light leading-4 text-gray-800 cursor-default">
+      <p
+        align="right"
+        class="p-0 mx-0 mt-0 mb-5 text-base text-gray-800 box-border"
+      >
+        <button
+          type="button"
+          @click.prevent="showFilter"
+          class="
+            text-indigo-500
+            no-underline
+            box-border
+            hover:text-indigo-600
+            focus:text-indigo-600
+          "
+        >
+          <template v-if="!filterStatus">Show filter</template>
+          <template v-else>Hide filter</template>
+          >
+        </button>
+      </p>
+    </div>
+  </div>
+  <div class="space-y-6 lg:px-0 lg:col-span-9 mb-5" v-show="filterStatus">
     <section aria-labelledby="payment-details-heading">
       <form @submit.prevent="filter">
         <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -22,20 +103,6 @@
                   v-model="filters.event.value"
                   :error="errors"
                   type="text"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="Event"
                 />
               </div>
@@ -44,20 +111,6 @@
                   v-model="filters.from.value"
                   :error="errors"
                   type="date"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="From"
                 />
               </div>
@@ -66,20 +119,6 @@
                 <text-input
                   v-model="filters.minOdds.value"
                   :error="errors"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="Min odds"
                 />
               </div>
@@ -91,40 +130,12 @@
                   label="Min stake"
                   type="text"
                   id="stake"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                 />
               </div>
               <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.sport.value"
                   :error="errors"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="Sport"
                 />
               </div>
@@ -132,20 +143,6 @@
                 <text-input
                   v-model="filters.bookie.value"
                   :error="errors"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="Bookie"
                 />
               </div>
@@ -194,20 +191,6 @@
                   v-model="filters.to.value"
                   :error="errors"
                   type="date"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="To"
                 />
               </div>
@@ -215,20 +198,6 @@
                 <text-input
                   v-model="filters.maxOdds.value"
                   :error="errors"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                   label="Max odds"
                 />
               </div>
@@ -240,20 +209,6 @@
                   label="Max stake"
                   type="text"
                   id="stake"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                 />
               </div>
               <div class="col-span-6 sm:col-span-1">
@@ -263,20 +218,6 @@
                   label="Tipster"
                   type="text"
                   id="tipster"
-                  class="
-                    mt-1
-                    block
-                    w-full
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    py-2
-                    px-3
-                    focus:outline-none
-                    focus:ring-gray-900
-                    focus:border-gray-900
-                    sm:text-sm
-                  "
                 />
               </div>
             </div>
@@ -341,6 +282,7 @@ import Layout from "@/Layouts/Authenticated";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/Components/Pagination";
+import { forEach } from "lodash";
 
 export default {
   layout: Layout,
@@ -348,6 +290,7 @@ export default {
 
   props: {
     propFilters: Object,
+    showFilter: Boolean,
   },
   data() {
     return {
@@ -431,11 +374,30 @@ export default {
       ...this.testFilters,
       ...this.propFilters,
     };
+
+    if (this.showFilter == true) {
+      this.filterStatus = true;
+    }
   },
 
   methods: {
     filter() {
-      this.$emit("filterSubmit", this.filters);
+      if (Object.keys(this.activeFilters).length == 0) {
+        this.filterStatus = false;
+      }
+      this.$emit("filterSubmit", {
+        filters: this.filters,
+        filterStatus: this.filterStatus,
+      });
+    },
+    showFilter() {
+      this.filterStatus = !this.filterStatus;
+    },
+
+    removeFilter(key) {
+      this.filters[key].value = null;
+
+      this.filter();
     },
 
     resetFilters() {
@@ -446,6 +408,17 @@ export default {
     },
   },
 
-  computed: {},
+  computed: {
+    activeFilters() {
+      var filtersWithValue = {};
+      for (const key in this.filters) {
+        var filter = this.filters[key];
+        if (filter.value) {
+          filtersWithValue[key] = filter.value;
+        }
+      }
+      return filtersWithValue;
+    },
+  },
 };
 </script>

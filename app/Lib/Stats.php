@@ -396,7 +396,7 @@ class Stats
             'Type' => $typeValue,
             'Bets' => $bets->clone()->betCount(),
             'Won' => $bets->clone()->wonBets(),
-            'Staked' => $bets->clone()->totalStaked(),
+            'Staked' => $bets->clone()->totalStaked(2),
             'Profit' => $bets->clone()->units(2),
             'ROI' => $bets->clone()->roi(2) . '%',
         ];
