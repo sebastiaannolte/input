@@ -338,7 +338,12 @@ export default {
         return;
       }
 
-      Inertia.visit(this.route("bet.show", id), { method: "get" });
+      Inertia.visit(this.route("bet.show", id), {
+        method: "get",
+        data: {
+          backUrl: window.location.href,
+        },
+      });
     },
 
     statusColor(status, type) {
