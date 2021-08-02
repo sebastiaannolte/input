@@ -63,9 +63,15 @@ class Bet extends Model
         return  $wonUnits;
     }
 
-    public function scopeTotalStaked($query)
+    public function scopeTotalStaked($query, $round = false)
     {
-        return $query->sum('stake');
+        $totalStaked = $query->sum('stake');
+
+        if ($round) {
+            return round($totalStaked, $round);
+        }
+
+        return $totalStaked;
     }
 
     public function scopeAvgStake($query, $round = false)

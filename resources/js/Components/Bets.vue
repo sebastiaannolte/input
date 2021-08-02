@@ -1,41 +1,8 @@
 <template>
-  <div
-    class="
-      px-4
-      w-full
-      font-light
-      leading-4
-      text-gray-800
-      cursor-default
-      flex
-      justify-end
-    "
-  >
-    <p
-      align="right"
-      class="p-0 mx-0 mt-0 mb-5 text-base text-gray-800 box-border"
-    >
-      <button
-        type="button"
-        @click.prevent="showFilter"
-        class="
-          text-indigo-500
-          no-underline
-          box-border
-          hover:text-indigo-600
-          focus:text-indigo-600
-        "
-      >
-        <template v-if="!filterStatus">Show filter</template>
-        <template v-else>Hide filter</template>
-        >
-      </button>
-    </p>
-  </div>
   <Filters
     :prop-filters="filters"
+    :show-filter="showFilter"
     @filterSubmit="handleFilter"
-    v-show="filterStatus"
   />
   <div class="flex flex-col">
     <div class="-my-2 overflow-x-auto">
@@ -286,6 +253,7 @@ export default {
     filters: Array,
     showFilter: Boolean,
   },
+
   data() {
     return {
       betData: this.bets.data,
@@ -309,16 +277,12 @@ export default {
           label: "bg-gray-100 text-gray-800",
         },
       },
-      filterStatus: false,
       localFilters: {},
       highlighted: null,
     };
   },
 
   created() {
-    if (this.showFilter == true) {
-      this.filterStatus = true;
-    }
     this.emitter.on("event:scroll", (id) => {
       this.scrollAndHighlight(id);
     });
@@ -327,12 +291,11 @@ export default {
   methods: {
     handleFilter(filters) {
       var localFilters = {};
-      var fil = filters;
-      if (filters == this.localFilters) {
+      if (filters.filters == this.localFilters) {
         var removePage = true;
       }
 
-      this.localFilters = filters;
+      this.localFilters = filters.filters;
       for (const key in this.localFilters) {
         var filter = this.localFilters[key];
 
@@ -345,16 +308,12 @@ export default {
         pageNumber = 1;
       }
 
-      if (Object.keys(localFilters).length == 0) {
-        this.filterStatus = false;
-      }
-
       this.$inertia.get(
         this.route("userhome", this.user.username),
         pickBy({
           filters: localFilters,
           page: pageNumber,
-          showFilter: this.filterStatus,
+          showFilter: filters.filterStatus,
         }),
         {
           preserveScroll: true,
@@ -372,9 +331,6 @@ export default {
 
     handleFocusOut() {
       this.activeKey = -1;
-    },
-    showFilter() {
-      this.filterStatus = !this.filterStatus;
     },
 
     openBetDetail(id) {

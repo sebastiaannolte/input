@@ -17,7 +17,7 @@ class GamesApi
             'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
             'x-rapidapi-key' => '***REMOVED***'
         ])->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'date' => '2021-07-30',
+            'date' => '2021-08-02',
             "timezone" => "Europe/Amsterdam"
         ]);
 

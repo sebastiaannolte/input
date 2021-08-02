@@ -74,43 +74,10 @@
       </div>
     </div>
   </div>
-  <div
-    class="
-      px-4
-      w-full
-      font-light
-      leading-4
-      text-gray-800
-      cursor-default
-      flex
-      justify-end
-    "
-  >
-    <p
-      align="right"
-      class="p-0 mx-0 mt-0 mb-5 text-base text-gray-800 box-border"
-    >
-      <button
-        type="button"
-        @click.prevent="showFilter"
-        class="
-          text-indigo-500
-          no-underline
-          box-border
-          hover:text-indigo-600
-          focus:text-indigo-600
-        "
-      >
-        <template v-if="!filterStatus">Show filter</template>
-        <template v-else>Hide filter</template>
-        >
-      </button>
-    </p>
-  </div>
   <Filters
     :prop-filters="filters"
+    :show-filter="showFilter"
     @filterSubmit="handleFilter"
-    v-show="filterStatus"
   />
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
@@ -280,7 +247,6 @@ export default {
       generatedTabs: [],
       loading: false,
       localFilters: {},
-      filterStatus: false,
       sortType: "",
       isReverse: false,
       sortIcon: null,
@@ -291,10 +257,6 @@ export default {
     this.createTabs();
     this.getStats("tipster");
     this.setPageTitle();
-
-    if (this.showFilter == true) {
-      this.filterStatus = true;
-    }
   },
 
   methods: {
@@ -316,7 +278,7 @@ export default {
 
     handleFilter(filters) {
       var localFilters = {};
-      this.localFilters = filters;
+      this.localFilters = filters.filters;
       var currentTab = this.generatedTabs.find((tab) => tab.current == true);
       this.getStats(currentTab.option);
 
@@ -328,13 +290,9 @@ export default {
         }
       }
 
-      if (Object.keys(localFilters).length == 0) {
-        this.filterStatus = false;
-      }
-
       this.$inertia.get(
         this.route("stats.index", this.$page.props.auth.user.username),
-        pickBy({ filters: localFilters, showFilter: this.filterStatus }),
+        pickBy({ filters: localFilters, showFilter: filters.filterStatus }),
         {
           preserveScroll: true,
           preserveState: true,
@@ -350,9 +308,6 @@ export default {
     },
     openTab(value) {
       this.changeTab(value);
-    },
-    showFilter() {
-      this.filterStatus = !this.filterStatus;
     },
 
     onDropdownTabChange(event) {
