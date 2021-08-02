@@ -18,7 +18,7 @@
     <div class="sm:flex pb-5">
       <div class="hidden sm:block">
         <inertia-link
-          :href="route('userhome', $page.props.auth.user.username)"
+          :href="backUrl"
           class="
             bg-white
             border border-gray-300
@@ -58,7 +58,7 @@
         <div class="flex justify-between">
           <div>
             <inertia-link
-              :href="route('userhome', $page.props.auth.user.username)"
+              :href="backUrl"
               class="
                 block
                 sm:hidden
@@ -211,10 +211,17 @@ export default {
     bet: Object,
   },
   data() {
-    return {};
+    return {
+      backUrl: this.route("userhome", this.$page.props.auth.user.username),
+    };
   },
 
-  created() {},
+  created() {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("backUrl")) {
+      this.backUrl = urlParams.get("backUrl");
+    }
+  },
 
   methods: {
     destroy() {
