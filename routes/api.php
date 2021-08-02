@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/match/{matchId}', function ($matchId) {
         return GamesApi::match($matchId);
     })->name('event.match');
@@ -25,5 +25,12 @@ use Illuminate\Support\Facades\Route;
         return GamesApi::search($search);
     })->name('event.search');
 
+    Route::get('/games/{date}', function ($search) {
+        // dd($search);
+        return GamesApi::get($search);
+    })->name('games.get');
+
     Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
-// });
+
+    
+});

@@ -8,28 +8,28 @@ use App\Models\Team;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redirect;
 
 class GamesApi
 {
-    public static function api()
+    public static function api($date)
     {
         $response = Http::withHeaders([
             'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
             'x-rapidapi-key' => '***REMOVED***'
         ])->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'date' => '2021-08-02',
+            'date' => $date,
             "timezone" => "Europe/Amsterdam"
         ]);
 
-        // dd($response);
-        // echo ($response->body());
+
         return $response->body();
     }
 
-    public static function get()
+    public static function get($date)
     {
         // $json = file_get_contents(storage_path() . '/games.json');
-        $json = self::api();
+        $json = self::api($date);
         $games = json_decode($json, true)['response'];
 
         foreach ($games as $key => $game) {
@@ -101,6 +101,8 @@ class GamesApi
                 ]
             );
         }
+        return response()
+            ->json(['message' => count($games) . ' games found']);
     }
 
     public static function search($keyword)
