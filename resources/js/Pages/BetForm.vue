@@ -22,7 +22,7 @@
                 <Events :bet="betData" :errors="errors" />
               </div>
 
-              <div class="col-span-4 sm:col-span-2">
+              <div class="col-span-2 sm:col-span-1">
                 <text-input
                   v-model="betData.selection"
                   :error="errors.selection"
@@ -45,8 +45,30 @@
               </div>
 
               <div class="col-span-4 sm:col-span-1">
+                <label
+                  class="
+                    block
+                    text-sm
+                    font-medium
+                    text-gray-700
+                    dark:text-gray-400
+                    capitalize
+                  "
+                  >Category:</label
+                >
+                <Multiselect
+                  v-model="betData.category"
+                  :searchable="true"
+                  :options="formattedBetTypes"
+                  mode="tags"
+                />
+              </div>
+
+              <div class="col-span-4 sm:col-span-1">
                 <autocomplete-input
-                :options='["Unibet", "Bwin", "Betfair", "William hill"]'
+                  :options="
+                    JSON.parse($page.props.auth.settings.bookmakers.value)
+                  "
                   v-model="betData.bookie"
                   :error="errors.bookie"
                   label="Bookie"
@@ -274,6 +296,7 @@ import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Bets from "@/Components/Bets.vue";
 import Stats from "@/Components/Stats.vue";
 import moment from "moment";
+import Multiselect from "@vueform/multiselect";
 
 export default {
   components: {
@@ -285,7 +308,8 @@ export default {
     TextInputWithAddOn,
     Dropdown,
     LoadingButton,
-    AutocompleteInput
+    AutocompleteInput,
+    Multiselect,
   },
   layout: Layout,
 
@@ -293,6 +317,7 @@ export default {
     errors: Object,
     bet: Object,
     processing: Boolean,
+    betTypes: Object,
   },
   data() {
     return {
@@ -325,6 +350,7 @@ export default {
         tipster: null,
         sport: null,
         type: null,
+        date: moment().format("YYYY-MM-DDTHH:mm"),
         clearInputs: true,
       });
       this.setUserSettings();
@@ -341,12 +367,19 @@ export default {
         tipster: null,
         sport: null,
         type: null,
+        date: moment().format("YYYY-MM-DDTHH:mm"),
         clearInputs: true,
       });
       this.setUserSettings();
     } else {
       this.betData = this.bet;
       this.betData.date = moment(this.betData.date).format("YYYY-MM-DDTHH:mm");
+
+      if (!this.betData.category) {
+        this.betData.category = [];
+      } else {
+        this.betData.category = JSON.parse(this.betData.category);
+      }
     }
   },
 
@@ -355,7 +388,7 @@ export default {
       var userSettings = this.$page.props.auth.settings;
       for (const key in userSettings) {
         var setting = userSettings[key];
-        this.betData[key] = setting;
+        this.betData[key] = setting.value;
       }
     },
     save() {
@@ -363,6 +396,14 @@ export default {
     },
   },
 
-  computed: {},
+  computed: {
+    formattedBetTypes() {
+      return this.betTypes.map((values, key) => {
+        return {value: values.id, label:values.name};
+      });
+    },
+  },
 };
 </script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>

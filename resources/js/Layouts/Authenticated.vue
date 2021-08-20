@@ -40,7 +40,7 @@
           </div>
 
           <!-- Profile dropdown -->
-          <Menu as="div" class="ml-3 relative" v-if="user">
+          <Menu as="div" class="ml-8 relative" v-if="user">
             <div>
               <MenuButton
                 class="
@@ -255,6 +255,10 @@ export default {
       {
         name: "Your stats",
         url: user.value.username + "/stats",
+      },
+      {
+        name: "Special stats",
+        url: user.value.username + "/special",
       },
     ];
 

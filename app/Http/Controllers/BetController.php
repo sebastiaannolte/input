@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bet;
+use App\Models\BetType;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,7 @@ class BetController extends Controller
             'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->take(3)->get(),
             'filters' => $filters,
             'showFilter' => $showFilter,
+            'betTypes' => BetType::get(),
         ]);
     }
 
@@ -45,17 +47,19 @@ class BetController extends Controller
         Request::validate([
             'event' => ['required', 'max:50'],
             'selection' => ['required', 'max:50'],
+            'category' => ['required', 'max:50'],
             'bookie' => ['required', 'max:50'],
             'stake' => ['required', 'max:50'],
             'odds' => ['required', 'max:50'],
             'sport' => ['required', 'max:50'],
             'type' => ['required', 'max:50'],
         ]);
-
+        // dd(Request::all());
         Bet::create([
             'match_id' => Request::get('match_id'),
             'event' => Request::get('event'),
             'selection' => Request::get('selection'),
+            'category' => json_encode(Request::get('category')),
             'bookie' => Request::get('bookie'),
             'stake' => Request::get('stake'),
             'odds' => Request::get('odds'),
@@ -75,6 +79,7 @@ class BetController extends Controller
         Request::validate([
             'event' => ['required', 'max:50'],
             'selection' => ['required', 'max:50'],
+            'category' => ['required', 'max:50'],
             'bookie' => ['required', 'max:50'],
             'stake' => ['required', 'max:50'],
             'odds' => ['required', 'max:50'],
@@ -90,6 +95,7 @@ class BetController extends Controller
                 'match_id' => Request::get('match_id'),
                 'event' => Request::get('event'),
                 'selection' => Request::get('selection'),
+                'category' => Request::get('category'),
                 'bookie' => Request::get('bookie'),
                 'stake' => Request::get('stake'),
                 'odds' => Request::get('odds'),
@@ -126,7 +132,10 @@ class BetController extends Controller
         $bet = Bet::find($id);
 
         return Inertia::render('Bet', [
-            'bet' => $bet
+            'bet' => $bet,
+            'betTypes' => BetType::get()->mapWithKeys(function ($item) {
+                return [$item->id => $item->name];
+            }),
         ]);
     }
 
@@ -134,7 +143,8 @@ class BetController extends Controller
     {
         $bet = Bet::find($id);
         return Inertia::render('BetEdit', [
-            'bet' => $bet
+            'bet' => $bet,
+            'betTypes' => BetType::get(),
         ]);
     }
 

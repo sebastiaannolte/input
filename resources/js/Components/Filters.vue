@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex items-center mb-5">
     <div class="flex-grow">
       <span
         v-for="(filter, key) in activeFilters"
@@ -16,7 +16,8 @@
           font-medium
           bg-indigo-100
           text-indigo-700
-          mr-2
+          mr-1
+          mb-1
         "
       >
         <span class="capitalize font-bold">{{ key }}</span
@@ -57,28 +58,6 @@
         </button>
       </span>
     </div>
-    <div class="px-4 font-light leading-4 text-gray-800 cursor-default">
-      <p
-        align="right"
-        class="p-0 mx-0 mt-0 mb-5 text-base text-gray-800 box-border"
-      >
-        <button
-          type="button"
-          @click.prevent="showFilter"
-          class="
-            text-indigo-500
-            no-underline
-            box-border
-            hover:text-indigo-600
-            focus:text-indigo-600
-          "
-        >
-          <template v-if="!filterStatus">Show filter</template>
-          <template v-else>Hide filter</template>
-          >
-        </button>
-      </p>
-    </div>
   </div>
   <div class="space-y-6 lg:px-0 lg:col-span-9 mb-5" v-show="filterStatus">
     <section aria-labelledby="payment-details-heading">
@@ -98,14 +77,6 @@
               </p>
             </div>
             <div class="mt-6 grid grid-cols-6 gap-4">
-              <div class="col-span-6 sm:col-span-2">
-                <text-input
-                  v-model="filters.event.value"
-                  :error="errors"
-                  type="text"
-                  label="Event"
-                />
-              </div>
               <div class="col-span-6 sm:col-span-1">
                 <text-input
                   v-model="filters.from.value"
@@ -275,22 +246,21 @@
   </div>
 </template>
 
-
-
 <script>
 import Layout from "@/Layouts/Authenticated";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/Components/Pagination";
-import { forEach } from "lodash";
+import ShowFilterButton from "@/Components/ShowFilterButton";
 
 export default {
   layout: Layout,
-  components: { TextInput, TextInputWithAddOn, Pagination },
+  components: { TextInput, TextInputWithAddOn, Pagination, ShowFilterButton },
 
   props: {
     propFilters: Object,
     showFilter: Boolean,
+    filterButton: Boolean,
   },
   data() {
     return {
@@ -307,11 +277,6 @@ export default {
       pageNumber: 1,
       perPage: 25,
       testFilters: {
-        event: {
-          value: null,
-          type: "like",
-          col: "event",
-        },
         from: {
           value: null,
           type: "min",
@@ -378,6 +343,10 @@ export default {
     if (this.showFilter == true) {
       this.filterStatus = true;
     }
+
+    // this.emitter.on("filter:show", (status) => {
+    //   this.filterStatus = status;
+    // });
   },
 
   methods: {

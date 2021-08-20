@@ -6,8 +6,17 @@
     :errors="errors"
     @betFormSubmit="handleSubmit"
     :processing="betForm.processing"
+    :betTypes="betTypes"
   ></bet-form>
-  <bets :bets="bets" :filters="filters" :showFilter="showFilter" />
+  <bets
+    :bets="bets"
+    :filters="filters"
+    :showFilter="showFilter"
+    :filterButton="true"
+    :filter-route="
+      this.route('userhome', this.$page.props.auth.user.username)
+    "
+  />
 </template>
 
 <script>
@@ -31,6 +40,7 @@ export default {
     filters: Array,
     showFilter: Boolean,
     upcommingBets: Object,
+    betTypes: Object,
   },
   data() {
     return {
@@ -45,14 +55,12 @@ export default {
 
   methods: {
     handleSubmit(bet) {
-      console.log(bet.clearInputs);
       this.betForm = this.$inertia.form(bet);
       this.betForm.post(this.route("bet.store"), {
         preserveScroll: true,
         onSuccess: () =>
           this.betForm.clearInputs ? this.emitter.emit("event:clear") : "",
       });
-      console.log(this.betForm.clearInputs);
     },
 
     setPageTitle() {

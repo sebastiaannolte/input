@@ -137,10 +137,16 @@
           {{ bet.event }}
         </div>
       </div>
-      <div class="col-span-8 sm:col-span-4">
+      <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Selection</div>
         <div class="p-2 mb-2 font-bold">
           {{ bet.selection }}
+        </div>
+      </div>
+      <div class="col-span-4 sm:col-span-2">
+        <div class="p-2">Category</div>
+        <div class="p-2 mb-2 font-bold">
+          {{ categoriesAsString() }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -203,12 +209,14 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
+import { forIn } from "lodash";
 
 export default {
   layout: Layout,
 
   props: {
     bet: Object,
+    betTypes: Object,
   },
   data() {
     return {
@@ -228,6 +236,20 @@ export default {
       if (confirm("Are you sure you want to delete this bet?")) {
         this.$inertia.delete(this.route("bet.delete", this.bet.id));
       }
+    },
+
+    categoriesAsString() {
+      if(!this.bet.category){
+        return;
+      }
+      var categories = JSON.parse(this.bet.category);
+      console.log(categories);
+      var categoryNames = [];
+      for (var key in categories) {
+        var value = categories[key];
+        categoryNames.push(this.betTypes[value]);
+      }
+      return categoryNames.join(", ");
     },
   },
 };

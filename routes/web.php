@@ -1,15 +1,13 @@
 <?php
 
 use App\Http\Controllers\BetController;
+use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\UserSettingController;
-use App\Lib\GamesApi;
-use App\Models\Bet;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +40,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('{username}/settings', [UserSettingController::class, 'index'])->name('userSettings.index');
     Route::post('{username}/settings', [UserSettingController::class, 'store'])->name('userSettings.store');
     Route::get('{username}/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('{username}/competition/{id}', [SpecialStatsController::class, 'show'])->name('competitions');
+    Route::get('{username}/special', [SpecialStatsController::class, 'special'])->name('special');
+    Route::get('{username}/referee/{name}', [SpecialStatsController::class, 'referee'])->name('referee');
+    Route::get('{username}/venue/{name}', [SpecialStatsController::class, 'venue'])->name('venue');
+    Route::get('{username}/team/{id}', [SpecialStatsController::class, 'team'])->name('team');
     Route::put('{username}/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/{username}', [BetController::class, 'index'])->name('userhome');
 });

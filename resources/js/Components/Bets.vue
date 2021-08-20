@@ -1,21 +1,27 @@
 <template>
-  <Filters
-    :prop-filters="filters"
-    :show-filter="showFilter"
-    @filterSubmit="handleFilter"
-  />
+  <div class="flex justify-between mb-5">
+    <active-filters
+      class="flex items-center"
+      :prop-filters="filters"
+      @filterSubmit="handleFilter"
+    />
+    <show-filter-button v-if="filterButton" />
+    <filters-slide-over :prop-filters="filters" @filterSubmit="handleFilter" />
+  </div>
   <div class="flex flex-col">
-    <div class="-my-2 overflow-x-auto">
+    <div class="-my-2">
       <div class="py-2 align-middle inline-block min-w-full">
         <div
           class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
         >
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="table-fixed min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
                 <th
                   scope="col"
                   class="
+                    hidden
+                    sm:table-cell
                     px-6
                     py-3
                     text-left text-xs
@@ -30,6 +36,8 @@
                 <th
                   scope="col"
                   class="
+                    w-full
+                    sm:w-auto
                     px-6
                     py-3
                     text-left text-xs
@@ -44,6 +52,8 @@
                 <th
                   scope="col"
                   class="
+                    w-full
+                    sm:w-auto
                     px-6
                     py-3
                     text-left text-xs
@@ -58,6 +68,8 @@
                 <th
                   scope="col"
                   class="
+                    hidden
+                    sm:table-cell
                     px-6
                     py-3
                     text-left text-xs
@@ -72,6 +84,8 @@
                 <th
                   scope="col"
                   class="
+                    hidden
+                    sm:table-cell
                     px-6
                     py-3
                     text-left text-xs
@@ -115,6 +129,8 @@
               >
                 <td
                   class="
+                    hidden
+                    sm:table-cell
                     px-6
                     py-4
                     whitespace-nowrap
@@ -125,25 +141,47 @@
                 >
                   {{ bet.date }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td
+                  class="px-6 py-4 sm:whitespace-nowrap text-sm text-gray-500"
+                >
                   {{ bet.event }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td
+                  class="px-6 py-4 sm:whitespace-nowrap text-sm text-gray-500"
+                >
                   {{ bet.selection }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td
+                  class="
+                    px-6
+                    py-4
+                    whitespace-nowrap
+                    text-sm text-gray-500
+                    hidden
+                    sm:table-cell
+                  "
+                >
                   {{ bet.stake }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td
+                  class="
+                    px-6
+                    py-4
+                    whitespace-nowrap
+                    text-sm text-gray-500
+                    hidden
+                    sm:table-cell
+                  "
+                >
                   {{ bet.odds }}
                 </td>
                 <td
                   class="px-6 py-3 whitespace-nowrap text-sm text-gray-500"
                   @click.prevent="showDropdown(key)"
                 >
-                  <div>
-                    <div v-if="activeKey != key">
-                      <div
+                  <span>
+                    <span v-if="activeKey != key">
+                      <span
                         v-if="bet.result"
                         class="flex justify-between items-center"
                       >
@@ -160,7 +198,7 @@
                         >
                           {{ bet.result }}
                         </span>
-                      </div>
+                      </span>
                       <span
                         v-else
                         class="
@@ -176,8 +214,8 @@
                       >
                         {{ bet.status }}
                       </span>
-                    </div>
-                  </div>
+                    </span>
+                  </span>
                   <select
                     @focusout="handleFocusOut"
                     class="
@@ -228,7 +266,7 @@
         </div>
       </div>
     </div>
-    <pagination :links="bets.links" />
+    <pagination :data="bets" />
   </div>
 </template>
 
@@ -240,18 +278,32 @@ import { Inertia } from "@inertiajs/inertia";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/Components/Pagination";
-import Filters from "@/Components/Filters";
+import FiltersSlideOver from "@/Components/FiltersSlideOver";
+import ActiveFilters from "@/Components/ActiveFilters";
+import ShowFilterButton from "@/Components/ShowFilterButton";
 import pickBy from "lodash/pickBy";
 
 export default {
   layout: Layout,
-  components: { TextInput, TextInputWithAddOn, Pagination, Filters },
+  components: {
+    TextInput,
+    TextInputWithAddOn,
+    Pagination,
+    FiltersSlideOver,
+    ActiveFilters,
+    ShowFilterButton,
+  },
 
   props: {
     bets: Object,
     errors: Object,
     filters: Array,
     showFilter: Boolean,
+    filterRoute: String,
+    filterButton: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -275,6 +327,14 @@ export default {
         void: {
           border: "border-gray-300",
           label: "bg-gray-100 text-gray-800",
+        },
+        halfwon: {
+          border: "border-green-500",
+          label: "bg-green-100 text-green-800",
+        },
+        halflost: {
+          border: "border-red-500",
+          label: "bg-red-100 text-red-800",
         },
       },
       localFilters: {},
@@ -309,7 +369,7 @@ export default {
       }
 
       this.$inertia.get(
-        this.route("userhome", this.user.username),
+        this.filterRoute,
         pickBy({
           filters: localFilters,
           page: pageNumber,
@@ -361,8 +421,12 @@ export default {
         status = -currentBet.stake;
       } else if (selectedStatus == "new") {
         status = null;
-      } else if (selectedStatus == "lost") {
+      } else if (selectedStatus == "void") {
         status = 0;
+      } else if (selectedStatus == "halfwon") {
+        status = "+" + ((currentBet.stake / 2) * currentBet.odds).toFixed(2);
+      } else if (selectedStatus == "halflost") {
+        status = "-" + (currentBet.stake / 2).toFixed(2);
       }
 
       this.bets.data[this.activeKey].result = status;

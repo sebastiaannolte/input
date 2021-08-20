@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bookmaker;
 use App\Models\Setting;
 use App\Models\UserSetting;
 use Illuminate\Support\Facades\Request;
@@ -13,13 +14,19 @@ class UserSettingController extends Controller
 {
     public function index()
     {
-        return Inertia::render('UserSettings', []);
+        return Inertia::render('UserSettings', [
+            'bookmakers' => Bookmaker::get(),
+        ]);
     }
 
     public function store()
     {
         foreach (Request::all() as $key => $value) {
             $setting = Setting::where('name', $key)->first();
+            $value = $value['value'];
+            if($setting->special == 1){
+                $value = json_encode($value);
+            }
             UserSetting::updateOrCreate(
                 ['user_id' => Auth::user()->id, 'setting_id' => $setting->id],
                 ['value' => $value]

@@ -5,6 +5,7 @@
     :errors="errors"
     @betFormSubmit="handleSubmit"
     :processing="betForm.processing"
+    :betTypes="this.betTypes"
   ></bet-form>
 </template>
 
@@ -21,6 +22,7 @@ export default {
   },
   props: {
     bet: Object,
+    betTypes: Object,
     errors: Object,
   },
   data() {
