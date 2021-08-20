@@ -26,9 +26,8 @@ class StatsController extends Controller
             'stats' => [
                 'roi' => $bets->clone()->roi(2),
                 'bets' => $bets->clone()->betCount(),
-                'totalStake' => $bets->clone()->totalStaked(),
+                'totalStake' => $bets->clone()->totalStaked(2),
                 'winRate' => $bets->clone()->winprecentage(2),
-
                 'profit' => $bets->clone()->units(2),
                 'avgStake' => $bets->clone()->avgStake(2),
                 'avgOdds' => $bets->clone()->avgOdds(2),
@@ -76,17 +75,17 @@ class StatsController extends Controller
         $key = $request->get('key');
         $filters = $request->get('filters');
 
-        $start = now()->subDays(200)->startOfDay();
+        $start = now()->subMonths(5)->startOfMonth();
         $end = now();
 
         $defaultFilters = [
             'from' => [
-                'value' => now()->subDays(200)->startOfDay(),
+                'value' => $start,
                 'type' => 'min',
                 'col' => 'date',
             ],
             'to' => [
-                'value' =>  now(),
+                'value' => $end,
                 'type' => 'max',
                 'col' => 'date',
             ],

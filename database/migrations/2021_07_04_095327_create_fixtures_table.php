@@ -18,10 +18,10 @@ class CreateFixturesTable extends Migration
             $table->string('home_team');
             $table->string('away_team');
             $table->string('referee')->nullable();
+            $table->integer('league_id');
+            $table->integer('venue_id')->nullable();
             $table->string('timezone');
             $table->string('date');
-            $table->integer('first_half');
-            $table->integer('second_half');
             $table->timestamps();
             $table->primary('id');
         });

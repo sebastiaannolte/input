@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\StatsController;
 use App\Lib\GamesApi;
 use Illuminate\Http\Request;
@@ -31,6 +32,9 @@ Route::middleware(['auth'])->group(function () {
     })->name('games.get');
 
     Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
+    Route::post('/comps', [SpecialStatsController::class, 'competitions'])->name('competitions.get');
+    Route::post('/comp', [SpecialStatsController::class, 'competition'])->name('competition.get');
+    Route::post('/special', [SpecialStatsController::class, 'specialStats'])->name('api.special');
 
     
 });

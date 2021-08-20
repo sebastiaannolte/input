@@ -1,9 +1,8 @@
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
     <div
       class="
         px-4
-        mb-5
         w-full
         leading-5
         text-center
@@ -21,16 +20,19 @@
           :key="key"
           class="first:text-lg first:font-bold"
         >
-          <div class="cursor-pointer hover:text-gray-700 truncate overflow-hidden" @click="scrollToElement(bet.id)"
-            >{{ moment(bet.date).format("MMM DD HH:mm") }} - {{ bet.event }}
+          <div
+            class="cursor-pointer hover:text-gray-700 truncate overflow-hidden"
+            @click="scrollToElement(bet.id)"
+          >
+            {{ moment(bet.date).format("MMM DD HH:mm") }} - {{ bet.event }}
           </div>
         </div>
+        <div v-if="upcommingBets.length == 0">No upcomming bets</div>
       </div>
     </div>
     <div
       class="
         px-4
-        mb-5
         w-full
         leading-4
         text-center
@@ -41,7 +43,7 @@
         sm:overflow-hidden
       "
     >
-      <div class="flex justify-center items-center flex-row h-full">
+      <div class="flex justify-center sm:items-center flex-row h-full">
         <div class="flex flex-col flex-1">
           <span>Bets</span>
           <span class="pt-3 font-bold">{{ stats.totalBets }}</span>
@@ -88,7 +90,6 @@ export default {
 
   methods: {
     scrollToElement(id) {
-      console.log('scroll');
       this.emitter.emit("event:scroll", id);
     },
   },

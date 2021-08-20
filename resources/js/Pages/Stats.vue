@@ -1,5 +1,6 @@
 <template>
   <Head :title="title" />
+  <filters-slide-over :prop-filters="filters" @filterSubmit="handleFilter" />
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
     <div
       class="
@@ -74,11 +75,10 @@
       </div>
     </div>
   </div>
-  <Filters
-    :prop-filters="filters"
-    :show-filter="showFilter"
-    @filterSubmit="handleFilter"
-  />
+  <div class="flex justify-end mb-5">
+    <show-filter-button />
+  </div>
+  <active-filters :prop-filters="filters" @filterSubmit="handleFilter" />
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
       <label for="tabs" class="sr-only">Select a tab</label>
@@ -205,11 +205,26 @@
                     v-for="(values, key) in values"
                     :key="key"
                   >
-                    {{ values.value }}{{values.type}}
+                    {{ values.value }}{{ values.type }}
                   </td>
                 </tr>
               </tbody>
             </table>
+            <div
+              v-if="!sortTable || sortTable.length == 0"
+              class="
+                bg-white
+                col-span-1
+                px-6
+                py-4
+                whitespace-nowrap
+                text-sm
+                font-medium
+                text-gray-900 text-center
+              "
+            >
+              No results
+            </div>
           </div>
         </div>
       </div>
@@ -217,21 +232,24 @@
   </div>
 </template>
 
-
 <script>
 import Layout from "@/Layouts/Authenticated";
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
-import Filters from "@/Components/Filters";
+import FiltersSlideOver from "@/Components/FiltersSlideOver";
 import pickBy from "lodash/pickBy";
+import ShowFilterButton from "@/Components/ShowFilterButton";
+import ActiveFilters from "@/Components/ActiveFilters.vue";
 
 export default {
   layout: Layout,
   components: {
     Vue3ChartJs,
     Loading,
-    Filters,
+    FiltersSlideOver,
+    ShowFilterButton,
+    ActiveFilters,
   },
   props: {
     stats: Object,
@@ -338,7 +356,7 @@ export default {
       if (this.currentTable.body.length < 2) {
         return;
       }
-      if(this.sortType != tableHeader){
+      if (this.sortType != tableHeader) {
         this.isReverse = false;
       }
       this.sortType = tableHeader;
@@ -348,11 +366,11 @@ export default {
   computed: {
     sortTable: function () {
       var self = this;
-      if (!this.currentTable.body) {
+      if (!this.currentTable || !this.currentTable.body) {
         return;
       }
 
-      if(!this.sortType){
+      if (!this.sortType) {
         return this.currentTable.body;
       }
 

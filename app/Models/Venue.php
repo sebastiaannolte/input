@@ -10,4 +10,9 @@ class Venue extends Model
     use HasFactory;
 
     public $fillable = ['id', 'name', 'city'];
+
+    public function fixtures()
+    {
+        return $this->hasMany(Fixture::class, 'league_id', 'id');
+    }
 }

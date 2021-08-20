@@ -2,9 +2,12 @@
 
 namespace App\Lib;
 
+use App\Models\BetType;
+use App\Models\Bookmaker;
 use App\Models\Fixture;
 use App\Models\League;
 use App\Models\Team;
+use App\Models\TeamLeague;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -74,6 +77,13 @@ class GamesApi
                 ]
             );
 
+            TeamLeague::updateOrCreate(
+                [
+                    'team_id' => $teams['home']['id'],
+                    'league_id' => $league['id'],
+                ]
+            );
+
             // Away team
             Team::updateOrCreate(
                 [
@@ -85,6 +95,14 @@ class GamesApi
                 ]
             );
 
+            TeamLeague::updateOrCreate(
+                [
+                    'team_id' => $teams['away']['id'],
+                    'league_id' => $league['id'],
+                ]
+            );
+
+
             Fixture::updateOrCreate(
                 [
                     'id' => $fixture['id'],
@@ -93,16 +111,67 @@ class GamesApi
                     'home_team' => $teams['home']['id'],
                     'away_team' => $teams['away']['id'],
                     'referee' => $fixture['referee'],
+                    'league_id' => $league['id'],
+                    'venue_id' => $venue['id'] ?: NULL,
                     'timezone' => $fixture['timezone'],
                     'date' => Carbon::parse($fixture['date']),
-                    'first_half' => $fixture['periods']['first'],
-                    'second_half' => $fixture['periods']['second'],
 
                 ]
             );
         }
         return response()
             ->json(['message' => count($games) . ' games found']);
+    }
+
+    public static function getBookmakers($parameters = false)
+    {
+        $response = Http::withHeaders([
+            'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
+            'x-rapidapi-key' => 'd6161131a5msh70042df8c8732dbp158a44jsn4011b4c5834b'
+        ])->get('https://api-football-v1.p.rapidapi.com/v3/odds/bookmakers');
+
+
+        $json =  $response->body();
+
+        $bookmakers = json_decode($json, true)['response'];
+
+        foreach ($bookmakers as $key => $bookmaker) {
+
+            Bookmaker::updateOrCreate(
+                [
+                    'id' => $bookmaker['id'],
+                ],
+                [
+                    'name' => $bookmaker['name'],
+                ]
+            );
+        }
+    }
+
+    public static function getBetTypes()
+    {
+        $response = Http::withHeaders([
+            'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
+            'x-rapidapi-key' => 'd6161131a5msh70042df8c8732dbp158a44jsn4011b4c5834b'
+        ])->get('https://api-football-v1.p.rapidapi.com/v3/odds/bets');
+
+
+        $json =  $response->body();
+
+        $betTypes = json_decode($json, true)['response'];
+        foreach ($betTypes as $key => $betType) {
+            if(!$betType['name']){
+                continue;
+            }
+            BetType::updateOrCreate(
+                [
+                    'id' => $betType['id'],
+                ],
+                [
+                    'name' => $betType['name'],
+                ]
+            );
+        }
     }
 
     public static function search($keyword)

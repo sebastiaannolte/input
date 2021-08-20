@@ -18,6 +18,7 @@ class CreateBetsTable extends Migration
             $table->integer('match_id')->nullable();
             $table->string('event')->nullable();
             $table->string('selection');
+            $table->string('category');
             $table->string('bookie');
             $table->double('stake');
             $table->double('odds');

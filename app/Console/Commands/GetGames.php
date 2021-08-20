@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Lib\GamesApi;
+use Carbon\CarbonPeriod;
 use Illuminate\Console\Command;
 
 class GetGames extends Command
@@ -39,6 +40,11 @@ class GetGames extends Command
     public function handle()
     {
         $stats = new GamesApi;
-        dd($stats->get());
+
+        $period = CarbonPeriod::create('2021-08-09', '2021-08-14');
+        foreach ($period as $date) {
+            dump($date->format('Y-m-d'));
+            $stats->get($date->format('Y-m-d'));
+        }
     }
 }

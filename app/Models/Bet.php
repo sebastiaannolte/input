@@ -11,7 +11,12 @@ class Bet extends Model
 {
     use HasFactory;
 
-    public $fillable = ['match_id', 'event', 'selection', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result', 'type'];
+    public $fillable = ['match_id', 'event', 'selection', 'category', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result', 'type'];
+
+    public function fixture()
+    {
+        return $this->hasOne(Fixture::class, 'id', 'match_id');
+    }
 
     public function scopeUser($query, $id)
     {
@@ -30,7 +35,7 @@ class Bet extends Model
 
     public function scopeWonBets($query)
     {
-        return $query->where('status', 'won')->count();
+        return $query->where('status', 'won')->orWhere('status', 'halfwon')->count();
     }
 
     public function scopeWinprecentage($query, $round = false)
@@ -55,6 +60,10 @@ class Bet extends Model
                 $wonUnits += ($bet->stake * $bet->odds) - $bet->stake;
             } elseif ($bet->status == 'lost') {
                 $wonUnits -= $bet->stake;
+            } elseif ($bet->status == 'halfwon') {
+                $wonUnits += (($bet->stake / 2) * $bet->odds) - $bet->stake;
+            } elseif ($bet->status == 'halflost') {
+                $wonUnits -= ($bet->stake / 2);
             }
         }
         if ($round) {

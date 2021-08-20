@@ -17,6 +17,7 @@
     <input
       @input="check"
       @keydown.enter.prevent="onEnter"
+      @keydown.tab="onTab"
       @blur="outOfFocus"
       v-model="autocomplete"
       ref="input"
@@ -130,6 +131,12 @@ export default {
     },
 
     onEnter() {
+      if (this.foundOption) {
+        this.autocomplete = this.foundOption;
+      }
+    },
+
+    onTab() {
       if (this.foundOption) {
         this.autocomplete = this.foundOption;
       }

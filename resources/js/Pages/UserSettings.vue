@@ -2,7 +2,7 @@
   <Head title="Settings" />
   <form action="#" method="POST">
     <div class="shadow sm:rounded-md sm:overflow-hidden">
-      <div class="bg-white py-6 px-4 sm:p-6">
+      <div class="bg-white py-6 px-4 sm:p-6 h-96">
         <div>
           <h2
             id="payment-details-heading"
@@ -17,11 +17,11 @@
         <div class="mt-6 grid grid-cols-4 gap-6">
           <div
             class="col-span-4 sm:col-span-2"
-            v-for="(value, key) in settings"
+            v-for="(value, key) in nonSpecialSettings"
             :key="key"
           >
             <text-input
-              v-model="newSettings[key]"
+              v-model="newSettings[key].value"
               class="
                 mt-1
                 block
@@ -77,6 +77,15 @@
             </div>
             <span>{{ gamesResponse }}</span>
           </div>
+          <div class="col-span-4 sm:col-span-2">
+            <Multiselect
+              v-model="newSettings.bookmakers.value"
+              mode="tags"
+              :searchable="true"
+              :createTag="true"
+              :options="bookmakerNames"
+            />
+          </div>
         </div>
       </div>
       <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -99,12 +108,15 @@ import Button from "@/Components/Button.vue";
 import TextInput from "@/Components/TextInput.vue";
 import LoadingButton from "@/Components/LoadingButton";
 import moment from "moment";
+import Multiselect from "@vueform/multiselect";
 
 export default {
-  components: { Button, TextInput, LoadingButton },
+  components: { Button, TextInput, LoadingButton, Multiselect },
   layout: Layout,
 
-  props: {},
+  props: {
+    bookmakers: Object,
+  },
   data() {
     return {
       settings: {},
@@ -120,13 +132,15 @@ export default {
     this.date = moment().format("YYYY-MM-DD");
     this.settings = this.$page.props.auth.settings;
     this.newSettings = this.$inertia.form(this.settings);
+    this.newSettings.bookmakers.value = JSON.parse(
+      this.newSettings["bookmakers"].value
+    );
   },
 
   methods: {
     saveSettings() {
       this.newSettings.post(
         this.route("userSettings.store", this.$page.props.auth.user.username),
-        this.newSettings,
         {
           preserveScroll: true, // bets are not added to frontend
         }
@@ -144,6 +158,20 @@ export default {
     },
   },
 
-  computed: {},
+  computed: {
+    bookmakerNames() {
+      return this.bookmakers
+        .map((el) => el.name)
+        .sort((a, b) => a.localeCompare(b));
+    },
+    nonSpecialSettings() {
+      return Object.fromEntries(
+        Object.entries(this.settings).filter(
+          ([key, value]) => value.special == 0
+        )
+      );
+    },
+  },
 };
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>
