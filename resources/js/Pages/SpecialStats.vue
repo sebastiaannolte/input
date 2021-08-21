@@ -166,7 +166,7 @@
     :per-page-prop="pagination.perPage"
     :total-results-prop="pagination.totalResults"
     custom="true"
-    :type-id="this.generatedTabs.find((tab) => tab.current == true).option"
+    :type-id="this.currentTab ? currentTab.option : ''"
   />
 </template>
 
@@ -216,6 +216,7 @@ export default {
         perPage: null,
       },
       currentRoute: null,
+      currentTab: null,
     };
   },
 
@@ -232,9 +233,7 @@ export default {
 
   methods: {
     getStats(key, pageReset = false) {
-      console.log("getStats");
       var pageNumber = location.search.split("page=")[1];
-
       if (pageReset) {
         pageNumber = 1;
         history.replaceState &&
@@ -265,7 +264,6 @@ export default {
     },
 
     goTo(route, id) {
-      console.log(id);
       this.$inertia.get(
         this.route(route, [this.$page.props.auth.user.username, id]),
         pickBy({
@@ -322,7 +320,8 @@ export default {
       this.getStats(value, true);
       this.generatedTabs.forEach((tab) => {
         if (tab.option == value) {
-          this.currentRoute = value;
+          this.currentRoute = tab.route;
+          this.currentTab = tab;
           return (tab.current = true);
         }
         tab.current = false;
@@ -334,15 +333,19 @@ export default {
         var tab = this.tabs[key];
         var current = false;
         if (tab == this.type) {
-          this.currentRoute = tab;
+          this.currentRoute = tab.route;
+          this.currentTab = tab
           current = true;
         }
-        this.generatedTabs.push({ option: tab, current: current });
+        this.generatedTabs.push({ option: tab.name, current: current, route:tab.route });
       }
 
       if (!this.type) {
-        this.currentRoute = this.generatedTabs[0].option;
+        this.currentTab = this.generatedTabs[0];
+        this.currentRoute = this.generatedTabs[0].route;
         this.generatedTabs[0].current = true;
+      }else{
+        this.generatedTabs.find((tab) => tab.option == this.type).current = true;
       }
     },
 

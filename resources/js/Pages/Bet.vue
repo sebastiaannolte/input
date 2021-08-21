@@ -104,8 +104,8 @@
             >
               Delete
             </button>
-            <inertia-link
-              :href="route('bet.edit', bet.id)"
+            <button
+              @click="editBet"
               class="
                 bg-red-500
                 border border-transparent
@@ -125,7 +125,7 @@
               "
             >
               Edit
-            </inertia-link>
+            </button>
           </div>
         </div>
       </div>
@@ -176,13 +176,7 @@
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Date</div>
         <div class="p-2 mb-2 font-bold">
-          {{ bet.date.split(" ")[0] }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Time</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.date.split(" ")[1] }}
+          {{ bet.date }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -209,7 +203,6 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import { forIn } from "lodash";
 
 export default {
   layout: Layout,
@@ -232,6 +225,9 @@ export default {
   },
 
   methods: {
+    editBet() {
+      this.emitter.emit("event:edit", Object.assign({}, this.bet));
+    },
     destroy() {
       if (confirm("Are you sure you want to delete this bet?")) {
         this.$inertia.delete(this.route("bet.delete", this.bet.id));
@@ -239,7 +235,7 @@ export default {
     },
 
     categoriesAsString() {
-      if(!this.bet.category){
+      if (!this.bet.category) {
         return;
       }
       var categories = JSON.parse(this.bet.category);

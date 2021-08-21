@@ -2,14 +2,9 @@
 
 namespace App\Lib;
 
-use App\Helpers\PaginationHelper;
 use App\Models\Bet;
-use App\Models\BetType;
-use App\Models\Fixture;
 use App\Models\League;
 use App\Models\Team;
-use App\Models\TeamLeague;
-use App\Models\Venue;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
@@ -62,36 +57,46 @@ class Stats
 
     public function oddsGraph()
     {
+        $type = 'odds';
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
 
         $intervalFunctions = reset($this->filters['interval'])['days'];
         $addFunction = $intervalFunctions['function'];
         $labels = [];
-        $odds = $this->odds;
+        // $odds = $this->odds;
+
+        $query = Bet::select(DB::raw("DATE_FORMAT(`date`, '%Y-%m') as date, id, status, stake, odds, case
+        when odds > 0 and odds <= 1.5 then '< 1.5'
+        when odds > 1.5 and odds <=1.75 then '1.5-1.75'
+        when odds > 1.75 and odds <=2 then '1.75-2'
+           when odds > 2 and odds <=2.25 then '2-2.25'
+        else '2.25+'
+        end AS odd_range"),  $this->statsSelect())
+            ->filters($this->filters)
+            ->groupBy('date', 'id');
+
+
+        $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
+            ->mergeBindings($query->getQuery())
+            ->select(DB::raw('count(id), odd_range, date'), $this->statsSelect())
+            ->groupBy('odd_range', 'date');
+
+        // dd($bets->get());
 
         foreach ($carbonDates as $key => $date) {
-            foreach ($odds as $name => $value) {
-                $labels[$date->format('Y-m-d')][$name] = 0;
+            foreach ($bets->get() as $key => $odd) {
+                $labels[$date->format('Y-m-d')][$odd->odd_range] = 0;
             }
         }
 
-        foreach ($labels as $date => $values) {
-            foreach ($values as $key => $value) {
-                $minMaxOdds = $odds[$key];
-                $bets = Bet::user($this->userId)
-                    ->filters($this->filters)
-                    ->where('odds', '>', $minMaxOdds['min'])
-                    ->where('odds', '<=', $minMaxOdds['max'])
-                    ->where('date', '>=', $date)
-                    ->where('date', '<', Carbon::parse($date)->$addFunction());
-                if ($bets->count() > 0) {
-                    $labels[$date][$key] = $bets->units(2);
-                }
-            }
+        foreach ($bets->get() as $key => $value) {
+            $date = $value->date . '-01';
+            $key = $value->odd_range;
+            $labels[$date][$key] = $value->profit;
         }
+
         $table = $this->oddsTable();
-        $tableValues = array_column($table['body'], 'Type');
-
+        $tableValues = array_column($table['body'], $type);
         $values = [];
         $vals = [];
         foreach ($labels as $date => $values) {
@@ -119,14 +124,13 @@ class Stats
     {
         $type = $column;
         $intervalFunctions = reset($this->filters['interval'])['days'];
-        $addFunction = $intervalFunctions['function'];
 
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
 
         $bets = Bet::user($this->userId)
             ->filters($this->filters);
 
-        $columns = $bets->clone()
+        $columnsTable = $bets->clone()
             ->groupBy($type)
             ->select([
                 $type,
@@ -135,23 +139,34 @@ class Stats
             ->whereNotNull($type)
             ->orderByDesc('bets');
 
+        $columns = $bets->clone()
+            ->groupBy($type, 'formatted_date')
+            ->select([
+                $type,
+                DB::raw("DATE_FORMAT(`date`, '%Y-%m') as formatted_date"),
+                $this->statsSelect()
+
+            ])
+            ->whereNotNull($type)
+            ->orderByDesc('bets')->get();
+
+
+
         $labels = [];
+
         foreach ($carbonDates as $key => $date) {
-            $date = $date->format('Y-m-d');
-            foreach ($columns->get() as $columnValue => $value) {
-                $bet = $columns->clone()
-                    ->where($type, $value->$type)
-                    ->where('date', '>=', $date)
-                    ->where('date', '<', Carbon::parse($date)->$addFunction())->first();
-                if ($bet) {
-                    $labels[$date][(string)$value->$type] = $bet->profit;
-                } else {
-                    $labels[$date][(string)$value->$type] = 0;
-                }
+            foreach ($columns as $columnValue) {
+                $labels[$date->format('Y-m-d')][(string)$columnValue->$type] = 0;
             }
         }
+        
+        foreach ($columns as $key => $value) {
+            $date = $value->formatted_date.'-01';
+            $labels[$date][(string)$value->$type] = $value->profit;
+        }
 
-        $table = $this->simpleTable($type, $columns);
+
+        $table = $this->simpleTable($type, $columnsTable);
         $tableValues = array_column($table['body'], 'Type');
 
         $vals = [];
@@ -476,19 +491,26 @@ class Stats
         $type = 'odds';
         $head = $this->tableHeader($type);
 
-        $query = Bet::user($this->userId)->where('date', '>=', $this->filters['from']['value'])
-            ->where('date', '<', $this->filters['to']['value']);
-        $bets = $query;
 
-        foreach ($this->odds as $typeValue => $odd) {
-            $minMaxOdds = $odd;
-            $bet1s = $bets->clone()
-                ->filters($this->filters)
-                ->where('odds', '>', $minMaxOdds['min'])
-                ->where('odds', '<=', $minMaxOdds['max'])
-                ->where('date', '>=', now()->subMonth())
-                ->where('date', '<', now());
-            $output[$typeValue] = $this->tableBody($typeValue, $bet1s, $type)[$typeValue];
+        $query = Bet::select(DB::raw("id, status, stake, odds, case
+        when odds > 0 and odds <= 1.5 then '< 1.5'
+        when odds > 1.5 and odds <=1.75 then '1.5-1.75'
+        when odds > 1.75 and odds <=2 then '1.75-2'
+           when odds > 2 and odds <=2.25 then '2-2.25'
+        else '2.25+'
+        end AS odd_range"),  $this->statsSelect())
+            ->filters($this->filters)
+            ->groupBy('id');
+
+
+        $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
+            ->mergeBindings($query->getQuery())
+            ->select(DB::raw('count(id), odd_range'), $this->statsSelect())
+            ->groupBy('odd_range');
+
+        foreach ($bets->get() as $typeValue => $odd) {
+            $typeValue = $odd->odd_range;
+            $output[$typeValue] = $this->tableBodyRendered($typeValue, $odd, $type);
         }
 
         usort($output, function ($a, $b) {
@@ -626,70 +648,45 @@ class Stats
         $type = 'Team';
         $head = $this->tableHeader($type);
 
-        $competition = League::find($id);
+        $bets = Bet::filters($this->filters);
+        $types = $bets
+            ->join('fixtures', function ($join) use ($id) {
+                $join->on('match_id', '=', 'fixtures.id')->where('league_id', $id);
+            })
+            ->leftjoin('teams', function ($join) {
+                $join->on('teams.id', '=', 'fixtures.home_team');
+                $join->orOn('teams.id', '=', 'fixtures.away_team');
+            })
+            ->groupBy('teams.id', 'league_id')
+            ->select(['teams.id as team_id', 'teams.name as team', 'league_id', $this->statsSelect()])
+            ->orderBy('bets', 'DESC')
+            ->paginate(15);
 
-        $bets = Bet::whereHas('fixture', function ($q) use ($competition) {
-            $q->where('league_id', $competition->id);
-        })->whereNotNull('match_id')->get();
 
-        $homeBets = $bets->groupBy('fixture.home_team')->toArray();
-        $awayBets = $bets->groupBy('fixture.away_team')->toArray();
-        $allbets = [];
-
-        foreach ($homeBets as $key => $values) {
-            if (array_key_exists($key, $awayBets)) {
-                $allbets[$key] = array_merge($values, $awayBets[$key]);
-            } else {
-                $allbets[$key] = $values;
-            }
+        foreach ($types as $teamId => $bets) {
+            $typeValue = $bets->team;
+            $output[$typeValue] = $this->tableBodyRendered($typeValue, $bets, $type, [$bets->team_id, $bets->league_id]);
         }
-
-        foreach ($awayBets as $key => $values) {
-            if (array_key_exists($key, $homeBets)) {
-                $allbets[$key] = array_merge($values, $homeBets[$key]);
-            } else {
-                $allbets[$key] = $values;
-            }
-        }
-
-        foreach ($allbets as $teamId => $bets) {
-            $team = Team::find($teamId);
-            $betIds = array_column($bets, 'id');
-            $bet1s = Bet::whereIn('id', $betIds)->filters($this->filters);
-
-            $typeValue = $team->name;
-            $output[$typeValue] = $this->tableBody($typeValue, $bet1s, $type, $team->id)[$typeValue];
-        }
-
-        usort($output, function ($a, $b) {
-            return $b['Bets'] <=> $a['Bets'];
-        });
 
 
         return ['head' => $head, 'body' => array_values($output)];
     }
 
-    public function teamTable($teamId)
+    public function teamTable($teamId, $leagueId)
     {
-        $leagues = League::get()->mapWithKeys(function ($league, $key) {
-            return [$league->id => $league];
-        });
-
-        $bets = Bet::whereHas('fixture', function ($q) use ($teamId) {
+        $bets = Bet::whereHas('fixture', function ($q) use ($teamId, $leagueId) {
             $q->where('home_team', $teamId)->orWhere('away_team', $teamId);
-        })->whereNotNull('match_id')->get();
+            if ($leagueId) {
+                $q->where('league_id', $leagueId);
+            }
+        })->whereNotNull('match_id')->paginate(15);
 
-        $betsByLeague = $bets->groupBy('fixture.league_id');
-        foreach ($betsByLeague as $key => $bets) {
-            $bets = Bet::whereIn('id', $bets->pluck('id'))->filters($this->filters)->paginate(15);
+        $bets = [
+            'bets' => $bets,
+        ];
 
-            $betsByCompetition[$leagues[$key]->name] = [
-                'bets' => $bets,
-                'competition' => $leagues[$key],
-            ];
-        }
 
-        return $betsByCompetition;
+        return $bets;
     }
 
     public function statsSelect()
@@ -701,12 +698,12 @@ class Stats
 
         (SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
         SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) * odds) - stake ELSE 0 END) +
+        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
         SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) as profit,
 
         ((SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
         SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) * odds) - stake ELSE 0 END) +
+        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
         SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) / sum(bets.stake) * 100) as roi
         ');
     }
@@ -773,6 +770,8 @@ class Stats
             return $this->venueTable($sort);
         } elseif ($key == 'competitions') {
             return $this->competitionsTable($sort);
+        } elseif ($key == 'teams') {
+            return $this->teamsTable($sort);
         }
     }
 
@@ -802,10 +801,39 @@ class Stats
             ->where('fixtures.venue_id', $venueId)
             ->paginate(15);
 
-        // $bets = Bet::whereIn('id', $bets->pluck('id'))->filters($this->filters)->paginate(15);
         $betsByVenue['bets'] =
             $bets;
 
         return $betsByVenue;
+    }
+
+    public function teamsTable($sort)
+    {
+        $type = 'team';
+        $head = $this->tableHeader($type);
+
+        $bets = Bet::user($this->userId)
+            ->filters($this->filters);
+
+        $types = $bets
+            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->leftjoin('teams', function ($join) {
+                $join->on('teams.id', '=', 'fixtures.home_team');
+                $join->orOn('teams.id', '=', 'fixtures.away_team');
+            })
+            ->groupBy('teams.id')
+            ->select(['teams.id', 'teams.name as team', $this->statsSelect()])
+            ->orderBy($sort['sortType'], $sort['sortOrder'])
+            ->paginate(15);
+
+        $output = [];
+        foreach ($types as $key => $typeValue) {
+            $referee = $typeValue;
+            $typeValue = $referee->team;
+
+            $output[$typeValue] = $this->tableBodyRendered($typeValue, $referee, $type, $referee->id);
+        }
+
+        return $this->customPaginationOutput($head, $output, $types);
     }
 }

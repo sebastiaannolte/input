@@ -68,17 +68,22 @@
             <span class="font-bold">{{ stats.avgOdds }}</span>
           </div>
           <div class="flex-1 flex flex-col justify-between">
-            <span class="mb-2">Avg result</span>
-            <span class="font-bold">{{ stats.avgResult }}</span>
+            <span class="mb-2">Avg odds/stake</span>
+            <span class="font-bold">{{ stats.avgOddsStake }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="flex justify-end mb-5">
+
+  <div class="flex justify-between mb-5">
+    <active-filters
+      class="flex items-center"
+      :prop-filters="filters"
+      @filterSubmit="handleFilter"
+    />
     <show-filter-button />
   </div>
-  <active-filters :prop-filters="filters" @filterSubmit="handleFilter" />
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
       <label for="tabs" class="sr-only">Select a tab</label>

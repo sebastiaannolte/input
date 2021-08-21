@@ -61,7 +61,7 @@ class Bet extends Model
             } elseif ($bet->status == 'lost') {
                 $wonUnits -= $bet->stake;
             } elseif ($bet->status == 'halfwon') {
-                $wonUnits += (($bet->stake / 2) * $bet->odds) - $bet->stake;
+                $wonUnits += (($bet->stake / 2) + ($bet->odds / 2)) - $bet->stake;
             } elseif ($bet->status == 'halflost') {
                 $wonUnits -= ($bet->stake / 2);
             }
@@ -120,6 +120,21 @@ class Bet extends Model
             return $avgResult;
         }
 
+        return 0;
+    }
+
+    public function scopeAvgOddsStake($query, $round = false)
+    {
+        $betCount = $query->clone()->betCount();
+
+        if ($betCount) {
+
+            $avgOddsStake =  $query->selectRaW('avg(odds * (stake / 1)) as odds')->pluck('odds')->first();
+            if ($round) {
+                return round($avgOddsStake, $round);
+            }
+            return $avgOddsStake;
+        }
         return 0;
     }
 

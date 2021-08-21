@@ -424,7 +424,7 @@ export default {
       } else if (selectedStatus == "void") {
         status = 0;
       } else if (selectedStatus == "halfwon") {
-        status = "+" + ((currentBet.stake / 2) * currentBet.odds).toFixed(2);
+        status = "+" + ((currentBet.stake / 2) +  (currentBet.odds / 2)).toFixed(2);
       } else if (selectedStatus == "halflost") {
         status = "-" + (currentBet.stake / 2).toFixed(2);
       }

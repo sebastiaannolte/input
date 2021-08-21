@@ -94,7 +94,7 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/vue";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
+import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 import Logo from "@/Components/Logo";
 
 export default {
@@ -106,7 +106,6 @@ export default {
     MenuButton,
     MenuItem,
     MenuItems,
-    BellIcon,
     MenuIcon,
     XIcon,
     Logo,

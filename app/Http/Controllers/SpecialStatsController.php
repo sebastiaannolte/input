@@ -20,17 +20,18 @@ class SpecialStatsController extends Controller
         ]);
     }
 
-    public function team($username, $teamId)
+    public function team($username, $teamId, $leagueId = false)
     {
         $filters = Request::get('filters');
 
         $stats = new Stats(1, $filters);
-        $teamTable = $stats->teamTable($teamId);
+        $teamTable = $stats->teamTable($teamId, $leagueId);
         $showFilter = Request::get('showFilter') === 'true' ? true : false;
 
         return Inertia::render('Team', [
             'teamTable' => $teamTable,
             'team' => Team::find($teamId),
+            'league' => $leagueId ? League::find($leagueId) : '',
             'filters' => $filters,
             'showFilter' => $showFilter,
         ]);
@@ -62,7 +63,12 @@ class SpecialStatsController extends Controller
         $type = Request::get('type');
 
         return Inertia::render('SpecialStats', [
-            'tabs' => ['referee', 'venue', 'competitions'],
+            'tabs' => [
+                ['name' => 'referee', 'route' => 'referee'], 
+                ['name' => 'venue', 'route' => 'venue'], 
+                ['name' => 'competitions', 'route' => 'competitions'], 
+                ['name' => 'teams', 'route' => 'team']
+            ],
             'type' => $type,
             'filters' => $filters,
             'showFilter' => $showFilter,

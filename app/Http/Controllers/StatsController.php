@@ -31,7 +31,7 @@ class StatsController extends Controller
                 'profit' => $bets->clone()->units(2),
                 'avgStake' => $bets->clone()->avgStake(2),
                 'avgOdds' => $bets->clone()->avgOdds(2),
-                'avgResult' => $bets->clone()->avgResult(2),
+                'avgOddsStake' => $bets->clone()->avgOddsStake(2),
             ],
         ]);
     }

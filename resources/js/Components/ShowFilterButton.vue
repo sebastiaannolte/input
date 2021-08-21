@@ -20,15 +20,17 @@
       focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
     "
   >
-    <span>Show filter ></span>
+    <span class="flex items-center"><FilterIcon class="block h-4 w-4 mr-1.5" aria-hidden="true" />Filter</span>
   </button>
 </template>
 
 <script>
 import Layout from "@/Layouts/Authenticated";
+import { FilterIcon } from "@heroicons/vue/outline";
 
 export default {
   layout: Layout,
+  components: { FilterIcon },
 
   props: {
     status: Boolean,
