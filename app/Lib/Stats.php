@@ -79,17 +79,16 @@ class Stats
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
             ->select(DB::raw('count(id), odd_range, date'), $this->statsSelect())
-            ->groupBy('odd_range', 'date');
+            ->groupBy('odd_range', 'date')->get();
 
-        // dd($bets->get());
 
         foreach ($carbonDates as $key => $date) {
-            foreach ($bets->get() as $key => $odd) {
+            foreach ($bets as $key => $odd) {
                 $labels[$date->format('Y-m-d')][$odd->odd_range] = 0;
             }
         }
 
-        foreach ($bets->get() as $key => $value) {
+        foreach ($bets as $key => $value) {
             $date = $value->date . '-01';
             $key = $value->odd_range;
             $labels[$date][$key] = $value->profit;
@@ -264,32 +263,42 @@ class Stats
             $join->whereRaw('JSON_CONTAINS(bets.category, CAST(bet_types.id as JSON), "$")');
         })
             ->whereRaw('category <> ""')
+            ->groupBy('bet_types.id', 'formatted_date')
+            ->filters($this->filters)
+            ->select([
+                'bet_types.id',
+                'bet_types.name',
+                DB::raw("DATE_FORMAT(`date`, '%Y-%m') as formatted_date"),
+                $this->statsSelect()
+            ])->orderBy('bets', 'DESC')
+            ->whereNotNull('name')
+            ->get();
+
+        $selectionsTable = Bet::leftJoin('bet_types', function ($join) {
+            $join->whereRaw('JSON_CONTAINS(bets.category, CAST(bet_types.id as JSON), "$")');
+        })
+            ->whereRaw('category <> ""')
             ->groupBy('bet_types.id')
             ->filters($this->filters)
             ->select([
                 'bet_types.id',
                 'bet_types.name',
                 $this->statsSelect()
-            ])->orderBy('bets', 'DESC');
+            ])->orderBy('bets', 'DESC')
+            ->whereNotNull('name');
 
-
-        $labels = [];
         foreach ($carbonDates as $key => $date) {
-            foreach ($selections->get() as $selection) {
-                $bets = $selections->clone()
-                    ->where('date', '>=', Carbon::parse($date)->startOfMonth())
-                    ->where('date', '<=', Carbon::parse($date)->startOfMonth()->addMonth())
-                    ->where('bet_types.id', $selection->id)->first();
-
-                if ($bets) {
-                    $labels[$date->format('Y-m-d')][$selection->name] = $bets->profit;
-                } else {
-                    $labels[$date->format('Y-m-d')][$selection->name] = 0;
-                }
+            foreach ($selections as $key => $selection) {
+                $labels[$date->format('Y-m-d')][$selection->name] = 0;
             }
         }
 
-        $table = $this->selectionTable($selections);
+        foreach ($selections as $key => $value) {
+            $date = $value->formatted_date . '-01';
+            $labels[$date][$value->name] = $value->profit;
+        }
+
+        $table = $this->selectionTable($selectionsTable);
         $tableValues = array_column($table['body'], $type);
 
         $vals = [];
@@ -493,7 +502,6 @@ class Stats
     {
         $type = 'odds';
         $head = $this->tableHeader($type);
-
 
         $query = Bet::select(DB::raw("id, status, stake, odds, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
