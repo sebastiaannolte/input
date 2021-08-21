@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\BetType;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'myPage' => $request->user() ? $request->user()->username ==  explode("/", $request->path())[0] : false,
                 'user' => $request->user() ? $request->user() : User::where('username',  explode("/", $request->path())[0])->first(),
             ],
+            'betTypes' => BetType::get(),
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),

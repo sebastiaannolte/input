@@ -1,13 +1,6 @@
 <template>
   <Head :title="title" />
   <stats :stats="stats" :upcommingBets="upcommingBets" />
-  <bet-form
-    v-if="$page.props.userInfo.myPage"
-    :errors="errors"
-    @betFormSubmit="handleSubmit"
-    :processing="betForm.processing"
-    :betTypes="betTypes"
-  ></bet-form>
   <bets
     :bets="bets"
     :filters="filters"

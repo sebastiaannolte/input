@@ -12,39 +12,26 @@
           sm:truncate
         "
       >
-        {{ team.name }}
+        {{ team.name }} <span v-if="league"> - {{league.name}}</span>
       </h2>
     </div>
     <div class="mt-4 flex md:mt-0 md:ml-4">
       <show-filter-button />
     </div>
   </div>
-  <span v-for="(team, key) in teamTable" :key="key">
-    <div class="md:flex md:items-center md:justify-between my-3">
-      <div class="flex-1 min-w-0">
-        <h5
-          class="
-            text-lg
-            font-bold
-            leading-7
-            text-gray-900
-            sm:text-xl
-            sm:truncate
-          "
-        >
-          {{ team.competition.name }}
-        </h5>
-      </div>
-    </div>
-    <bets
-      :bets="team.bets"
-      :filters="filters"
-      :showFilter="showFilter"
-      :filter-route="
-        this.route('team', [this.$page.props.auth.user.username, this.team.id])
-      "
-    />
-  </span>
+
+  <bets
+    :bets="teamTable.bets"
+    :filters="filters"
+    :showFilter="showFilter"
+    :filter-route="
+      this.route('team', [
+        this.$page.props.auth.user.username,
+        this.team.id,
+        17,
+      ])
+    "
+  />
 </template>
 
 
@@ -62,6 +49,7 @@ export default {
   props: {
     teamTable: Object,
     team: Object,
+    league: Object,
     filters: Array,
     showFilter: Boolean,
   },

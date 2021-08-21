@@ -1,6 +1,33 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <flash-messages />
+
+  <button
+    type="button"
+    @click="openBet"
+    class="
+      fixed
+      bottom-10
+      right-10
+      inline-flex
+      items-center
+      p-3
+      border border-transparent
+      rounded-full
+      shadow-sm
+      text-white
+      bg-indigo-600
+      hover:bg-indigo-700
+      focus:outline-none
+      focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+    "
+  >
+    <PlusIconOutline class="h-6 w-6" aria-hidden="true" />
+  </button>
+  <bet-form-slide-over
+    :errors="errors"
+    :processing="betForm.processing"
+  />
   <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
@@ -221,13 +248,23 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/vue";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
+import {
+  BellIcon,
+  MenuIcon,
+  XIcon,
+  PlusIcon as PlusIconOutline,
+} from "@heroicons/vue/outline";
 import Logo from "@/Components/Logo";
 import FlashMessages from "@/Components/FlashMessages";
 import { computed } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
+import BetFormSlideOver from "@/Components/BetFormSlideOver";
 
 export default {
+  props: {
+    errors: Object,
+    bet: Object,
+  },
   components: {
     Disclosure,
     DisclosureButton,
@@ -241,6 +278,14 @@ export default {
     XIcon,
     Logo,
     FlashMessages,
+    BetFormSlideOver,
+    PlusIconOutline,
+  },
+
+  data() {
+    return {
+      betForm: this.$inertia.form(this.bet),
+    };
   },
 
   setup() {
@@ -270,6 +315,9 @@ export default {
   },
 
   methods: {
+    openBet() {
+      this.emitter.emit("betForm:show");
+    },
     url() {
       return location.pathname.substr(1);
     },

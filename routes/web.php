@@ -44,7 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('{username}/special', [SpecialStatsController::class, 'special'])->name('special');
     Route::get('{username}/referee/{name}', [SpecialStatsController::class, 'referee'])->name('referee');
     Route::get('{username}/venue/{name}', [SpecialStatsController::class, 'venue'])->name('venue');
-    Route::get('{username}/team/{id}', [SpecialStatsController::class, 'team'])->name('team');
+    Route::get('{username}/team/{id}/{league?}', [SpecialStatsController::class, 'team'])->name('team');
     Route::put('{username}/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/{username}', [BetController::class, 'index'])->name('userhome');
 });

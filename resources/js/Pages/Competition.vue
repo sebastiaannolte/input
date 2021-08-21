@@ -68,11 +68,13 @@
                     v-for="(values, key) in values"
                     :key="key"
                   >
+                  <!-- {{values.specialId.join(',')}} -->
                     <inertia-link
                       :href="
                         this.route('team', [
                           this.$page.props.auth.user.username,
-                          values.specialId,
+                          values.specialId[0],
+                          values.specialId[1]
                         ])
                       "
                       v-if="values.specialId"

@@ -273,11 +273,11 @@ export default {
     url(number) {
       var url = new URL(window.location.href);
       var search_params = url.searchParams;
-     
+
       if (this.typeId) {
         search_params.set("type", this.typeId);
       }
-       search_params.set("page", number);
+      search_params.set("page", number);
       url.search = search_params.toString();
       var new_url = url.toString();
       return new_url;
@@ -293,7 +293,7 @@ export default {
         var url = new URL(window.location.href);
         var search_params = url.searchParams;
         this.currentPage = parseInt(search_params.get("page"))
-          ? search_params.get("page")
+          ? parseInt(search_params.get("page"))
           : 1;
         this.from = this.perPage * this.currentPage - this.perPage + 1;
         this.to =

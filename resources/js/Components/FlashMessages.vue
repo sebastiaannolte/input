@@ -12,7 +12,9 @@ export default {
         this.show = true;
 
         if (this.$page.props.flash.success && this.show) {
-          this.$toast.success(this.$page.props.flash.success);
+          this.$toast.success(this.$page.props.flash.success, {
+            position: "bottom-left",
+          });
         }
 
         if (
@@ -34,7 +36,7 @@ export default {
             }
           }
 
-          this.$toast.error(errorMessage);
+          this.$toast.error(errorMessage, { position: "bottom-left" });
         }
       },
       deep: true,
