@@ -159,9 +159,9 @@ class Stats
                 $labels[$date->format('Y-m-d')][(string)$columnValue->$type] = 0;
             }
         }
-        
+
         foreach ($columns as $key => $value) {
-            $date = $value->formatted_date.'-01';
+            $date = $value->formatted_date . '-01';
             $labels[$date][(string)$value->$type] = $value->profit;
         }
 
@@ -189,9 +189,6 @@ class Stats
 
     public function profitPerDayGraph()
     {
-        $intervalFunctions = reset($this->filters['interval'])['days'];
-        $addFunction = $intervalFunctions['function'];
-
         $carbonDates = CarbonPeriod::create(now()->subMonth(), '1 day', now());
 
         $labels = [];
@@ -200,28 +197,34 @@ class Stats
             'Total profit',
         ];
 
+        $bets = Bet::user($this->userId)
+            ->filters($this->filters);
+
         foreach ($carbonDates as $key => $date) {
             foreach ($columns as $columnValue) {
                 $labels[$date->format('Y-m-d')][(string)$columnValue] = 0;
             }
         }
+
+        $bets = $bets
+            ->groupBy('formatted_date')
+            ->select([
+                DB::raw("DATE_FORMAT(`date`, '%Y-%m-%d') as formatted_date"),
+                $this->statsSelect()
+
+            ])
+            ->orderBy('formatted_date')->get();
+
+
         $totalProfit = 0;
-        foreach ($labels as $date => $values) {
-            foreach ($values as $columnValue => $value) {
-                $bets = Bet::user($this->userId)
-                    ->filters($this->filters)
-                    ->where('date', '>=', $date)
-                    ->where('date', '<', Carbon::parse($date)->addDay());
-                if ($bets->count() > 0) {
-                    if ($columnValue == 'Profit per day') {
-                        $labels[$date]['Profit per day'] = $bets->units(2);
-                        $totalProfit += $bets->units();
-                    }
-                }
-                if ($columnValue == 'Total profit') {
-                    $labels[$date][$columnValue] += round($totalProfit, 2);
-                }
+        foreach ($bets as $key => $bet) {
+            $date = $bet->formatted_date;
+            if (!array_key_exists($date, $labels) || !array_key_exists('Total profit', $labels[$date])) {
+                continue;
             }
+            $totalProfit += $bet->profit;
+            $labels[$date]['Profit per day'] = $bet->profit;
+            $labels[$date]['Total profit'] += $totalProfit;
         }
 
         $vals = [];
