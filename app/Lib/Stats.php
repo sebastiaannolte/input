@@ -219,9 +219,9 @@ class Stats
         }
 
         foreach ($labels as $date => $values) {
-           if($date < now()->subMonth()){
-               unset($labels[$date]);
-           }
+            if ($date < now()->subMonth()) {
+                unset($labels[$date]);
+            }
         }
 
         $vals = [];
@@ -840,15 +840,28 @@ class Stats
         $bets = Bet::user($this->userId)
             ->filters($this->filters);
 
-        $types = $bets
+        $home = $bets->clone()
             ->join('fixtures', 'match_id', '=', 'fixtures.id')
             ->leftjoin('teams', function ($join) {
                 $join->on('teams.id', '=', 'fixtures.home_team');
-                $join->orOn('teams.id', '=', 'fixtures.away_team');
             })
-            ->groupBy('teams.id')
-            ->select(['teams.id', 'teams.name as team', $this->statsSelect()])
-            ->orderBy($sort['sortType'], $sort['sortOrder'])
+            ->select(['teams.id as id', 'teams.name as team', 'status', 'stake', 'odds']);
+
+        $homeAndAway = $bets->clone()
+            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->leftjoin('teams', function ($join) {
+                $join->on('teams.id', '=', 'fixtures.away_team');
+            })
+            ->select(['teams.id as id', 'teams.name as team', 'status', 'stake', 'odds'])
+            ->unionAll($home);
+
+
+
+        $types = DB::table(DB::raw("({$homeAndAway->toSql()}) as bets"))
+            ->mergeBindings($homeAndAway->getQuery())
+            ->select(DB::raw('id, team'), $this->statsSelect())
+            ->groupBy('team', 'id')
+            ->orderByDesc('bets')
             ->paginate(15);
 
         $output = [];
