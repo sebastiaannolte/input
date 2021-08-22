@@ -113,12 +113,7 @@
                               <div class="col-span-4 sm:col-span-2">
                                 <autocomplete-input
                                   :options="
-                                    JSON.parse(
-                                      JSON.stringify(
-                                        $page.props.auth.settings.bookmakers
-                                          .value
-                                      )
-                                    )
+                                    $page.props.auth.settings.bookmakers.value
                                   "
                                   v-model="betData.bookie"
                                   :error="errors.bookie"
@@ -516,7 +511,7 @@ export default {
   computed: {
     formattedBetTypes() {
       return Object.keys(this.betTypes).map((key) => {
-        return { value: key, label: this.betTypes[key] };
+        return { value: key, label: this.betTypes[key].name };
       });
     },
   },
