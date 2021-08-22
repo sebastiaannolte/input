@@ -45,7 +45,7 @@ export default {
       },
     },
     type: {
-      type: String,
+      type: [String, Number],
       default: "text",
     },
     modelValue: String,

@@ -74,7 +74,7 @@
           </nav>
         </div>
       </div>
-      <div class="relative" style="height: 500px" v-if="loading">
+      <div class="relative" :style=" loading ? 'height: 500px' : ''">
         <loading v-model:active="loading" :is-full-page="false" />
       </div>
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -164,7 +164,7 @@
     :data="currentTable.body"
     :per-page-prop="pagination.perPage"
     :total-results-prop="pagination.totalResults"
-    custom="true"
+    :custom="true"
     :type-id="this.currentTab ? currentTab.option : ''"
   />
 </template>

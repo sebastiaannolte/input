@@ -91,12 +91,12 @@ class StatsController extends Controller
                 'col' => 'date',
             ],
         ];
-        
-        if (!$filters['from']['value']) {
+
+        if (!array_key_exists('from', $filters) || !$filters['from']['value'] ) {
             $filters['from'] = $defaultFilters['from'];
         }
 
-        if (!$filters['to']['value']) {
+        if (!array_key_exists('to', $filters) || !$filters['to']['value']) {
             $filters['to'] = $defaultFilters['to'];
         }
         $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);

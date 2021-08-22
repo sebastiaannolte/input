@@ -7,6 +7,7 @@ use App\Models\League;
 use App\Models\Team;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Stats
@@ -180,7 +181,7 @@ class Stats
 
     public function profitPerDayGraph()
     {
-        $carbonDates = CarbonPeriod::create($this->filters['from']['value'], '1 day', $this->filters['to']['value']);
+        $carbonDates = CarbonPeriod::create(Carbon::parse(Auth::user()->created_at), '1 day', now()->endOfDay());
 
         $labels = [];
         $columns = [
@@ -215,6 +216,12 @@ class Stats
             $totalProfit += $dateExists ? $bets[$date]->profit : 0;
             $labels[$date]['Profit per day'] = $dateExists ? $bets[$date]->profit : 0;
             $labels[$date]['Total profit'] = $totalProfit;
+        }
+
+        foreach ($labels as $date => $values) {
+           if($date < now()->subMonth()){
+               unset($labels[$date]);
+           }
         }
 
         $vals = [];
@@ -277,9 +284,10 @@ class Stats
             ])->orderBy('bets', 'DESC')
             ->whereNotNull('name');
 
+        $labels = [];
         foreach ($carbonDates as $key => $date) {
             foreach ($selections as $key => $selection) {
-                $labels[$dateSelect['format']][$selection->name] = 0;
+                $labels[$date->format($dateSelect['format'])][$selection->name] = 0;
             }
         }
 
@@ -510,6 +518,7 @@ class Stats
             ->orderBy('bets', 'DESC')
             ->groupBy('odd_range');
 
+        $output = [];
         foreach ($bets->get() as $typeValue => $odd) {
             $typeValue = $odd->odd_range;
             $output[$typeValue] = $this->tableBodyRendered($typeValue, $odd, $type);

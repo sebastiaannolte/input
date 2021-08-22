@@ -110,12 +110,14 @@
                                   mode="tags"
                                 />
                               </div>
-
                               <div class="col-span-4 sm:col-span-2">
                                 <autocomplete-input
                                   :options="
                                     JSON.parse(
-                                      $page.props.auth.settings.bookmakers.value
+                                      JSON.stringify(
+                                        $page.props.auth.settings.bookmakers
+                                          .value
+                                      )
                                     )
                                   "
                                   v-model="betData.bookie"
@@ -327,7 +329,12 @@
                     @click.prevent="save"
                     :loading="processing"
                   >
-                    <span class="flex items-center"><SaveIcon class="block h-4 w-4 mr-1.5" aria-hidden="true" />Save</span>
+                    <span class="flex items-center"
+                      ><SaveIcon
+                        class="block h-4 w-4 mr-1.5"
+                        aria-hidden="true"
+                      />Save</span
+                    >
                   </loading-button>
                 </div>
               </form>
