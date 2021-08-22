@@ -151,7 +151,7 @@
           </nav>
         </div>
       </div>
-      <div class="relative" style="height: 500px" v-if="loading">
+      <div class="relative" :style=" loading ? 'height: 500px' : ''">
         <loading v-model:active="loading" :is-full-page="false" />
       </div>
       <vue3-chart-js
@@ -371,7 +371,7 @@ export default {
     sortTable: function () {
       var self = this;
       if (!this.currentTable || !this.currentTable.body) {
-        return;
+        return false;
       }
 
       if (!this.sortType) {

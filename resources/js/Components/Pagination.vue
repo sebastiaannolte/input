@@ -233,22 +233,22 @@ export default {
     ChevronRightIcon,
   },
   props: {
-    data: Array,
+    data: Object,
     custom: {
       type: Boolean,
-      default: "false",
+      default: false,
     },
     perPageProp: {
       type: Number,
-      default: "false",
+      default: 0,
     },
     totalResultsProp: {
       type: Number,
-      default: "false",
+      default: 0,
     },
     typeId: {
-      type: String,
-      default: false,
+      type: [String, Number],
+      default: 0,
     },
   },
 
@@ -284,7 +284,7 @@ export default {
     },
 
     setPageInfo() {
-      if (this.custom == "true") {
+      if (this.custom) {
         if (!this.data) {
           return;
         }
