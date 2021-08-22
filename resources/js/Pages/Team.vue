@@ -1,6 +1,6 @@
 <template>
   <Head :title="title" />
-  <div class="md:flex md:items-center md:justify-between">
+  <div class="flex items-center justify-between">
     <div class="flex-1 min-w-0">
       <h2
         class="
@@ -36,7 +36,7 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import Bets from "@/Components/Bets";
+import Bets from "@/PageComponents/Bets";
 import ShowFilterButton from "@/Components/ShowFilterButton";
 
 export default {

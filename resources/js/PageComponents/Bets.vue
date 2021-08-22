@@ -139,7 +139,7 @@
                     text-gray-900
                   "
                 >
-                  {{ bet.date }}
+                  {{ moment(bet.date).format("DD MMM HH:mm") }}
                 </td>
                 <td
                   class="px-6 py-4 sm:whitespace-nowrap text-sm text-gray-500"
@@ -277,11 +277,12 @@ import Layout from "@/Layouts/Authenticated";
 import { Inertia } from "@inertiajs/inertia";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-import Pagination from "@/Components/Pagination";
-import FiltersSlideOver from "@/Components/FiltersSlideOver";
-import ActiveFilters from "@/Components/ActiveFilters";
+import Pagination from "@/PageComponents/Pagination";
+import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
+import ActiveFilters from "@/PageComponents/ActiveFilters";
 import ShowFilterButton from "@/Components/ShowFilterButton";
 import pickBy from "lodash/pickBy";
+import moment from "moment";
 
 export default {
   layout: Layout,
@@ -342,6 +343,7 @@ export default {
   },
 
   created() {
+    this.moment = moment;
     this.emitter.on("event:scroll", (id) => {
       this.scrollAndHighlight(id);
     });

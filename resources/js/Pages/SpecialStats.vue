@@ -171,13 +171,13 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import ActiveFilters from "@/Components/ActiveFilters";
-import FiltersSlideOver from "@/Components/FiltersSlideOver";
+import ActiveFilters from "@/PageComponents/ActiveFilters";
+import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import pickBy from "lodash/pickBy";
-import TableFilterHeader from "@/Components/TableFilterHeader";
+import TableFilterHeader from "@/PageComponents/TableFilterHeader";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
-import Pagination from "@/Components/Pagination";
+import Pagination from "@/PageComponents/Pagination";
 
 export default {
   layout: Layout,
@@ -329,7 +329,7 @@ export default {
       for (const key in this.tabs) {
         var tab = this.tabs[key];
         var current = false;
-        if (tab == this.type) {
+        if (tab.name == this.type) {
           this.currentRoute = tab.route;
           this.currentTab = tab
           current = true;
