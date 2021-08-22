@@ -260,7 +260,6 @@ export default {
     stats: Object,
     tabs: Array,
     filters: Array,
-    showFilter: Boolean,
   },
 
   data() {
@@ -315,7 +314,7 @@ export default {
 
       this.$inertia.get(
         this.route("stats.index", this.$page.props.auth.user.username),
-        pickBy({ filters: localFilters, showFilter: filters.filterStatus }),
+        pickBy({ filters: localFilters }),
         {
           preserveScroll: true,
           preserveState: true,

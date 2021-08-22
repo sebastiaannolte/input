@@ -302,7 +302,6 @@ export default {
   },
   props: {
     propFilters: Object,
-    showFilter: Boolean,
     filterButton: Boolean,
   },
   data() {
@@ -377,10 +376,6 @@ export default {
       ...this.testFilters,
       ...this.propFilters,
     };
-
-    if (this.showFilter == true) {
-      this.filterStatus = true;
-    }
 
     this.emitter.on("filter:show", (status) => {
       this.open = true;

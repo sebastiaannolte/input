@@ -23,7 +23,6 @@
   <bets
     :bets="teamTable.bets"
     :filters="filters"
-    :showFilter="showFilter"
     :filter-route="
       this.route('team', [
         this.$page.props.auth.user.username,
@@ -51,7 +50,6 @@ export default {
     team: Object,
     league: Object,
     filters: Array,
-    showFilter: Boolean,
   },
 
   data() {

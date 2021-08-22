@@ -59,37 +59,35 @@ class Stats
     {
         $type = 'odds';
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
+        $dateSelect = $this->dateSelect();
 
-        $intervalFunctions = reset($this->filters['interval'])['days'];
-        $addFunction = $intervalFunctions['function'];
-        $labels = [];
-        // $odds = $this->odds;
-
-        $query = Bet::select(DB::raw("DATE_FORMAT(`date`, '%Y-%m') as date, id, status, stake, odds, case
+        $query = Bet::select(DB::raw("id, status, stake, odds, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
-        when odds > 1.5 and odds <=1.75 then '1.5-1.75'
-        when odds > 1.75 and odds <=2 then '1.75-2'
-           when odds > 2 and odds <=2.25 then '2-2.25'
-        else '2.25+'
-        end AS odd_range"),  $this->statsSelect())
+        when odds > 1.5 and odds <= 1.75 then '1.5-1.75'
+        when odds > 1.75 and odds <= 2 then '1.75-2'
+        when odds > 2 and odds <= 2.25 then '2-2.25'
+        when odds > 2.25 and odds <= 2.50 then '2-2.25'
+        when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
+        else '2.75+'
+        end AS odd_range"),  $this->statsSelect(), $dateSelect['select'])
             ->filters($this->filters)
-            ->groupBy('date', 'id');
+            ->groupBy('formatted_date', 'id');
 
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odd_range, date'), $this->statsSelect())
-            ->groupBy('odd_range', 'date')->get();
+            ->select(DB::raw('count(id), odd_range, formatted_date'), $this->statsSelect())
+            ->groupBy('odd_range', 'formatted_date')->get();
 
-
+        $labels = [];
         foreach ($carbonDates as $key => $date) {
             foreach ($bets as $key => $odd) {
-                $labels[$date->format('Y-m-d')][$odd->odd_range] = 0;
+                $labels[$date->format($dateSelect['format'])][$odd->odd_range] = 0;
             }
         }
 
         foreach ($bets as $key => $value) {
-            $date = $value->date . '-01';
+            $date = $value->formatted_date;
             $key = $value->odd_range;
             $labels[$date][$key] = $value->profit;
         }
@@ -99,7 +97,6 @@ class Stats
         $values = [];
         $vals = [];
         foreach ($labels as $date => $values) {
-            $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
             $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($sortedLabels as $key => $value) {
                 $vals[$key][] = $value;
@@ -107,7 +104,7 @@ class Stats
         }
 
         return [
-            'labels' => array_keys($formattedLabels),
+            'labels' => array_keys($labels),
             'values' => $vals,
             'table' => $table,
         ];
@@ -122,10 +119,8 @@ class Stats
     public function simpleGraph($column)
     {
         $type = $column;
-        $intervalFunctions = reset($this->filters['interval'])['days'];
-
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
-
+        $dateSelect = $this->dateSelect();
         $bets = Bet::user($this->userId)
             ->filters($this->filters);
 
@@ -133,7 +128,7 @@ class Stats
             ->groupBy($type)
             ->select([
                 $type,
-                $this->statsSelect()
+                $this->statsSelect(),
             ])
             ->whereNotNull($type)
             ->orderByDesc('bets');
@@ -142,37 +137,34 @@ class Stats
             ->groupBy($type, 'formatted_date')
             ->select([
                 $type,
-                DB::raw("DATE_FORMAT(`date`, '%Y-%m') as formatted_date"),
+                $dateSelect['select'],
                 $this->statsSelect()
 
             ])
             ->whereNotNull($type)
             ->orderByDesc('bets')->get();
 
-
-
         $labels = [];
 
         foreach ($carbonDates as $key => $date) {
             foreach ($columns as $columnValue) {
-                $labels[$date->format('Y-m-d')][(string)$columnValue->$type] = 0;
+                $labels[$date->format($dateSelect['format'])][(string)$columnValue->$type] = 0;
             }
         }
 
+
         foreach ($columns as $key => $value) {
-            $date = $value->formatted_date . '-01';
+            $date = $value->formatted_date;
             $labels[$date][(string)$value->$type] = $value->profit;
         }
+
 
 
         $table = $this->simpleTable($type, $columnsTable);
         $tableValues = array_column($table['body'], 'Type');
 
         $vals = [];
-        $formattedLabels = [];
-
         foreach ($labels as $date => $values) {
-            $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
             $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($sortedLabels as $key => $value) {
                 $vals[$key][] = $value;
@@ -180,7 +172,7 @@ class Stats
         }
 
         return [
-            'labels' => array_keys($formattedLabels),
+            'labels' => array_keys($labels),
             'values' => $vals,
             'table' => $table,
         ];
@@ -188,7 +180,7 @@ class Stats
 
     public function profitPerDayGraph()
     {
-        $carbonDates = CarbonPeriod::create(now()->subMonth(), '1 day', now());
+        $carbonDates = CarbonPeriod::create($this->filters['from']['value'], '1 day', $this->filters['to']['value']);
 
         $labels = [];
         $columns = [
@@ -199,12 +191,6 @@ class Stats
         $bets = Bet::user($this->userId)
             ->filters($this->filters);
 
-        foreach ($carbonDates as $key => $date) {
-            foreach ($columns as $columnValue) {
-                $labels[$date->format('Y-m-d')][(string)$columnValue] = 0;
-            }
-        }
-
         $bets = $bets
             ->groupBy('formatted_date')
             ->select([
@@ -212,18 +198,23 @@ class Stats
                 $this->statsSelect()
 
             ])
-            ->orderBy('formatted_date')->get();
+            ->orderBy('formatted_date')->get()->mapWithKeys(function ($values) {
+                return [$values->formatted_date => $values];
+            });
+
+        foreach ($carbonDates as $key => $date) {
+            foreach ($columns as $columnValue) {
+                $labels[$date->format('Y-m-d')][(string)$columnValue] = 0;
+            }
+        }
 
 
         $totalProfit = 0;
-        foreach ($bets as $key => $bet) {
-            $date = $bet->formatted_date;
-            if (!array_key_exists($date, $labels) || !array_key_exists('Total profit', $labels[$date])) {
-                continue;
-            }
-            $totalProfit += $bet->profit;
-            $labels[$date]['Profit per day'] = $bet->profit;
-            $labels[$date]['Total profit'] += $totalProfit;
+        foreach ($labels as $date => $values) {
+            $dateExists = $bets->has($date);
+            $totalProfit += $dateExists ? $bets[$date]->profit : 0;
+            $labels[$date]['Profit per day'] = $dateExists ? $bets[$date]->profit : 0;
+            $labels[$date]['Total profit'] = $totalProfit;
         }
 
         $vals = [];
@@ -256,8 +247,7 @@ class Stats
     {
         $type = 'selection';
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
-        $intervalFunctions = reset($this->filters['interval'])['days'];
-        $addFunction = $intervalFunctions['function'];
+        $dateSelect = $this->dateSelect();
 
         $selections = Bet::leftJoin('bet_types', function ($join) {
             $join->whereRaw('JSON_CONTAINS(bets.category, CAST(bet_types.id as JSON), "$")');
@@ -268,7 +258,7 @@ class Stats
             ->select([
                 'bet_types.id',
                 'bet_types.name',
-                DB::raw("DATE_FORMAT(`date`, '%Y-%m') as formatted_date"),
+                $dateSelect['select'],
                 $this->statsSelect()
             ])->orderBy('bets', 'DESC')
             ->whereNotNull('name')
@@ -289,12 +279,12 @@ class Stats
 
         foreach ($carbonDates as $key => $date) {
             foreach ($selections as $key => $selection) {
-                $labels[$date->format('Y-m-d')][$selection->name] = 0;
+                $labels[$dateSelect['format']][$selection->name] = 0;
             }
         }
 
         foreach ($selections as $key => $value) {
-            $date = $value->formatted_date . '-01';
+            $date = $value->formatted_date;
             $labels[$date][$value->name] = $value->profit;
         }
 
@@ -302,9 +292,7 @@ class Stats
         $tableValues = array_column($table['body'], $type);
 
         $vals = [];
-        $formattedLabels = [];
         foreach ($labels as $date => $values) {
-            $formattedLabels[Carbon::parse($date)->format(reset($this->filters['interval'])['days']['format'])] = $values;
             $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($sortedLabels as $key => $value) {
                 $vals[$key][] = $value;
@@ -312,7 +300,7 @@ class Stats
         }
 
         return [
-            'labels' => array_keys($formattedLabels),
+            'labels' => array_keys($labels),
             'values' => $vals,
             'table' => $table,
         ];
@@ -505,10 +493,12 @@ class Stats
 
         $query = Bet::select(DB::raw("id, status, stake, odds, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
-        when odds > 1.5 and odds <=1.75 then '1.5-1.75'
-        when odds > 1.75 and odds <=2 then '1.75-2'
-           when odds > 2 and odds <=2.25 then '2-2.25'
-        else '2.25+'
+        when odds > 1.5 and odds <= 1.75 then '1.5-1.75'
+        when odds > 1.75 and odds <= 2 then '1.75-2'
+        when odds > 2 and odds <= 2.25 then '2-2.25'
+        when odds > 2.25 and odds <= 2.50 then '2-2.25'
+        when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
+        else '2.75+'
         end AS odd_range"),  $this->statsSelect())
             ->filters($this->filters)
             ->groupBy('id');
@@ -517,17 +507,13 @@ class Stats
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
             ->select(DB::raw('count(id), odd_range'), $this->statsSelect())
+            ->orderBy('bets', 'DESC')
             ->groupBy('odd_range');
 
         foreach ($bets->get() as $typeValue => $odd) {
             $typeValue = $odd->odd_range;
             $output[$typeValue] = $this->tableBodyRendered($typeValue, $odd, $type);
         }
-
-        usort($output, function ($a, $b) {
-            return $b['Bets'] <=> $a['Bets'];
-        });
-
 
         return ['head' => $head, 'body' => array_values($output)];
     }
@@ -818,6 +804,25 @@ class Stats
         return $betsByVenue;
     }
 
+    public function competitionBets($league_id)
+    {
+        $bets = Bet::user($this->userId)
+            ->filters($this->filters);
+
+        $bets = $bets
+            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->join('leagues', 'league_id', '=', 'leagues.id')
+            ->groupBy('bets.id')
+            ->whereNotNull('fixtures.league_id')
+            ->where('fixtures.league_id', $league_id)
+            ->paginate(15);
+
+        $betsByLeague['bets'] =
+            $bets;
+
+        return $betsByLeague;
+    }
+
     public function teamsTable($sort)
     {
         $type = 'team';
@@ -846,5 +851,11 @@ class Stats
         }
 
         return $this->customPaginationOutput($head, $output, $types);
+    }
+
+    public function dateSelect()
+    {
+        $interval = reset($this->filters['interval']);
+        return ['select' => DB::raw($interval['formatting']['select']), 'format' => $interval['formatting']['format']];
     }
 }

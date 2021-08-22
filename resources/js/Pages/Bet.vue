@@ -102,7 +102,12 @@
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
               "
             >
-              Delete
+             <span class="flex items-center"
+                ><TrashIcon
+                  class="block h-4 w-4 mr-1.5"
+                  aria-hidden="true"
+                />Delete</span
+              >
             </button>
             <button
               @click="editBet"
@@ -113,7 +118,6 @@
                 shadow-sm
                 py-2
                 px-4
-                mr-2
                 inline-flex
                 justify-center
                 text-sm
@@ -124,7 +128,12 @@
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
               "
             >
-              Edit
+              <span class="flex items-center"
+                ><PencilAltIcon
+                  class="block h-4 w-4 mr-1.5"
+                  aria-hidden="true"
+                />Edit</span
+              >
             </button>
           </div>
         </div>
@@ -203,9 +212,12 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
+import { PencilAltIcon, TrashIcon } from "@heroicons/vue/outline";
 
 export default {
   layout: Layout,
+
+  components: {PencilAltIcon, TrashIcon},
 
   props: {
     bet: Object,

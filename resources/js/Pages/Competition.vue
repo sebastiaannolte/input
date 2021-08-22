@@ -1,11 +1,33 @@
 <template>
   <Head :title="title" />
-  <table-filter-header :title="competition.name" />
-  <Filters
-    :prop-filters="filters"
-    :show-filter="showFilter"
-    @filterSubmit="handleFilter"
-  />
+  <table-filter-header :title="competition.name">
+    <template v-slot:button>
+     <inertia-link
+     :href="this.route('competition.bets', [$page.props.auth.user.username, competition.id])"
+    type="button"
+    class="
+      ml-3
+      inline-flex
+      items-center
+      px-4
+      py-2
+      border border-transparent
+      rounded-md
+      shadow-sm
+      text-sm
+      font-medium
+      text-white
+      bg-indigo-600
+      hover:bg-indigo-700
+      focus:outline-none
+      focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+    "
+  >
+    <span class="flex items-center">All {{competition.name}} bets</span>
+  </inertia-link>
+  </template>
+  </table-filter-header>
+
   <div class="flex flex-col items-center">
     <div
       class="
@@ -68,7 +90,6 @@
                     v-for="(values, key) in values"
                     :key="key"
                   >
-                  <!-- {{values.specialId.join(',')}} -->
                     <inertia-link
                       :href="
                         this.route('team', [
@@ -94,19 +115,16 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import Filters from "@/Components/Filters";
 import pickBy from "lodash/pickBy";
 import TableFilterHeader from "@/Components/TableFilterHeader";
 
 export default {
   layout: Layout,
   components: {
-    Filters,
     TableFilterHeader,
   },
   props: {
     filters: Array,
-    showFilter: Boolean,
     competition: Number,
   },
 
@@ -149,7 +167,6 @@ export default {
           pickBy({
             competition: this.competition.id,
             filters: localFilters,
-            showFilter: filterStatus,
           })
         )
         .then((response) => {

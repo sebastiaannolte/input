@@ -298,7 +298,6 @@ export default {
     bets: Object,
     errors: Object,
     filters: Array,
-    showFilter: Boolean,
     filterRoute: String,
     filterButton: {
       type: Boolean,
@@ -373,7 +372,6 @@ export default {
         pickBy({
           filters: localFilters,
           page: pageNumber,
-          showFilter: filters.filterStatus,
         }),
         {
           preserveScroll: true,

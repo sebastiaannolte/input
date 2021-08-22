@@ -7,7 +7,6 @@
   />
   <filters-slide-over
     :prop-filters="filters"
-    :show-filter="showFilter"
     @filterSubmit="handleFilter"
   />
   <div class="flex flex-col items-center">
@@ -191,7 +190,6 @@ export default {
   },
   props: {
     filters: Array,
-    showFilter: Boolean,
     tabs: Array,
     type: String,
   },
@@ -293,7 +291,6 @@ export default {
         this.route("special", this.$page.props.auth.user.username),
         pickBy({
           filters: localFilters,
-          showFilter: filters.filterStatus,
           type: currentTab.option,
           sort: this.sort,
         }),

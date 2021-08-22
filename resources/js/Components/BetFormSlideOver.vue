@@ -327,7 +327,7 @@
                     @click.prevent="save"
                     :loading="processing"
                   >
-                    Save
+                    <span class="flex items-center"><SaveIcon class="block h-4 w-4 mr-1.5" aria-hidden="true" />Save</span>
                   </loading-button>
                 </div>
               </form>
@@ -340,7 +340,6 @@
 </template>
 
 <script>
-// import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import Events from "@/Components/Events.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -348,7 +347,6 @@ import AutocompleteInput from "@/Components/AutocompleteInput.vue";
 import LoadingButton from "@/Components/LoadingButton.vue";
 import Dropdown from "@/Components/Dropdown";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-// import Stats from "@/Components/Stats.vue";
 import moment from "moment";
 import Multiselect from "@vueform/multiselect";
 import {
@@ -358,12 +356,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { XIcon } from "@heroicons/vue/outline";
-import {
-  LinkIcon,
-  PlusIcon,
-  QuestionMarkCircleIcon,
-} from "@heroicons/vue/solid";
+import { XIcon, SaveIcon } from "@heroicons/vue/outline";
 import { ref, watch, getCurrentInstance } from "vue";
 
 export default {
@@ -373,14 +366,11 @@ export default {
     DialogTitle,
     TransitionChild,
     TransitionRoot,
-    LinkIcon,
-    PlusIcon,
-    QuestionMarkCircleIcon,
     XIcon,
+    SaveIcon,
     Button,
     Events,
     TextInput,
-    // Stats,
     TextInputWithAddOn,
     Dropdown,
     LoadingButton,
@@ -464,9 +454,9 @@ export default {
         this.betForm.put(route, {
           preserveScroll: true,
           onSuccess: () => {
+            this.setBetData();
             this.open = false;
             this.emitter.emit("event:clear");
-            this.setBetData();
           },
         });
       } else {
@@ -475,9 +465,9 @@ export default {
           preserveScroll: true,
           onSuccess: () => {
             if (this.betForm.clearInputs) {
-              this.emitter.emit("event:clear");
-              this.open = false;
               this.setBetData();
+              this.open = false;
+              this.emitter.emit("event:clear");
             }
           },
         });
@@ -519,7 +509,7 @@ export default {
   computed: {
     formattedBetTypes() {
       return Object.keys(this.betTypes).map((key) => {
-        return { value: key, label: this.betTypes[key].name };
+        return { value: key, label: this.betTypes[key] };
       });
     },
   },
