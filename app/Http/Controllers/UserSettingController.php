@@ -24,7 +24,7 @@ class UserSettingController extends Controller
         foreach (Request::all() as $key => $value) {
             $setting = Setting::where('name', $key)->first();
             $value = $value['value'];
-            if($setting->special == 1){
+            if($setting->type == 'array'){
                 $value = json_encode($value);
             }
             UserSetting::updateOrCreate(

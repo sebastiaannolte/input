@@ -55,9 +55,9 @@ class User extends Authenticatable
           return [$setting->setting_id => $setting->value];
         });
         $settings = Setting::get();
-        
+        // dd($settings);
         return $settings->mapWithKeys(function ($setting) use ($userSettings) {
-          return [$setting->name => ['value' => array_key_exists($setting->id, $userSettings->toArray()) ? $userSettings[$setting->id] : null, 'special' => $setting->special]];
+          return [$setting->name => ['value' => array_key_exists($setting->id, $userSettings->toArray()) ? ($setting->type == 'array' ? json_decode($userSettings[$setting->id]) : $userSettings[$setting->id]) : null, 'type' => $setting->type]];
         });
     }
 }

@@ -17,7 +17,7 @@
         <div class="mt-6 grid grid-cols-4 gap-6">
           <div
             class="col-span-4 sm:col-span-2"
-            v-for="(value, key) in nonSpecialSettings"
+            v-for="(value, key) in stringSettings"
             :key="key"
           >
             <text-input
@@ -132,9 +132,6 @@ export default {
     this.date = moment().format("YYYY-MM-DD");
     this.settings = this.$page.props.auth.settings;
     this.newSettings = this.$inertia.form(this.settings);
-    this.newSettings.bookmakers.value = JSON.parse(
-      this.newSettings["bookmakers"].value
-    );
   },
 
   methods: {
@@ -164,10 +161,10 @@ export default {
         .map((el) => el.name)
         .sort((a, b) => a.localeCompare(b));
     },
-    nonSpecialSettings() {
+    stringSettings() {
       return Object.fromEntries(
         Object.entries(this.settings).filter(
-          ([key, value]) => value.special == 0
+          ([key, value]) => value.type == 'string'
         )
       );
     },
