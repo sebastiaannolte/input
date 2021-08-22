@@ -271,6 +271,9 @@ export default {
 
   methods: {
     url(number) {
+      if (typeof number != "number") {
+        return;
+      }
       var url = new URL(window.location.href);
       var search_params = url.searchParams;
 

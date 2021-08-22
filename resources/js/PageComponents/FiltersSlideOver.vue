@@ -274,7 +274,7 @@ import {
 } from "@heroicons/vue/solid";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-import Pagination from "@/Components/Pagination";
+import Pagination from "@/PageComponents/Pagination";
 import ShowFilterButton from "@/Components/ShowFilterButton";
 
 export default {

@@ -617,7 +617,7 @@ class Stats
 
     public function competitionsTable($sort)
     {
-        $type = 'competition';
+        $type = 'country/competition';
         $head = $this->tableHeader($type);
 
         $bets = Bet::user($this->userId)
@@ -630,8 +630,8 @@ class Stats
             ->whereNotNull('fixtures.league_id')
             ->select([
                 'league_id',
-                'leagues.country',
-                'leagues.name',
+                'leagues.country as country/competition',
+                'leagues.name as competition',
                 $this->statsSelect()
             ])
             ->orderBy($sort['sortType'], $sort['sortOrder'])
@@ -642,7 +642,7 @@ class Stats
             $league = $typeValue;
             $typeValue = $typeValue->league_id;
 
-            $typeValues = $league->country . ' - ' . $league->name;
+            $typeValues = $league['country/competition'] . ' - ' . $league->competition;
             $output[$typeValues] = $this->tableBodyRendered($typeValues, $league, $type, $typeValue);
         }
 
@@ -742,7 +742,7 @@ class Stats
 
     public function venueTable($sort)
     {
-        $type = 'venue_id';
+        $type = 'venue';
         $head = $this->tableHeader($type);
 
         $bets = Bet::user($this->userId)
@@ -753,7 +753,7 @@ class Stats
             ->join('venues', 'venue_id', '=', 'venues.id')
             ->groupBy('fixtures.venue_id')
             ->whereNotNull('fixtures.venue_id')
-            ->select(['venue_id', 'venues.name', $this->statsSelect()])
+            ->select(['venue_id', 'venues.name as venue', $this->statsSelect()])
             ->orderBy($sort['sortType'], $sort['sortOrder'])
             ->paginate(15);
 
@@ -761,7 +761,7 @@ class Stats
         foreach ($types as $key => $typeValue) {
             $venue = $typeValue;
 
-            $typeValue = $venue->name;
+            $typeValue = $venue->$type;
             $output[$typeValue] = $this->tableBodyRendered($typeValue, $venue, $type, $venue->venue_id);
         }
 
@@ -861,7 +861,7 @@ class Stats
             ->mergeBindings($homeAndAway->getQuery())
             ->select(DB::raw('id, team'), $this->statsSelect())
             ->groupBy('team', 'id')
-            ->orderByDesc('bets')
+            ->orderBy($sort['sortType'], $sort['sortOrder'])
             ->paginate(15);
 
         $output = [];

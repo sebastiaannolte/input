@@ -116,7 +116,7 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import pickBy from "lodash/pickBy";
-import TableFilterHeader from "@/Components/TableFilterHeader";
+import TableFilterHeader from "@/PageComponents/TableFilterHeader";
 
 export default {
   layout: Layout,

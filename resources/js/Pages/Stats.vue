@@ -242,10 +242,10 @@ import Layout from "@/Layouts/Authenticated";
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
-import FiltersSlideOver from "@/Components/FiltersSlideOver";
+import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import pickBy from "lodash/pickBy";
 import ShowFilterButton from "@/Components/ShowFilterButton";
-import ActiveFilters from "@/Components/ActiveFilters.vue";
+import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
 
 export default {
   layout: Layout,

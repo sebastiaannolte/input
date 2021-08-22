@@ -106,7 +106,10 @@
                                 <Multiselect
                                   v-model="betData.category"
                                   :searchable="true"
-                                  :options="formattedBetTypes"
+                                  :options="this.betTypes"
+                                  label="name"
+                                  valueProp="id"
+                                  trackBy="name"
                                   mode="tags"
                                 />
                               </div>
@@ -324,12 +327,7 @@
                     @click.prevent="save"
                     :loading="processing"
                   >
-                    <span class="flex items-center"
-                      ><SaveIcon
-                        class="block h-4 w-4 mr-1.5"
-                        aria-hidden="true"
-                      />Save</span
-                    >
+                    Save
                   </loading-button>
                 </div>
               </form>
@@ -343,7 +341,7 @@
 
 <script>
 import Button from "@/Components/Button.vue";
-import Events from "@/Components/Events.vue";
+import Events from "@/PageComponents/Events.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AutocompleteInput from "@/Components/AutocompleteInput.vue";
 import LoadingButton from "@/Components/LoadingButton.vue";
@@ -358,8 +356,8 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { XIcon, SaveIcon } from "@heroicons/vue/outline";
-import { ref, watch, getCurrentInstance } from "vue";
+import { XIcon } from "@heroicons/vue/outline";
+import { ref } from "vue";
 
 export default {
   components: {
@@ -369,7 +367,6 @@ export default {
     TransitionChild,
     TransitionRoot,
     XIcon,
-    SaveIcon,
     Button,
     Events,
     TextInput,
@@ -505,14 +502,6 @@ export default {
           this.betData.category = JSON.parse(this.betData.category);
         }
       }
-    },
-  },
-
-  computed: {
-    formattedBetTypes() {
-      return Object.keys(this.betTypes).map((key) => {
-        return { value: key, label: this.betTypes[key].name };
-      });
     },
   },
 

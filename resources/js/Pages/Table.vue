@@ -1,6 +1,6 @@
 <template>
   <Head :title="pageTitle" />
-  <div class="md:flex md:items-center md:justify-between">
+  <div class="flex items-center justify-between">
     <div class="flex-1 min-w-0">
       <h2
         class="
@@ -20,20 +20,6 @@
     </div>
   </div>
   <span>
-    <div class="md:flex md:items-center md:justify-between my-3">
-      <div class="flex-1 min-w-0">
-        <h5
-          class="
-            text-lg
-            font-bold
-            leading-7
-            text-gray-900
-            sm:text-xl
-            sm:truncate
-          "
-        ></h5>
-      </div>
-    </div>
     <bets
       :bets="bets.bets"
       :filters="filters"
@@ -50,7 +36,7 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import Bets from "@/Components/Bets";
+import Bets from "@/PageComponents/Bets";
 import ShowFilterButton from "@/Components/ShowFilterButton";
 
 export default {

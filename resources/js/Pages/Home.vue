@@ -13,8 +13,8 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import Bets from "@/Components/Bets.vue";
-import Stats from "@/Components/Stats.vue";
+import Bets from "@/PageComponents/Bets.vue";
+import Stats from "@/PageComponents/Stats.vue";
 
 export default {
   components: {
