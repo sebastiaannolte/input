@@ -23,7 +23,6 @@ class BetController extends Controller
         $userId = $user->id;
         $filters = Request::get('filters');
 
-        $showFilter = Request::get('showFilter') === 'true' ? true : false;
         $bets = Bet::user($userId);
         return Inertia::render('Home', [
             'stats' => [
@@ -37,7 +36,6 @@ class BetController extends Controller
             'bets' => $bets->clone()->bets()->filters($filters)->paginate()->withQueryString(),
             'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->take(3)->get(),
             'filters' => $filters,
-            'showFilter' => $showFilter,
             'betTypes' => BetType::get(),
         ]);
     }

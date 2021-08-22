@@ -4,7 +4,6 @@
   <bets
     :bets="bets"
     :filters="filters"
-    :showFilter="showFilter"
     :filterButton="true"
     :filter-route="
       this.route('userhome', this.$page.props.auth.user.username)
@@ -16,13 +15,11 @@
 import Layout from "@/Layouts/Authenticated";
 import Bets from "@/Components/Bets.vue";
 import Stats from "@/Components/Stats.vue";
-import BetForm from "@/Pages/BetForm.vue";
 
 export default {
   components: {
     Bets,
     Stats,
-    BetForm,
   },
   layout: Layout,
 
@@ -31,7 +28,6 @@ export default {
     bets: Object,
     stats: Object,
     filters: Array,
-    showFilter: Boolean,
     upcommingBets: Object,
     betTypes: Object,
   },

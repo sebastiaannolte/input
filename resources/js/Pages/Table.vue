@@ -1,5 +1,5 @@
 <template>
-  <Head :title="title" />
+  <Head :title="pageTitle" />
   <div class="md:flex md:items-center md:justify-between">
     <div class="flex-1 min-w-0">
       <h2
@@ -12,7 +12,7 @@
           sm:truncate
         "
       >
-        {{ venue.name }}
+        {{ type.name }}
       </h2>
     </div>
     <div class="mt-4 flex md:mt-0 md:ml-4">
@@ -31,16 +31,17 @@
             sm:text-xl
             sm:truncate
           "
-        >
-        </h5>
+        ></h5>
       </div>
     </div>
     <bets
-      :bets="venueBets.bets"
+      :bets="bets.bets"
       :filters="filters"
-      :showFilter="showFilter"
       :filter-route="
-        this.route('venue', [this.$page.props.auth.user.username, venue.id])
+        this.route(this.filterRoute, [
+          this.$page.props.auth.user.username,
+          type.id,
+        ])
       "
     />
   </span>
@@ -59,29 +60,29 @@ export default {
     ShowFilterButton,
   },
   props: {
-    venueBets: Object,
-    venue: Object,
+    bets: Object,
+    type: Object,
     filters: Array,
-    showFilter: Boolean,
+    filterRoute: String,
+    title: String,
   },
 
   data() {
     return {
-      currentTable: null,
-      localFilters: {},
+      pageTitle: null,
     };
   },
 
   created() {
-    this.currentTable = this.venueBets;
     this.setPageTitle();
   },
 
   methods: {
     setPageTitle() {
-      this.title = "Your team stats";
+      this.pageTitle = "Your " + this.title + " stats";
       if (!this.$page.props.userInfo.myPage) {
-        this.title = this.$page.props.userInfo.user.name + "'s team stats";
+        this.pageTitle =
+          this.$page.props.userInfo.user.name + "'s " + this.title + " stats";
       }
     },
   },

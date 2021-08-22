@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Lib\Stats;
 use App\Models\Bet;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Inertia\Inertia;
@@ -16,13 +17,11 @@ class StatsController extends Controller
         $userId = User::where('username', $username)->first()->id;
         $filters = FacadesRequest::get('filters');
         $stats = new Stats($userId, $filters);
-        $showFilter = FacadesRequest::get('showFilter') === 'true' ? true : false;
 
         $bets = Bet::user($userId)->filters($filters);
         return Inertia::render('Stats', [
             'tabs' => $stats->getTabs(),
             'filters' => $filters,
-            'showFilter' => $showFilter,
             'stats' => [
                 'roi' => $bets->clone()->roi(2),
                 'bets' => $bets->clone()->betCount(),
@@ -38,28 +37,30 @@ class StatsController extends Controller
 
     public function calculateInterval($start, $end)
     {
+        $start = Carbon::parse($start);
+        $end = Carbon::parse($end);
         $diff = $start->diffInDays($end);
 
         $intervals = [
             '1 day' => [
                 'value' => '40',
-                'days' => [
-                    'function' => 'addDay',
+                'formatting' => [
                     'format' => 'Y-m-d',
+                    'select' => 'DATE_FORMAT(`date`, "%Y-%m-%d") as formatted_date'
                 ],
             ],
             '1 month' => [
                 'value' => '365',
-                'days' => [
-                    'function' => 'addMonth',
+                'formatting' => [
                     'format' => 'Y-m',
+                    'select' => 'DATE_FORMAT(`date`, "%Y-%m") as formatted_date'
                 ],
             ],
             '1 year' => [
                 'value' => '2333232',
-                'days' => [
-                    'function' => 'addYear',
+                'formatting' => [
                     'format' => 'Y',
+                    'select' => 'DATE_FORMAT(`date`, "%Y") as formatted_date'
                 ],
             ],
         ];
@@ -75,8 +76,8 @@ class StatsController extends Controller
         $key = $request->get('key');
         $filters = $request->get('filters');
 
-        $start = now()->subMonths(5)->startOfMonth();
-        $end = now();
+        $start = now()->subMonths(5)->startOfMonth()->format('Y-m-d H:i:s');
+        $end = now()->format('Y-m-d H:i:s');
 
         $defaultFilters = [
             'from' => [
@@ -89,10 +90,17 @@ class StatsController extends Controller
                 'type' => 'max',
                 'col' => 'date',
             ],
-            'interval' => $this->calculateInterval($start, $end),
         ];
+        
+        if (!$filters['from']['value']) {
+            $filters['from'] = $defaultFilters['from'];
+        }
 
-        $filters = array_merge($filters, $defaultFilters);
+        if (!$filters['to']['value']) {
+            $filters['to'] = $defaultFilters['to'];
+        }
+        $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);
+
         $userId = 1;
         $stats = new Stats($userId, $filters);
         return $stats->renderStats($key, $request);
