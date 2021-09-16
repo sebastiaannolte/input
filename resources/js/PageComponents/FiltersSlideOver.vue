@@ -19,7 +19,7 @@
     <Dialog
       as="div"
       auto-reopen="true"
-      class="fixed inset-0 overflow-hidden"
+      class="fixed inset-0 overflow-hidden z-20"
       @close="open = false"
     >
       <div class="absolute inset-0 overflow-hidden">
@@ -225,7 +225,7 @@
                     Reset
                   </button>
                   <button
-                    @click.prevent="filter"
+                    @click.prevent="filter(false)"
                     type="submit"
                     class="
                       ml-4
@@ -276,6 +276,8 @@ import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/PageComponents/Pagination";
 import ShowFilterButton from "@/Components/ShowFilterButton";
+import pickBy from "lodash/pickBy";
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   components: {
@@ -303,6 +305,7 @@ export default {
   props: {
     propFilters: Object,
     filterButton: Boolean,
+    filterRoute: String,
   },
   data() {
     return {
@@ -380,17 +383,38 @@ export default {
     this.emitter.on("filter:show", (status) => {
       this.open = true;
     });
+    this.emitter.on("filter:remove", (key) => {
+      this.removeFilter(key);
+    });
   },
 
   methods: {
     filter() {
-      if (Object.keys(this.activeFilters).length == 0) {
-        this.filterStatus = false;
+      var localFilters = {};
+      this.localFilters = this.filters;
+
+      for (const key in this.localFilters) {
+        var filter = this.localFilters[key];
+
+        if (filter.value) {
+          localFilters[key] = filter;
+        }
       }
-      this.$emit("filterSubmit", {
-        filters: this.filters,
-        filterStatus: this.filterStatus,
-      });
+
+      Inertia.get(
+        this.filterRoute,
+        pickBy({
+          filters: localFilters,
+        }),
+        {
+          only: ["filters", "stats", "bets"],
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            this.emitter.emit("filter:submit");
+          },
+        }
+      );
     },
     showFilter() {
       this.filterStatus = !this.filterStatus;
@@ -398,7 +422,6 @@ export default {
 
     removeFilter(key) {
       this.filters[key].value = null;
-
       this.filter();
     },
 

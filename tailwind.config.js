@@ -28,8 +28,11 @@ module.exports = {
             },
             spacing: {
                 '120': '33rem',
-              }
-            
+            },
+            minHeight: {
+                '20': '5rem',
+            }
+
         },
     },
 

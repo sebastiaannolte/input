@@ -14,10 +14,10 @@
         {{ title }}
       </h2>
     </div>
-    <div class="mt-4 flex md:mt-0 md:ml-4">
+    <!-- <div class="mt-4 flex md:mt-0 md:ml-4">
        <slot name="button"></slot>
       <show-filter-button />
-    </div>
+    </div> -->
   </div>
 </template>
 

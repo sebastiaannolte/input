@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
     Route::post('/comps', [SpecialStatsController::class, 'competitions'])->name('competitions.get');
-    Route::post('/comp', [SpecialStatsController::class, 'competition'])->name('competition.get');
+    Route::post('/comp', [SpecialStatsController::class, 'competitionStats'])->name('competition.get');
     Route::post('/special', [SpecialStatsController::class, 'specialStats'])->name('api.special');
 
     

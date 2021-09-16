@@ -13,35 +13,44 @@ use Inertia\Inertia;
 
 class SpecialStatsController extends Controller
 {
-    public function show($username, $id)
+    public function competition($username, $id)
     {
+        $filters = Request::get('filters');
+        $sort = Request::get('sort') ?: [
+            'sortType' => "Bets",
+            'sortOrder' => "DESC"
+        ];
+
         return Inertia::render('Competition', [
             'competition' => League::find($id),
+            'sort' => $sort,
+            'filters' => $filters,
         ]);
     }
 
     public function team($username, $teamId, $leagueId = false)
     {
         $filters = Request::get('filters');
-
         $stats = new Stats(1, $filters);
         $teamTable = $stats->teamTable($teamId, $leagueId);
 
         return Inertia::render('Team', [
-            'teamTable' => $teamTable,
+            'bets' => $teamTable,
             'team' => Team::find($teamId),
             'league' => $leagueId ? League::find($leagueId) : '',
             'filters' => $filters,
         ]);
     }
 
-    public function competition()
+    public function competitionStats()
     {
         $competitionId = Request::get('competition');
         $filters = Request::get('filters');
+        $sort = Request::get('sort');
+
 
         $userId = Auth::user()->id;
-        $stats = new Stats($userId, $filters);
+        $stats = new Stats($userId, $filters, $sort);
         return $stats->competitionTable($competitionId);
     }
 
@@ -49,17 +58,17 @@ class SpecialStatsController extends Controller
     {
         $filters = Request::get('filters');
         $type = Request::get('type');
+        $sort = Request::get('sort') ?: [
+            'sortType' => "Bets",
+            'sortOrder' => "DESC"
+        ];
+        $tabs = Auth::user()->getSpecialTabs();
 
         return Inertia::render('SpecialStats', [
-            'tabs' => [
-                ['name' => 'referee', 'route' => 'referee'],
-                ['name' => 'venue', 'route' => 'venue'],
-                ['name' => 'competitions', 'route' => 'competitions'],
-                ['name' => 'teams', 'route' => 'team']
-            ],
+            'tabs' => $tabs,
             'type' => $type,
             'filters' => $filters,
-
+            'sort' => $sort,
         ]);
     }
 
@@ -68,9 +77,8 @@ class SpecialStatsController extends Controller
         $filters = Request::get('filters');
         $key = Request::get('key');
         $sort = Request::get('sort');
-
         $userId = Auth::user()->id;
-        $stats = new Stats($userId, $filters);
+        $stats = new Stats($userId, $filters, $sort);
         return $stats->getSpecialStats($key, $sort);
     }
 
@@ -108,7 +116,6 @@ class SpecialStatsController extends Controller
     public function competitionBets($username, $leagueId)
     {
         $filters = Request::get('filters');
-
         $stats = new Stats(1, $filters);
         $bets = $stats->competitionBets($leagueId);
         return Inertia::render('Table', [

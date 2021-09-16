@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('{username}/settings', [UserSettingController::class, 'index'])->name('userSettings.index');
     Route::post('{username}/settings', [UserSettingController::class, 'store'])->name('userSettings.store');
     Route::get('{username}/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('{username}/competition/{id}', [SpecialStatsController::class, 'show'])->name('competitions');
+    Route::get('{username}/competition/{id}', [SpecialStatsController::class, 'competition'])->name('competition');
     Route::get('{username}/competition/{id}/bets', [SpecialStatsController::class, 'competitionBets'])->name('competition.bets');
     Route::get('{username}/special', [SpecialStatsController::class, 'special'])->name('special');
     Route::get('{username}/referee/{name}', [SpecialStatsController::class, 'referee'])->name('referee');

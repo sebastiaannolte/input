@@ -3,8 +3,6 @@
 namespace App\Lib;
 
 use App\Models\Bet;
-use App\Models\League;
-use App\Models\Team;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +13,13 @@ class Stats
     protected $userId = null;
     protected $odds = null;
     protected $filters = null;
-    protected $tabs = null;
+    protected $sort = null;
 
-    public function __construct($userId, $filters)
+    public function __construct($userId, $filters, $sort = false) //maybe optional
     {
         $this->userId = $userId;
         $this->filters = $filters;
+        $this->sort = $sort;
         $this->odds = [
             '< 1.50' => [
                 'min' => 1,
@@ -42,17 +41,6 @@ class Stats
                 'min' => 2.25,
                 'max' => 1000,
             ],
-        ];
-
-        $this->tabs = [
-            'tipster',
-            'odds',
-            'selection',
-            'stake',
-            'sport',
-            'bookie',
-            'profit',
-            'type',
         ];
     }
 
@@ -78,7 +66,9 @@ class Stats
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
             ->select(DB::raw('count(id), odd_range, formatted_date'), $this->statsSelect())
-            ->groupBy('odd_range', 'formatted_date')->get();
+            ->groupBy('odd_range', 'formatted_date')
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
+            ->get();
 
         $labels = [];
         foreach ($carbonDates as $key => $date) {
@@ -94,12 +84,11 @@ class Stats
         }
 
         $table = $this->oddsTable();
-        $tableValues = array_column($table['body'], $type);
-        $values = [];
+        // $tableValues = array_column($table['body'], $type);
         $vals = [];
         foreach ($labels as $date => $values) {
-            $sortedLabels = $this->sortArrayByArray($values, $tableValues);
-            foreach ($sortedLabels as $key => $value) {
+            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
+            foreach ($values as $key => $value) {
                 $vals[$key][] = $value;
             }
         }
@@ -132,7 +121,7 @@ class Stats
                 $this->statsSelect(),
             ])
             ->whereNotNull($type)
-            ->orderByDesc('bets');
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder']);
 
         $columns = $bets->clone()
             ->groupBy($type, 'formatted_date')
@@ -143,7 +132,7 @@ class Stats
 
             ])
             ->whereNotNull($type)
-            ->orderByDesc('bets')->get();
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])->get();
 
         $labels = [];
 
@@ -153,22 +142,19 @@ class Stats
             }
         }
 
-
         foreach ($columns as $key => $value) {
             $date = $value->formatted_date;
             $labels[$date][(string)$value->$type] = $value->profit;
         }
 
-
-
         $table = $this->simpleTable($type, $columnsTable);
-        $tableValues = array_column($table['body'], 'Type');
+        // $tableValues = array_column($table['body'], 'Type');
 
         $vals = [];
         foreach ($labels as $date => $values) {
-            $sortedLabels = $this->sortArrayByArray($values, $tableValues);
-            foreach ($sortedLabels as $key => $value) {
-                $vals[$key][] = $value;
+            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
+            foreach ($values as $key => $value) {
+                $vals[ucfirst($key)][] = $value;
             }
         }
 
@@ -267,7 +253,7 @@ class Stats
                 'bet_types.name',
                 $dateSelect['select'],
                 $this->statsSelect()
-            ])->orderBy('bets', 'DESC')
+            ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->whereNotNull('name')
             ->get();
 
@@ -281,7 +267,7 @@ class Stats
                 'bet_types.id',
                 'bet_types.name',
                 $this->statsSelect()
-            ])->orderBy('bets', 'DESC')
+            ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->whereNotNull('name');
 
         $labels = [];
@@ -297,12 +283,12 @@ class Stats
         }
 
         $table = $this->selectionTable($selectionsTable);
-        $tableValues = array_column($table['body'], $type);
+        // $tableValues = array_column($table['body'], $type);
 
         $vals = [];
         foreach ($labels as $date => $values) {
-            $sortedLabels = $this->sortArrayByArray($values, $tableValues);
-            foreach ($sortedLabels as $key => $value) {
+            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
+            foreach ($values as $key => $value) {
                 $vals[$key][] = $value;
             }
         }
@@ -314,17 +300,17 @@ class Stats
         ];
     }
 
-    function sortArrayByArray(array $array, array $orderArray)
-    {
-        $ordered = array();
-        foreach ($orderArray as $key) {
-            if (array_key_exists($key['value'], $array)) {
-                $ordered[$key['value']] = $array[$key['value']];
-                unset($array[$key['value']]);
-            }
-        }
-        return $ordered + $array;
-    }
+    // function sortArrayByArray(array $array, array $orderArray)
+    // {
+    //     $ordered = array();
+    //     foreach ($orderArray as $key) {
+    //         if (array_key_exists($key['value'], $array)) {
+    //             $ordered[$key['value']] = $array[$key['value']];
+    //             unset($array[$key['value']]);
+    //         }
+    //     }
+    //     return $ordered + $array;
+    // }
 
 
     public function selectionMapping($selections)
@@ -432,20 +418,6 @@ class Stats
         return $headerItems;
     }
 
-    public function tableBody($typeValue, $bets, $type, $specialId = '',)
-    {
-        $output[$typeValue] = [
-            $type => ['value' => $typeValue, 'type' => '', 'specialId' => $specialId],
-            'Bets' => ['value' => $bets->clone()->betCount(), 'type' => ''],
-            'Won' => ['value' => $bets->clone()->wonBets(), 'type' => ''],
-            'Staked' => ['value' => $bets->clone()->totalStaked(2), 'type' => ''],
-            'Profit' => ['value' => $bets->clone()->units(2), 'type' => ''],
-            'ROI' => ['value' => $bets->clone()->roi(2), 'type' => '%'],
-        ];
-
-        return $output;
-    }
-
     public function tableBodyRendered($typeValue, $output, $type, $specialId = '',)
     {
         $output = [
@@ -515,7 +487,7 @@ class Stats
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
             ->select(DB::raw('count(id), odd_range'), $this->statsSelect())
-            ->orderBy('bets', 'DESC')
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->groupBy('odd_range');
 
         $output = [];
@@ -594,11 +566,14 @@ class Stats
                 'datasets' => $datasets
 
             ],
+
             'options' => [
+                'maintainAspectRatio' => false,
                 'interaction' => [
                     'mode' => "index",
                     'intersect' => "true",
                 ],
+   
                 'animation' => [
                     'duration' => '0',
                 ]
@@ -610,12 +585,7 @@ class Stats
         return $graphs;
     }
 
-    public function getTabs()
-    {
-        return $this->tabs;
-    }
-
-    public function competitionsTable($sort)
+    public function competitionsTable()
     {
         $type = 'country/competition';
         $head = $this->tableHeader($type);
@@ -634,7 +604,7 @@ class Stats
                 'leagues.name as competition',
                 $this->statsSelect()
             ])
-            ->orderBy($sort['sortType'], $sort['sortOrder'])
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
         $output = [];
@@ -642,7 +612,7 @@ class Stats
             $league = $typeValue;
             $typeValue = $typeValue->league_id;
 
-            $typeValues = $league['country/competition'] . ' - ' . $league->competition;
+            $typeValues = $league[$type] . ' - ' . $league->competition;
             $output[$typeValues] = $this->tableBodyRendered($typeValues, $league, $type, $typeValue);
         }
 
@@ -665,17 +635,17 @@ class Stats
             })
             ->groupBy('teams.id', 'league_id')
             ->select(['teams.id as team_id', 'teams.name as team', 'league_id', $this->statsSelect()])
-            ->orderBy('bets', 'DESC')
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
-
+        $output = [];
         foreach ($types as $teamId => $bets) {
             $typeValue = $bets->team;
             $output[$typeValue] = $this->tableBodyRendered($typeValue, $bets, $type, [$bets->team_id, $bets->league_id]);
         }
 
 
-        return ['head' => $head, 'body' => array_values($output)];
+        return $this->customPaginationOutput($head, $output, $types);
     }
 
     public function teamTable($teamId, $leagueId)
@@ -685,7 +655,9 @@ class Stats
             if ($leagueId) {
                 $q->where('league_id', $leagueId);
             }
-        })->whereNotNull('match_id')->paginate(15);
+        })->whereNotNull('match_id')
+            ->filters($this->filters)
+            ->paginate(15);
 
         $bets = [
             'bets' => $bets,
@@ -714,7 +686,7 @@ class Stats
         ');
     }
 
-    public function refereeTable($sort)
+    public function refereeTable()
     {
         $type = 'referee';
         $head = $this->tableHeader($type);
@@ -727,7 +699,7 @@ class Stats
             ->groupBy('fixtures.referee')
             ->whereNotNull('fixtures.referee')
             ->select(['referee', $this->statsSelect()])
-            ->orderBy($sort['sortType'], $sort['sortOrder'])
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
         $output = [];
         foreach ($types as $key => $typeValue) {
@@ -740,7 +712,7 @@ class Stats
         return $this->customPaginationOutput($head, $output, $types);
     }
 
-    public function venueTable($sort)
+    public function venueTable()
     {
         $type = 'venue';
         $head = $this->tableHeader($type);
@@ -754,7 +726,7 @@ class Stats
             ->groupBy('fixtures.venue_id')
             ->whereNotNull('fixtures.venue_id')
             ->select(['venue_id', 'venues.name as venue', $this->statsSelect()])
-            ->orderBy($sort['sortType'], $sort['sortOrder'])
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
         $output = [];
@@ -768,16 +740,16 @@ class Stats
         return $this->customPaginationOutput($head, $output, $types);
     }
 
-    public function getSpecialStats($key, $sort)
+    public function getSpecialStats($key)
     {
         if ($key == 'referee') {
-            return $this->refereeTable($sort);
+            return $this->refereeTable();
         } elseif ($key == 'venue') {
-            return $this->venueTable($sort);
+            return $this->venueTable();
         } elseif ($key == 'competitions') {
-            return $this->competitionsTable($sort);
+            return $this->competitionsTable();
         } elseif ($key == 'teams') {
-            return $this->teamsTable($sort);
+            return $this->teamsTable();
         }
     }
 
@@ -832,7 +804,7 @@ class Stats
         return $betsByLeague;
     }
 
-    public function teamsTable($sort)
+    public function teamsTable()
     {
         $type = 'team';
         $head = $this->tableHeader($type);
@@ -861,7 +833,7 @@ class Stats
             ->mergeBindings($homeAndAway->getQuery())
             ->select(DB::raw('id, team'), $this->statsSelect())
             ->groupBy('team', 'id')
-            ->orderBy($sort['sortType'], $sort['sortOrder'])
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
         $output = [];

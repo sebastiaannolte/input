@@ -1,14 +1,8 @@
 <template>
   <Head :title="title" />
   <table-filter-header title="Special stats" />
-  <active-filters
-    :prop-filters="filters"
-    @filterSubmit="handleFilter"
-  />
-  <filters-slide-over
-    :prop-filters="filters"
-    @filterSubmit="handleFilter"
-  />
+  <active-filters :prop-filters="filters" :filter-route="filterRoute"  />
+  <!-- <filters-slide-over :prop-filters="filters" :filter-route="filterRoute" /> -->
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
       <label for="tabs" class="sr-only">Select a tab</label>
@@ -74,7 +68,7 @@
           </nav>
         </div>
       </div>
-      <div class="relative" :style=" loading ? 'height: 500px' : ''">
+      <div class="relative" :style="loading ? 'height: 500px' : ''">
         <loading v-model:active="loading" :is-full-page="false" />
       </div>
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -100,9 +94,11 @@
                   v-for="(values, keys) in currentTable.head"
                   :class="{
                     'arrow-down':
-                      sort.sortType == values && sort.sortOrder == 'DESC',
+                      sort.sortType == values &&
+                      sort.sortOrder == 'DESC',
                     'arrow-up':
-                      sort.sortType == values && sort.sortOrder == 'ASC',
+                      sort.sortType == values &&
+                      sort.sortOrder == 'ASC',
                   }"
                   @click="sortHeader(values)"
                 >
@@ -129,7 +125,7 @@
                     :key="key"
                   >
                     <button
-                      @click="goTo(currentRoute, values.specialId)"
+                      @click="goTo(currentTab.route, values.specialId)"
                       v-if="values.specialId"
                     >
                       {{ values.value }}
@@ -140,7 +136,11 @@
               </tbody>
             </table>
             <div
-              v-if="currentTable && currentTable.body.length == 0"
+              v-if="
+                currentTable &&
+                currentTable.body &&
+                currentTable.body.length == 0
+              "
               class="
                 bg-white
                 col-span-1
@@ -160,12 +160,12 @@
     </div>
   </div>
   <pagination
-    v-if="currentTable && currentTable.body.length > 0"
+    v-if="currentTable && currentTable.body && currentTable.body.length > 0"
     :data="currentTable.body"
     :per-page-prop="pagination.perPage"
     :total-results-prop="pagination.totalResults"
     :custom="true"
-    :type-id="this.currentTab ? currentTab.option : ''"
+    :type-id="currentTab ? currentTab.option : ''"
   />
 </template>
 
@@ -178,6 +178,7 @@ import TableFilterHeader from "@/PageComponents/TableFilterHeader";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import Pagination from "@/PageComponents/Pagination";
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   layout: Layout,
@@ -192,6 +193,7 @@ export default {
     filters: Array,
     tabs: Array,
     type: String,
+    sort: Object,
   },
 
   data() {
@@ -200,12 +202,6 @@ export default {
         head: null,
         body: null,
       },
-      sort: {
-        sortType: "bets",
-        sortOrder: "DESC",
-      },
-      selectedTab: null,
-      currentTable: null,
       generatedTabs: [],
       localFilters: {},
       loading: false,
@@ -213,37 +209,32 @@ export default {
         totalResults: null,
         perPage: null,
       },
-      currentRoute: null,
       currentTab: null,
     };
   },
 
   created() {
-    this.createTabs();
-    if (this.type) {
-      this.getStats(this.type, false);
-    } else {
-      this.getStats("referee", false);
-    }
+    this.filterRoute = this.route("special", {
+      username: this.$page.props.auth.user.username,
+      _query: pickBy({ type: this.type, sort: this.sort }),
+    });
 
+    this.createTabs();
+    this.emitter.on("filter:submit", () => {
+      this.getStats();
+    });
+    this.getStats();
     this.setPageTitle();
   },
 
   methods: {
-    getStats(key, pageReset = false) {
+    getStats() {
       var pageNumber = location.search.split("page=")[1];
-      if (pageReset) {
-        pageNumber = 1;
-        history.replaceState &&
-          history.replaceState(
-            null,
-            "",
-            location.pathname +
-              location.search.replace(/[\?&]page=[^&]+/, "").replace(/^&/, "?")
-          );
+      var key = this.generatedTabs[0].option;
+      if (this.type) {
+        key = this.type;
       }
       this.loading = true;
-
       this.$http
         .post(this.route("api.special"), {
           key: key,
@@ -274,36 +265,6 @@ export default {
       );
     },
 
-    handleFilter(filters) {
-      var localFilters = {};
-      this.localFilters = filters.filters;
-
-      var currentTab = this.generatedTabs.find((tab) => tab.current == true);
-
-      for (const key in this.localFilters) {
-        var filter = this.localFilters[key];
-
-        if (filter.value) {
-          localFilters[key] = filter;
-        }
-      }
-      this.$inertia.get(
-        this.route("special", this.$page.props.auth.user.username),
-        pickBy({
-          filters: localFilters,
-          type: currentTab.option,
-          sort: this.sort,
-        }),
-        {
-          preserveScroll: true,
-          preserveState: true,
-          onSuccess: () => {
-            this.getStats(currentTab.option, false);
-          },
-        }
-      );
-    },
-
     openTab(value) {
       this.changeTab(value);
     },
@@ -314,35 +275,42 @@ export default {
 
     changeTab(value) {
       this.sort.sortType = "bets";
-      this.getStats(value, true);
-      this.generatedTabs.forEach((tab) => {
-        if (tab.option == value) {
-          this.currentRoute = tab.route;
-          this.currentTab = tab;
-          return (tab.current = true);
+      this.currentTab = this.generatedTabs.find((tab) => tab.option == value);
+      Inertia.get(
+        this.route("special", this.$page.props.auth.user.username),
+        pickBy({
+          type: this.currentTab.option,
+          filters: null, // reset filters if tab changes
+        }),
+        {
+          only: ["type", "filters"],
         }
-        tab.current = false;
-      });
+      );
     },
 
     createTabs() {
       for (const key in this.tabs) {
         var tab = this.tabs[key];
         var current = false;
+        var localTab = {
+          option: tab.name,
+          current: current,
+          route: tab.route,
+        };
         if (tab.name == this.type) {
-          this.currentRoute = tab.route;
-          this.currentTab = tab
-          current = true;
+          localTab.current = true;
+          this.currentTab = localTab;
         }
-        this.generatedTabs.push({ option: tab.name, current: current, route:tab.route });
+        this.generatedTabs.push(localTab);
       }
 
       if (!this.type) {
         this.currentTab = this.generatedTabs[0];
-        this.currentRoute = this.generatedTabs[0].route;
         this.generatedTabs[0].current = true;
-      }else{
-        this.generatedTabs.find((tab) => tab.option == this.type).current = true;
+      } else {
+        this.generatedTabs.find(
+          (tab) => tab.option == this.type
+        ).current = true;
       }
     },
 
@@ -361,12 +329,22 @@ export default {
       if (this.sort.sortType != tableHeader) {
         this.sort.sortOrder = "DESC";
       } else {
-        this.sort.sortOrder = this.sort.sortOrder == "DESC" ? "ASC" : "DESC";
+        this.sort.sortOrder =
+          this.sort.sortOrder == "DESC" ? "ASC" : "DESC";
       }
       this.sort.sortType = tableHeader;
 
-      var currentTab = this.generatedTabs.find((tab) => tab.current == true);
-      this.getStats(currentTab.option);
+      Inertia.get(
+        this.route("special", this.$page.props.auth.user.username),
+        pickBy({
+          type: this.currentTab.option,
+          sort: this.sort,
+          filters: this.filters,
+        }),
+        {
+          only: ["type", "sort", "filters"],
+        }
+      );
     },
   },
 };

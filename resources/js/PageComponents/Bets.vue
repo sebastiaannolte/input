@@ -1,13 +1,5 @@
 <template>
-  <div class="flex justify-between mb-5">
-    <active-filters
-      class="flex items-center"
-      :prop-filters="filters"
-      @filterSubmit="handleFilter"
-    />
-    <show-filter-button v-if="filterButton" />
-    <filters-slide-over :prop-filters="filters" @filterSubmit="handleFilter" />
-  </div>
+  <active-filters :prop-filters="filters" :filter-route="filterRoute" />
   <div class="flex flex-col">
     <div class="-my-2">
       <div class="py-2 align-middle inline-block min-w-full">
@@ -281,7 +273,6 @@ import Pagination from "@/PageComponents/Pagination";
 import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import ActiveFilters from "@/PageComponents/ActiveFilters";
 import ShowFilterButton from "@/Components/ShowFilterButton";
-import pickBy from "lodash/pickBy";
 import moment from "moment";
 
 export default {
@@ -350,37 +341,6 @@ export default {
   },
 
   methods: {
-    handleFilter(filters) {
-      var localFilters = {};
-      if (filters.filters == this.localFilters) {
-        var removePage = true;
-      }
-
-      this.localFilters = filters.filters;
-      for (const key in this.localFilters) {
-        var filter = this.localFilters[key];
-
-        if (filter.value) {
-          localFilters[key] = filter;
-        }
-      }
-      var pageNumber = location.search.split("page=")[1];
-      if (removePage) {
-        pageNumber = 1;
-      }
-
-      this.$inertia.get(
-        this.filterRoute,
-        pickBy({
-          filters: localFilters,
-          page: pageNumber,
-        }),
-        {
-          preserveScroll: true,
-          preserveState: true,
-        }
-      );
-    },
     showDropdown(key) {
       if (!this.$page.props.userInfo.myPage) {
         return;
@@ -424,7 +384,7 @@ export default {
       } else if (selectedStatus == "void") {
         status = 0;
       } else if (selectedStatus == "halfwon") {
-        status = "+" + ((currentBet.stake / 2) +  (currentBet.odds / 2)).toFixed(2);
+        status = "+" + (currentBet.stake / 2 + currentBet.odds / 2).toFixed(2);
       } else if (selectedStatus == "halflost") {
         status = "-" + (currentBet.stake / 2).toFixed(2);
       }

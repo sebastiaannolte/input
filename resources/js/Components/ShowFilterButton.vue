@@ -20,7 +20,12 @@
       focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
     "
   >
-    <span class="flex items-center"><FilterIcon class="block h-4 w-4 mr-1.5" aria-hidden="true" />Filter</span>
+    <span class="flex items-center"
+      ><FilterIcon
+        class="block h-4 w-4 mr-1.5"
+        aria-hidden="true"
+      />Filter</span
+    >
   </button>
 </template>
 

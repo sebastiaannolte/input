@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Lib\StatsHelper;
 use App\Models\Bookmaker;
 use App\Models\Setting;
 use App\Models\UserSetting;
@@ -14,8 +15,23 @@ class UserSettingController extends Controller
 {
     public function index()
     {
+        $stats = new StatsHelper;
+        $specialTabNames = collect($stats->getSpecialStatsTabs())->map(function ($value) {
+            return $value['name'];
+        });
+        // $statsTabNames = collect($stats->getStatsTabs())->map(function ($value) {
+        //     return $value['name'];
+        // });
+        // dd(Auth::user()->userSettingsFormatted());
+        $specialTabsSettings = Auth::user()->userSettingsFormatted()['special_tabs']['value'];
+        $statsTabsSettings = Auth::user()->userSettingsFormatted()['stats_tabs']['value'];
+        $specialTabs = array_diff($specialTabNames->toArray(), $specialTabsSettings );
+        $statsTabs = array_diff($stats->getStatsTabs(), $statsTabsSettings );
+
         return Inertia::render('UserSettings', [
             'bookmakers' => Bookmaker::get(),
+            'specialTabs' => array_values($specialTabs),
+            'statsTabs' => array_values($statsTabs),
         ]);
     }
 
@@ -24,7 +40,7 @@ class UserSettingController extends Controller
         foreach (Request::all() as $key => $value) {
             $setting = Setting::where('name', $key)->first();
             $value = $value['value'];
-            if($setting->type == 'array'){
+            if ($setting->type == 'array') {
                 $value = json_encode($value);
             }
             UserSetting::updateOrCreate(
