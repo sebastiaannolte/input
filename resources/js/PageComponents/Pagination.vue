@@ -170,7 +170,7 @@
               font-medium
             "
             :class="{
-              'z-10 bg-indigo-50 border-indigo-500 text-indigo-600':
+              'bg-indigo-50 border-indigo-500 text-indigo-600':
                 currentPage == index,
             }"
           >

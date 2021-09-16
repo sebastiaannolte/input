@@ -2,12 +2,9 @@
   <Head title="Settings" />
   <form action="#" method="POST">
     <div class="shadow sm:rounded-md sm:overflow-hidden">
-      <div class="bg-white py-6 px-4 sm:p-6 h-96">
+      <div class="bg-white py-6 px-4 sm:p-6">
         <div>
-          <h2
-            id="payment-details-heading"
-            class="text-xl leading-6 font-medium text-gray-900 font-bold"
-          >
+          <h2 class="text-xl leading-6 font-medium text-gray-900 font-bold">
             Default settings
           </h2>
           <p class="mt-1 text-sm text-gray-500">
@@ -86,6 +83,134 @@
               :options="bookmakerNames"
             />
           </div>
+          <div class="col-span-4 sm:col-span-2">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="">
+                Special tabs to show/order
+                <draggable
+                  class="divide-y divide-gray-200 min-h-20"
+                  :list="newSettings.special_tabs.value"
+                  :animation="200"
+                  ghost-class="moving-card"
+                  group="specialTabs"
+                  tag="ul"
+                >
+                  <template #item="{ element }">
+                    <li
+                      class="
+                        p-2
+                        mb-2
+                        flex
+                        justify-between
+                        items-center
+                        bg-white
+                        shadow
+                        rounded-lg
+                        cursor-move
+                        border border-white
+                      "
+                    >
+                      {{ element }}
+                    </li>
+                  </template>
+                </draggable>
+              </div>
+              <div class="">
+                Hidden tabs
+                <draggable
+                  class="divide-y divide-gray-200 min-h-20"
+                  :list="specialTabs"
+                  :animation="200"
+                  ghost-class="moving-card"
+                  group="specialTabs"
+                  tag="ul"
+                >
+                  <template #item="{ element }">
+                    <li
+                      class="
+                        p-2
+                        mb-2
+                        flex
+                        justify-between
+                        items-center
+                        bg-white
+                        shadow
+                        rounded-lg
+                        cursor-move
+                        border border-white
+                      "
+                    >
+                      {{ element }}
+                    </li>
+                  </template>
+                </draggable>
+              </div>
+            </div>
+          </div>
+          <div class="col-span-4 sm:col-span-2">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="">
+                Stats tabs to show/order
+                <draggable
+                  class="divide-y divide-gray-200 min-h-20"
+                  :list="newSettings.stats_tabs.value"
+                  :animation="200"
+                  ghost-class="moving-card"
+                  group="specialTabs"
+                  tag="ul"
+                >
+                  <template #item="{ element }">
+                    <li
+                      class="
+                        p-2
+                        mb-2
+                        flex
+                        justify-between
+                        items-center
+                        bg-white
+                        shadow
+                        rounded-lg
+                        cursor-move
+                        border border-white
+                      "
+                    >
+                      {{ element }}
+                    </li>
+                  </template>
+                </draggable>
+              </div>
+              <div class="">
+                Hidden tabs
+                <draggable
+                  class="divide-y divide-gray-200 min-h-20"
+                  :list="statsTabs"
+                  :animation="200"
+                  ghost-class="moving-card"
+                  group="specialTabs"
+                  tag="ul"
+                >
+                  <template #item="{ element }">
+                    <li
+                      class="
+                        p-2
+                        mb-2
+                        flex
+                        justify-between
+                        items-center
+                        bg-white
+                        shadow
+                        rounded-lg
+                        cursor-move
+                        border border-white
+                      "
+                    >
+                      {{ element }}
+                    </li>
+                  </template>
+                </draggable>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -109,13 +234,16 @@ import TextInput from "@/Components/TextInput.vue";
 import LoadingButton from "@/Components/LoadingButton";
 import moment from "moment";
 import Multiselect from "@vueform/multiselect";
+import draggable from "vuedraggable";
 
 export default {
-  components: { Button, TextInput, LoadingButton, Multiselect },
+  components: { Button, TextInput, LoadingButton, Multiselect, draggable },
   layout: Layout,
 
   props: {
     bookmakers: Object,
+    specialTabs: Object,
+    statsTabs: Object,
   },
   data() {
     return {
@@ -124,6 +252,7 @@ export default {
       date: null,
       gamesResponse: null,
       loadingGames: false,
+      speiclaTabsFiltered: null,
     };
   },
 
@@ -164,7 +293,7 @@ export default {
     stringSettings() {
       return Object.fromEntries(
         Object.entries(this.settings).filter(
-          ([key, value]) => value.type == 'string'
+          ([key, value]) => value.type == "string"
         )
       );
     },

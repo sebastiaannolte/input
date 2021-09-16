@@ -1,6 +1,5 @@
 <template>
   <Head :title="title" />
-  <filters-slide-over :prop-filters="filters" @filterSubmit="handleFilter" />
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
     <div
       class="
@@ -76,14 +75,8 @@
     </div>
   </div>
 
-  <div class="flex justify-between mb-5">
-    <active-filters
-      class="flex items-center"
-      :prop-filters="filters"
-      @filterSubmit="handleFilter"
-    />
-    <show-filter-button />
-  </div>
+  <active-filters :prop-filters="filters" :filter-route="filterRoute" />
+
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
       <label for="tabs" class="sr-only">Select a tab</label>
@@ -127,10 +120,10 @@
         rounded-md
         sm:overflow-hidden
         w-full
-        md:w-2/3
       "
     >
-      <div class="hidden sm:block mb-5">
+      <!-- md:w-2/3 -->
+      <div class="hidden sm:block">
         <div class="border-b border-gray-200">
           <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
             <span
@@ -151,84 +144,104 @@
           </nav>
         </div>
       </div>
-      <div class="relative" :style=" loading ? 'height: 500px' : ''">
+      <div class="relative" :style="loading ? 'height: 500px' : ''">
         <loading v-model:active="loading" :is-full-page="false" />
       </div>
-      <vue3-chart-js
-        v-if="!loading"
-        :type="selectedTab.type"
-        :data="selectedTab.data"
-        :options="selectedTab.options"
-        class="mb-5 p-2 md:p-4"
-      />
-      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+      <div class="grid gap-4 p-4"
+      :class="{'grid-cols-1' : !currentTable.head,
+      'grid-cols-2' : currentTable.head}">
+        <div class="w-full h-full flex-col">
+          <vue3-chart-js
+            v-if="!loading"
+            :type="currentGraph.type"
+            :data="currentGraph.data"
+            :options="currentGraph.options"
+            class=""
+            height="400"
+          />
+        </div>
+        <div class="overflow-x-auto w-full"
+         v-if="currentTable.head">
           <div
-            class="shadow overflow-hidden border-b border-gray-200 rounded-md"
+            class="py-2 align-middle inline-block min-w-full"
+           
           >
-            <table class="min-w-full divide-y divide-gray-200" v-if="!loading">
-              <thead class="bg-gray-50">
-                <th
-                  scope="col"
-                  class="
-                    t-header
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
-                  :key="keys"
-                  v-for="(values, keys) in currentTable.head"
-                  :class="{
-                    'arrow-down': sortType == values && isReverse,
-                    'arrow-up': sortType == values && !isReverse,
-                  }"
-                  @click="sortHeader(values)"
-                >
-                  {{ values }}
-                </th>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(values, key) in sortTable"
-                  :key="key"
-                  :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
-                >
-                  <td
-                    class="
-                      first:font-bold
-                      px-6
-                      py-2
-                      whitespace-nowrap
-                      text-sm
-                      font-medium
-                      text-gray-900 text-left
-                    "
-                    v-for="(values, key) in values"
-                    :key="key"
-                  >
-                    {{ values.value }}{{ values.type }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
             <div
-              v-if="!sortTable || sortTable.length == 0"
-              class="
-                bg-white
-                col-span-1
-                px-6
-                py-4
-                whitespace-nowrap
-                text-sm
-                font-medium
-                text-gray-900 text-center
-              "
+              class="shadow overflow-hidden border-b border-gray-200 rounded-md"
             >
-              No results
+              <table
+                class="min-w-full divide-y divide-gray-200"
+                v-if="!loading"
+              >
+                <thead class="bg-gray-50">
+                  <th
+                    scope="col"
+                    class="
+                      t-header
+                      px-6
+                      py-3
+                      text-left text-xs
+                      font-medium
+                      text-gray-500
+                      uppercase
+                      tracking-wider
+                    "
+                    :key="keys"
+                    v-for="(values, keys) in currentTable.head"
+                    :class="{
+                      'arrow-down':
+                        sort.sortType == values && sort.sortOrder == 'DESC',
+                      'arrow-up':
+                        sort.sortType == values && sort.sortOrder == 'ASC',
+                    }"
+                    @click="sortHeader(values)"
+                  >
+                    {{ values }}
+                  </th>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(values, key) in currentTable.body"
+                    :key="key"
+                    :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+                  >
+                    <td
+                      class="
+                        first:font-bold
+                        px-6
+                        py-2
+                        whitespace-nowrap
+                        text-sm
+                        font-medium
+                        text-gray-900 text-left
+                      "
+                      v-for="(values, key) in values"
+                      :key="key"
+                    >
+                      {{ values.value }}{{ values.type }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div
+                v-if="
+                  currentTable &&
+                  currentTable.body &&
+                  currentTable.body.length == 0
+                "
+                class="
+                  bg-white
+                  col-span-1
+                  px-6
+                  py-4
+                  whitespace-nowrap
+                  text-sm
+                  font-medium
+                  text-gray-900 text-center
+                "
+              >
+                No results
+              </div>
             </div>
           </div>
         </div>
@@ -246,6 +259,7 @@ import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import pickBy from "lodash/pickBy";
 import ShowFilterButton from "@/Components/ShowFilterButton";
 import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   layout: Layout,
@@ -259,67 +273,65 @@ export default {
   props: {
     stats: Object,
     tabs: Array,
-    filters: Array,
+    filters: {
+      type: Array,
+      default: [],
+    },
+    type: Number,
+    sort: Object,
   },
 
   data() {
     return {
-      selectedTab: null,
-      currentTable: null,
+      currentGraph: null,
+      currentTable: {
+        head: null,
+        body: null,
+      },
       generatedTabs: [],
       loading: false,
       localFilters: {},
-      sortType: "",
-      isReverse: false,
-      sortIcon: null,
+      currentTab: null,
+      filterRoute: null,
     };
   },
 
   created() {
     this.createTabs();
-    this.getStats("tipster");
+    this.filterRoute = this.route("stats.index", {
+      username: this.$page.props.auth.user.username,
+      _query: pickBy({ type: this.type, sort: this.sort }),
+    });
+
+    this.emitter.on("filter:submit", () => {
+      this.getStats();
+    });
+
+    this.getStats();
     this.setPageTitle();
   },
 
   methods: {
-    getStats(key) {
+    getStats() {
+      var key = this.generatedTabs[0].option;
+      if (this.type) {
+        key = this.type;
+      }
       this.loading = true;
       this.$http
         .post(this.route("stats.stats"), {
           key: key,
-          filters: this.localFilters,
+          filters: this.filters,
+          sort: this.sort,
         })
         .then((response) => {
           if (response.data) {
-            this.selectedTab = response.data[key].graph;
+            this.currentGraph = response.data[key].graph;
             this.currentTable = response.data[key].table;
+
             this.loading = false;
           }
         });
-    },
-
-    handleFilter(filters) {
-      var localFilters = {};
-      this.localFilters = filters.filters;
-      var currentTab = this.generatedTabs.find((tab) => tab.current == true);
-      this.getStats(currentTab.option);
-
-      for (const key in this.localFilters) {
-        var filter = this.localFilters[key];
-
-        if (filter.value) {
-          localFilters[key] = filter;
-        }
-      }
-
-      this.$inertia.get(
-        this.route("stats.index", this.$page.props.auth.user.username),
-        pickBy({ filters: localFilters }),
-        {
-          preserveScroll: true,
-          preserveState: true,
-        }
-      );
     },
 
     setPageTitle() {
@@ -337,60 +349,71 @@ export default {
     },
 
     changeTab(value) {
-      this.sortType = null;
-      this.getStats(value);
-      this.generatedTabs.forEach((tab) => {
-        if (tab.option == value) {
-          return (tab.current = true);
+      this.sort.sortType = "bets";
+      this.currentTab = this.generatedTabs.find((tab) => tab.option == value);
+      Inertia.get(
+        this.route("stats.index", this.$page.props.auth.user.username),
+        pickBy({
+          type: this.currentTab.option,
+          filters: null, // reset filters if tab changes
+        }),
+        {
+          only: ["type", "filters"],
         }
-        tab.current = false;
-      });
+      );
     },
 
     createTabs() {
       for (const key in this.tabs) {
         var tab = this.tabs[key];
-        this.generatedTabs.push({ option: tab, current: false });
+        var current = false;
+        var localTab = {
+          option: tab,
+          current: current,
+        };
+        if (tab == this.type) {
+          localTab.current = true;
+          this.currentTab = localTab;
+        }
+        this.generatedTabs.push(localTab);
       }
 
-      this.generatedTabs[0].current = true;
+      if (!this.type) {
+        this.currentTab = this.generatedTabs[0];
+        this.generatedTabs[0].current = true;
+      } else {
+        this.generatedTabs.find(
+          (tab) => tab.option == this.type
+        ).current = true;
+      }
     },
 
     sortHeader(tableHeader) {
       if (this.currentTable.body.length < 2) {
         return;
       }
-      if (this.sortType != tableHeader) {
-        this.isReverse = false;
-      }
-      this.sortType = tableHeader;
-      this.isReverse = !this.isReverse;
-    },
-  },
-  computed: {
-    sortTable: function () {
-      var self = this;
-      if (!this.currentTable || !this.currentTable.body) {
-        return false;
-      }
 
-      if (!this.sortType) {
-        return this.currentTable.body;
+      if (this.sort.sortType != tableHeader) {
+        this.sort.sortOrder = "DESC";
+      } else {
+        this.sort.sortOrder = this.sort.sortOrder == "DESC" ? "ASC" : "DESC";
       }
+      this.sort.sortType = tableHeader;
 
-      this.currentTable.body = Object.values(this.currentTable.body).sort(
-        function (a, b) {
-          if (a[self.sortType].value < b[self.sortType].value) {
-            if (self.isReverse) return 1;
-            else return -1;
-          } else {
-            if (self.isReverse) return -1;
-            else return 1;
-          }
+      Inertia.get(
+        this.route("stats.index", this.$page.props.auth.user.username),
+        pickBy({
+          type: this.currentTab.option,
+          sort: this.sort,
+          filters: this.filters,
+        }),
+        {
+          preserveScroll: true,
+        },
+        {
+          only: ["type", "sort", "filters"],
         }
       );
-
-      return this.currentTable.body;
     },
   },
 };

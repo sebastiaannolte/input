@@ -114,20 +114,23 @@ export default {
 
     getResults(searchValue) {
       if (searchValue && searchValue.length >= 3) {
-        this.$http
-          .get(this.route("event.search", searchValue))
-          .then((response) => {
-            if (response.data) {
-              this.results = Object.values(response.data);
-              if (this.results.length > 0) {
-                if (!this.selected) {
-                  this.isOpen = true;
+        clearTimeout(this.eventTimeout);
+        this.eventTimeout = setTimeout(() => {
+          this.$http
+            .get(this.route("event.search", searchValue))
+            .then((response) => {
+              if (response.data) {
+                this.results = Object.values(response.data);
+                if (this.results.length > 0) {
+                  if (!this.selected) {
+                    this.isOpen = true;
+                  }
+                  this.isFirstLoad = false;
+                  this.selected = false;
                 }
-                this.isFirstLoad = false;
-                this.selected = false;
               }
-            }
-          });
+            });
+        }, 1000);
       }
     },
     setResult(result, i) {

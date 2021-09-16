@@ -196,6 +196,12 @@
           {{ bet.type }}
         </div>
       </div>
+      <div class="col-span-4 sm:col-span-2">
+        <div class="p-2">Placed on</div>
+        <div class="p-2 mb-2 font-bold capitalize">
+          {{ bet.created_at }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -238,7 +244,6 @@ export default {
         return;
       }
       var categories = JSON.parse(this.bet.category);
-      console.log(categories);
       var categoryNames = [];
       for (var key in categories) {
         var value = categories[key];

@@ -2,7 +2,7 @@
   <TransitionRoot as="template" :show="open">
     <Dialog
       as="div"
-      class="fixed inset-0 overflow-hidden"
+      class="fixed inset-0 overflow-hidden z-20"
       @close="open = false"
     >
       <div class="absolute inset-0 overflow-hidden">

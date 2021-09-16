@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Lib\Stats;
+use App\Lib\StatsHelper;
 use App\Models\Bet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Inertia\Inertia;
 
@@ -16,12 +18,19 @@ class StatsController extends Controller
     {
         $userId = User::where('username', $username)->first()->id;
         $filters = FacadesRequest::get('filters');
-        $stats = new Stats($userId, $filters);
+        $type = FacadesRequest::get('type');
+        $sort = FacadesRequest::get('sort') ?: [
+            'sortType' => "Bets",
+            'sortOrder' => "DESC"
+        ];
 
         $bets = Bet::user($userId)->filters($filters);
+        $tabs = Auth::user()->getStatsTabs();
         return Inertia::render('Stats', [
-            'tabs' => $stats->getTabs(),
+            'tabs' => $tabs,
             'filters' => $filters,
+            'type' => $type,
+            'sort' => $sort,
             'stats' => [
                 'roi' => $bets->clone()->roi(2),
                 'bets' => $bets->clone()->betCount(),
@@ -76,8 +85,11 @@ class StatsController extends Controller
         $key = $request->get('key');
         $filters = $request->get('filters');
 
+        $sort = FacadesRequest::get('sort');
+
         $start = now()->subMonths(5)->startOfMonth()->format('Y-m-d H:i:s');
         $end = now()->format('Y-m-d H:i:s');
+
 
         $defaultFilters = [
             'from' => [
@@ -92,17 +104,17 @@ class StatsController extends Controller
             ],
         ];
 
-        if (!array_key_exists('from', $filters) || !$filters['from']['value'] ) {
+        if (!$filters || !array_key_exists('from', $filters) || !$filters['from']['value']) {
             $filters['from'] = $defaultFilters['from'];
         }
 
-        if (!array_key_exists('to', $filters) || !$filters['to']['value']) {
+        if (!$filters || !array_key_exists('to', $filters) || !$filters['to']['value']) {
             $filters['to'] = $defaultFilters['to'];
         }
         $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);
 
         $userId = 1;
-        $stats = new Stats($userId, $filters);
-        return $stats->renderStats($key, $request);
+        $stats = new Stats($userId, $filters, $sort);
+        return $stats->renderStats($key, $sort);
     }
 }
