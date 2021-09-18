@@ -377,8 +377,6 @@ export default {
     filter() {
       var localFilters = {};
       this.localFilters = this.filters;
-      console.log(this.localFilters, this.filters);
-
       for (const key in this.localFilters) {
         var filter = this.localFilters[key];
 
@@ -419,7 +417,7 @@ export default {
 
   watch: {
     propFilters: function (val) {
-      this.setFilters();
+      // this.setFilters();
     },
   },
 };

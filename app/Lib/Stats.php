@@ -14,34 +14,14 @@ class Stats
     protected $odds = null;
     protected $filters = null;
     protected $sort = null;
+    protected $statsHelper = null;
 
     public function __construct($userId, $filters, $sort = false) //maybe optional
     {
         $this->userId = $userId;
         $this->filters = $filters;
         $this->sort = $sort;
-        $this->odds = [
-            '< 1.50' => [
-                'min' => 1,
-                'max' => 1.50,
-            ],
-            '1.50-1.75' => [
-                'min' => 1.50,
-                'max' => 1.75,
-            ],
-            '1.75-2' => [
-                'min' => 1.75,
-                'max' => 2,
-            ],
-            '2-2.25' => [
-                'min' => 2,
-                'max' => 2.25,
-            ],
-            '>2.25' => [
-                'min' => 2.25,
-                'max' => 1000,
-            ],
-        ];
+        $this->statsHelper = (new StatsHelper);
     }
 
     public function oddsGraph()
@@ -58,14 +38,14 @@ class Stats
         when odds > 2.25 and odds <= 2.50 then '2-2.25'
         when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
         else '2.75+'
-        end AS odd_range"),  $this->statsSelect(), $dateSelect['select'])
+        end AS odd_range"),  $this->statsHelper->statsSelect(), $dateSelect['select'])
             ->filters($this->filters)
             ->groupBy('formatted_date', 'id');
 
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odd_range, formatted_date'), $this->statsSelect())
+            ->select(DB::raw('count(id), odd_range, formatted_date'), $this->statsHelper->statsSelect())
             ->groupBy('odd_range', 'formatted_date')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
@@ -118,7 +98,7 @@ class Stats
             ->groupBy($type)
             ->select([
                 $type,
-                $this->statsSelect(),
+                $this->statsHelper->statsSelect(),
             ])
             ->whereNotNull($type)
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder']);
@@ -128,7 +108,7 @@ class Stats
             ->select([
                 $type,
                 $dateSelect['select'],
-                $this->statsSelect()
+                $this->statsHelper->statsSelect()
 
             ])
             ->whereNotNull($type)
@@ -182,7 +162,7 @@ class Stats
             ->groupBy('formatted_date')
             ->select([
                 DB::raw("DATE_FORMAT(`date`, '%Y-%m-%d') as formatted_date"),
-                $this->statsSelect()
+                $this->statsHelper->statsSelect()
 
             ])
             ->orderBy('formatted_date')->get()->mapWithKeys(function ($values) {
@@ -252,7 +232,7 @@ class Stats
                 'bet_types.id',
                 'bet_types.name',
                 $dateSelect['select'],
-                $this->statsSelect()
+                $this->statsHelper->statsSelect()
             ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->whereNotNull('name')
             ->get();
@@ -266,7 +246,7 @@ class Stats
             ->select([
                 'bet_types.id',
                 'bet_types.name',
-                $this->statsSelect()
+                $this->statsHelper->statsSelect()
             ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->whereNotNull('name');
 
@@ -479,14 +459,14 @@ class Stats
         when odds > 2.25 and odds <= 2.50 then '2-2.25'
         when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
         else '2.75+'
-        end AS odd_range"),  $this->statsSelect())
+        end AS odd_range"),  $this->statsHelper->statsSelect())
             ->filters($this->filters)
             ->groupBy('id');
 
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odd_range'), $this->statsSelect())
+            ->select(DB::raw('count(id), odd_range'), $this->statsHelper->statsSelect())
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->groupBy('odd_range');
 
@@ -602,7 +582,7 @@ class Stats
                 'league_id',
                 'leagues.country as country/competition',
                 'leagues.name as competition',
-                $this->statsSelect()
+                $this->statsHelper->statsSelect()
             ])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
@@ -634,7 +614,7 @@ class Stats
                 $join->orOn('teams.id', '=', 'fixtures.away_team');
             })
             ->groupBy('teams.id', 'league_id')
-            ->select(['teams.id as team_id', 'teams.name as team', 'league_id', $this->statsSelect()])
+            ->select(['teams.id as team_id', 'teams.name as team', 'league_id', $this->statsHelper->statsSelect()])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
@@ -667,25 +647,6 @@ class Stats
         return $bets;
     }
 
-    public function statsSelect()
-    {
-        return DB::raw('count(bets.id) as bets, 
-        COUNT(CASE WHEN status = "won" THEN 1 END) AS won, 
-        
-        sum(stake) AS staked,
-
-        (SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
-        SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) as profit,
-
-        ((SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
-        SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) / sum(bets.stake) * 100) as roi
-        ');
-    }
-
     public function refereeTable()
     {
         $type = 'referee';
@@ -698,7 +659,7 @@ class Stats
             ->join('fixtures', 'match_id', '=', 'fixtures.id')
             ->groupBy('fixtures.referee')
             ->whereNotNull('fixtures.referee')
-            ->select(['referee', $this->statsSelect()])
+            ->select(['referee', $this->statsHelper->statsSelect()])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
         $output = [];
@@ -725,7 +686,7 @@ class Stats
             ->join('venues', 'venue_id', '=', 'venues.id')
             ->groupBy('fixtures.venue_id')
             ->whereNotNull('fixtures.venue_id')
-            ->select(['venue_id', 'venues.name as venue', $this->statsSelect()])
+            ->select(['venue_id', 'venues.name as venue', $this->statsHelper->statsSelect()])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
@@ -831,7 +792,7 @@ class Stats
 
         $types = DB::table(DB::raw("({$homeAndAway->toSql()}) as bets"))
             ->mergeBindings($homeAndAway->getQuery())
-            ->select(DB::raw('id, team'), $this->statsSelect())
+            ->select(DB::raw('id, team'), $this->statsHelper->statsSelect())
             ->groupBy('team', 'id')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);

@@ -29,7 +29,6 @@ export default {
     stats: Object,
     filters: Array,
     upcommingBets: Object,
-    betTypes: Object,
   },
   data() {
     return {

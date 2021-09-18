@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Lib\StatsHelper;
 use App\Models\Bet;
 use App\Models\BetType;
 use App\Models\User;
@@ -24,19 +25,21 @@ class BetController extends Controller
         $filters = Request::get('filters');
 
         $bets = Bet::user($userId);
+        $betStats = $bets->clone()->select((new StatsHelper)->statsSelect())->first();
+
         return Inertia::render('Home', [
             'stats' => [
-                'totalBets' => $bets->clone()->count(),
-                'wonbets' => $bets->clone()->wonBets(),
-                'winprecentage' => $bets->clone()->winprecentage(2),
-                'units' => $bets->clone()->units(2),
-                'roi' => $bets->clone()->roi(2),
+                'totalBets' => $betStats->bets,
+                'wonbets' => $betStats->won,
+                'winprecentage' => round($betStats->won / $betStats->bets * 100, 2),
+                'units' => round($betStats->profit, 2),
+                'roi' => round($betStats->roi, 2),
                 'username' => $username,
             ],
+
             'bets' => $bets->clone()->bets()->filters($filters)->paginate()->withQueryString(),
             'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->take(3)->get(),
             'filters' => $filters,
-            'betTypes' => BetType::get(),
         ]);
     }
 
@@ -122,7 +125,7 @@ class BetController extends Controller
             ]
         );
 
-        return Redirect::route('userhome', Auth::user()->username);
+        return Redirect::back();
     }
 
     public function show($id)
@@ -131,20 +134,17 @@ class BetController extends Controller
 
         return Inertia::render('Bet', [
             'bet' => $bet,
-            'betTypes' => BetType::get()->mapWithKeys(function ($item) {
-                return [$item->id => $item->name];
-            }),
         ]);
     }
 
-    public function edit($id)
-    {
-        $bet = Bet::find($id);
-        return Inertia::render('BetEdit', [
-            'bet' => $bet,
-            'betTypes' => BetType::get(),
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $bet = Bet::find($id);
+    //     return Inertia::render('BetEdit', [
+    //         'bet' => $bet,
+    //         // 'betTypes' => BetType::get(),
+    //     ]);
+    // }
 
     public function delete($id)
     {
