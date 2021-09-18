@@ -214,7 +214,6 @@ export default {
 
   props: {
     bet: Object,
-    betTypes: Object,
   },
   data() {
     return {
@@ -247,7 +246,7 @@ export default {
       var categoryNames = [];
       for (var key in categories) {
         var value = categories[key];
-        categoryNames.push(this.betTypes[value]);
+        categoryNames.push(this.$page.props.betTypes.find(betType => betType.id == value).name);
       }
       return categoryNames.join(", ");
     },
