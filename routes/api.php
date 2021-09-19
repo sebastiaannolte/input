@@ -26,7 +26,6 @@ Route::middleware(['auth'])->group(function () {
     })->name('event.search');
 
     Route::get('/games/{date}', function ($search) {
-        // dd($search);
         return GamesApi::get($search);
     })->name('games.get');
 

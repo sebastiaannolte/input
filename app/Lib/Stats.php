@@ -398,7 +398,7 @@ class Stats
         return $headerItems;
     }
 
-    public function tableBodyRendered($typeValue, $output, $type, $specialId = '',)
+    public function tableBodyRendered($typeValue, $output, $type, $specialId = '')
     {
         $output = [
             $type => ['value' => $typeValue, 'type' => '', 'specialId' => $specialId],
