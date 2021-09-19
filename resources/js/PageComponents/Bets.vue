@@ -405,15 +405,39 @@ export default {
       }, 1);
     },
 
+    findPage(id) {
+      this.$http.get(this.route("bet.pageNumber", id)).then((response) => {
+        if (response.data) {
+          Inertia.reload({
+            data: {
+              page: response.data,
+            },
+            onSuccess: () => {
+              const el = this.$refs["bet-" + id];
+              if (el) {
+                this.scroll(id, el);
+              }
+            },
+          });
+        }
+      });
+    },
+
+    scroll(id, el) {
+      this.highlighted = id;
+      setTimeout(() => {
+        this.highlighted = null;
+      }, 3000);
+      el.scrollIntoView({ behavior: "smooth" });
+    },
+
     scrollAndHighlight(id) {
       const el = this.$refs["bet-" + id];
-
+      if (!el) {
+        this.findPage(id);
+      }
       if (el) {
-        this.highlighted = id;
-        setTimeout(() => {
-          this.highlighted = null;
-        }, 3000);
-        el.scrollIntoView({ behavior: "smooth" });
+        this.scroll(id, el);
       }
     },
   },

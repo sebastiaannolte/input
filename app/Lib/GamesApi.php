@@ -2,6 +2,7 @@
 
 namespace App\Lib;
 
+use App\Models\Bet;
 use App\Models\BetType;
 use App\Models\Bookmaker;
 use App\Models\Fixture;
@@ -11,7 +12,7 @@ use App\Models\TeamLeague;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class GamesApi
 {
@@ -160,7 +161,7 @@ class GamesApi
 
         $betTypes = json_decode($json, true)['response'];
         foreach ($betTypes as $key => $betType) {
-            if(!$betType['name']){
+            if (!$betType['name']) {
                 continue;
             }
             BetType::updateOrCreate(
@@ -218,5 +219,17 @@ class GamesApi
     public static function match($matchId)
     {
         return Fixture::find($matchId);
+    }
+
+    public static function findPageOfBet($id)
+    {
+        $filters = Request::get('filters');
+        $bets = Bet::bets()->filters($filters)->get();
+
+        foreach ($bets as $index => $bet) {
+            if ($bet->id == $id) {
+                return ceil($index / 15);
+            }
+        }
     }
 }

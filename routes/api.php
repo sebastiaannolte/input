@@ -3,7 +3,6 @@
 use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\StatsController;
 use App\Lib\GamesApi;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,10 +30,12 @@ Route::middleware(['auth'])->group(function () {
         return GamesApi::get($search);
     })->name('games.get');
 
+    Route::get('/find-bet/{id}', function ($id) {
+        return GamesApi::findPageOfBet($id);
+    })->name('bet.pageNumber');
+
     Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
     Route::post('/comps', [SpecialStatsController::class, 'competitions'])->name('competitions.get');
     Route::post('/comp', [SpecialStatsController::class, 'competitionStats'])->name('competition.get');
     Route::post('/special', [SpecialStatsController::class, 'specialStats'])->name('api.special');
-
-    
 });
