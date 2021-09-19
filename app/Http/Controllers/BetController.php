@@ -55,7 +55,7 @@ class BetController extends Controller
             'sport' => ['required', 'max:50'],
             'type' => ['required', 'max:50'],
         ]);
-        // dd(Request::all());
+
         Bet::create([
             'match_id' => Request::get('match_id'),
             'event' => Request::get('event'),
@@ -72,7 +72,7 @@ class BetController extends Controller
             'status' => 'new',
         ]);
 
-        return Redirect::route('userhome', Auth::user()->username)->with('success', 'Bet created');;
+        return Redirect::back()->with('success', 'Bet created');;
     }
 
     public function update()
