@@ -19,10 +19,6 @@ class UserSettingController extends Controller
         $specialTabNames = collect($stats->getSpecialStatsTabs())->map(function ($value) {
             return $value['name'];
         });
-        // $statsTabNames = collect($stats->getStatsTabs())->map(function ($value) {
-        //     return $value['name'];
-        // });
-        // dd(Auth::user()->userSettingsFormatted());
         $specialTabsSettings = Auth::user()->userSettingsFormatted()['special_tabs']['value'];
         $statsTabsSettings = Auth::user()->userSettingsFormatted()['stats_tabs']['value'];
         $specialTabs = array_diff($specialTabNames->toArray(), $specialTabsSettings );

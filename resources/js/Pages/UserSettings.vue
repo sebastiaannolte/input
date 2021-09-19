@@ -80,6 +80,7 @@
               mode="tags"
               :searchable="true"
               :createTag="true"
+              addTagOn="'enter'|'space'|'tab'|';'|','"
               :options="bookmakerNames"
             />
           </div>

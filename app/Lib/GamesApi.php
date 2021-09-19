@@ -192,9 +192,6 @@ class GamesApi
                     return $item;
                 }
             } elseif (count($hasV2) == 1) {
-                if (!$item->homeTeam) {
-                    dd($item);
-                }
                 if (strpos(strtolower($item->homeTeam->name), strtolower($hasV2[0])) !== false) {
                     return $item;
                 }
@@ -228,6 +225,7 @@ class GamesApi
 
         foreach ($bets as $index => $bet) {
             if ($bet->id == $id) {
+                $index++;
                 return ceil($index / 15);
             }
         }

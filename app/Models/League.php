@@ -19,6 +19,5 @@ class League extends Model
     public function betCount()
     {
         $fixtures = $this->fixtures();
-        dd($fixtures);
     }
 }
