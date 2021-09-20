@@ -322,10 +322,11 @@
                   >
                     Cancel
                   </button>
+                  
                   <loading-button
                     class="ml-5"
                     @click.prevent="save"
-                    :loading="processing"
+                    :loading="betData.processing"
                   >
                     Save
                   </loading-button>
@@ -386,7 +387,6 @@ export default {
 
   props: {
     errors: Object,
-    processing: Boolean,
   },
   data() {
     return {
@@ -447,10 +447,9 @@ export default {
     },
     save() {
       var route = "";
-      this.betForm = this.$inertia.form(this.betData);
       if (this.bet) {
         route = this.route("bet.update");
-        this.betForm.put(route, {
+        this.betData.put(route, {
           preserveScroll: true,
           onSuccess: () => {
             this.setBetData();
@@ -460,10 +459,10 @@ export default {
         });
       } else {
         route = this.route("bet.store");
-        this.betForm.post(route, {
+        this.betData.post(route, {
           preserveScroll: true,
           onSuccess: () => {
-            if (this.betForm.clearInputs) {
+            if (this.betData.clearInputs) {
               this.setBetData();
               this.open = false;
               this.emitter.emit("event:clear");
@@ -479,6 +478,7 @@ export default {
         this.betData = this.$inertia.form({
           event: null,
           selection: null,
+          category: null,
           bookie: null,
           stake: null,
           odds: null,
@@ -490,7 +490,7 @@ export default {
         });
         this.setUserSettings();
       } else {
-        this.betData = this.bet;
+        this.betData =  this.$inertia.form(this.bet);
         this.title = "Edit " + this.bet.event;
         this.betData.date = moment(this.betData.date).format(
           "YYYY-MM-DDTHH:mm"

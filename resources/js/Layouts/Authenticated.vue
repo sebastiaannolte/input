@@ -25,10 +25,7 @@
   >
     <PlusIconOutline class="h-6 w-6" aria-hidden="true" />
   </button>
-  <bet-form-slide-over
-    :errors="errors"
-    :processing="betForm.processing"
-  />
+  <bet-form-slide-over :errors="errors" />
   <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
@@ -286,9 +283,7 @@ export default {
   },
 
   data() {
-    return {
-      betForm: this.$inertia.form(this.bet),
-    };
+    return {};
   },
 
   setup() {
