@@ -60,7 +60,7 @@
       </div>
     </div>
     <DisclosurePanel class="border-t border-gray-200">
-      <form @submit.prevent="filter">
+      <form @submit.prevent="filter" @keyup.enter="filter">
         <div class="ssm:overflow-hidden">
           <div class="py-6 px-4 sm:p-6">
             <div class="mt-6 grid grid-cols-8 gap-4">
@@ -188,7 +188,7 @@
         <Menu as="div" class="relative inline-block">
           <div class="flex">
             <MenuButton
-              @click.prevent="filter(false)"
+              @click.prevent="filter()"
               class="
                 group
                 inline-flex
@@ -273,6 +273,7 @@ export default {
   props: {
     propFilters: Object,
     filterRoute: String,
+    errors: Object,
   },
 
   components: {
@@ -297,7 +298,7 @@ export default {
         lost: "border-r-8 border-red-500",
         void: "border-r-8 border-gray-200",
       },
-      testFilters: {
+      localFilters: {
         from: {
           value: null,
           type: "min",
@@ -362,7 +363,7 @@ export default {
   methods: {
     setFilters() {
       this.filters = {
-        ...this.testFilters,
+        ...this.localFilters,
         ...this.propFilters,
       };
     },
@@ -376,9 +377,8 @@ export default {
 
     filter() {
       var localFilters = {};
-      this.localFilters = this.filters;
-      for (const key in this.localFilters) {
-        var filter = this.localFilters[key];
+      for (const key in this.filters) {
+        var filter = this.filters[key];
 
         if (filter.value) {
           localFilters[key] = filter;
