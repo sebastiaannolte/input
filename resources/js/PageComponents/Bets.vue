@@ -2,20 +2,21 @@
   <active-filters :prop-filters="filters" :filter-route="filterRoute" />
   <div class="flex flex-col">
     <div class="-my-2">
-      <div class="py-2 align-middle inline-block min-w-full">
+      <div class="py-2 align-middle min-w-full">
         <div
           class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
         >
-          <table class="table-fixed min-w-full divide-y divide-gray-200">
+          <table class="table-auto border-collapse w-full">
             <thead class="bg-gray-50">
-              <tr>
+              <tr
+                class="rounded-lg text-sm font-medium text-gray-700 text-left"
+              >
                 <th
-                  scope="col"
                   class="
-                    hidden
-                    sm:table-cell
                     px-6
                     py-3
+                    hidden
+                    sm:table-cell
                     text-left text-xs
                     font-medium
                     text-gray-500
@@ -26,10 +27,7 @@
                   Time
                 </th>
                 <th
-                  scope="col"
                   class="
-                    w-full
-                    sm:w-auto
                     px-6
                     py-3
                     text-left text-xs
@@ -42,10 +40,7 @@
                   Event
                 </th>
                 <th
-                  scope="col"
                   class="
-                    w-full
-                    sm:w-auto
                     px-6
                     py-3
                     text-left text-xs
@@ -55,13 +50,25 @@
                     tracking-wider
                   "
                 >
-                  Selection
+                  selection
                 </th>
                 <th
-                  scope="col"
                   class="
+                    px-6
+                    py-3
+                    text-left text-xs
+                    font-medium
+                    text-gray-500
+                    uppercase
+                    tracking-wider
                     hidden
                     sm:table-cell
+                  "
+                >
+                  stake
+                </th>
+                <th
+                  class="
                     px-6
                     py-3
                     text-left text-xs
@@ -69,28 +76,13 @@
                     text-gray-500
                     uppercase
                     tracking-wider
-                  "
-                >
-                  Stake
-                </th>
-                <th
-                  scope="col"
-                  class="
                     hidden
                     sm:table-cell
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
                   "
                 >
-                  Odds
+                  odds
                 </th>
                 <th
-                  scope="col"
                   class="
                     px-6
                     py-3
@@ -99,10 +91,9 @@
                     text-gray-500
                     uppercase
                     tracking-wider
-                    w-40
                   "
                 >
-                  Result
+                  result
                 </th>
               </tr>
             </thead>
@@ -168,7 +159,7 @@
                   {{ bet.odds }}
                 </td>
                 <td
-                  class="px-6 py-3 whitespace-nowrap text-sm text-gray-500"
+                  class="px-6 py-3 whitespace-nowrap text-sm text-gray-500 w-10"
                   @click.prevent="showDropdown(key)"
                 >
                   <span>
