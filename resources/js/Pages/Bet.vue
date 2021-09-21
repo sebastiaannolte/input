@@ -34,9 +34,12 @@
             hover:bg-gray-100
             focus:outline-none
             focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+            flex
+            items-center
           "
         >
-          🠔 All bets
+          <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" /> All
+          bets
         </inertia-link>
       </div>
       <div class="flex sm:flex-row flex-grow flex-col-reverse">
@@ -76,9 +79,12 @@
                 hover:bg-gray-100
                 focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+                flex
+                items-center
               "
             >
-              🠔 All bets
+              <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" />
+              All bets
             </inertia-link>
           </div>
           <div>
@@ -208,9 +214,14 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
+import { ArrowNarrowLeftIcon } from "@heroicons/vue/outline";
 
 export default {
   layout: Layout,
+
+  components: {
+    ArrowNarrowLeftIcon,
+  },
 
   props: {
     bet: Object,
@@ -246,7 +257,9 @@ export default {
       var categoryNames = [];
       for (var key in categories) {
         var value = categories[key];
-        categoryNames.push(this.$page.props.betTypes.find(betType => betType.id == value).name);
+        categoryNames.push(
+          this.$page.props.betTypes.find((betType) => betType.id == value).name
+        );
       }
       return categoryNames.join(", ");
     },
