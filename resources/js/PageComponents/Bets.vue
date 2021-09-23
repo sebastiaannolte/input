@@ -159,7 +159,7 @@
                   {{ bet.odds }}
                 </td>
                 <td
-                  class="px-6 py-3 whitespace-nowrap text-sm text-gray-500 w-10"
+                  class="px-6 py-3 whitespace-nowrap text-sm text-gray-500"
                   @click.prevent="showDropdown(key)"
                 >
                   <span>
@@ -213,6 +213,9 @@
                       sm:text-sm
                       rounded-md
                     "
+                    :class="{
+                      'w-full sm:w-24 sm:-mr-24': activeKey == key,
+                    }"
                     @change.prevent="selectStatus(bet.status)"
                     v-show="activeKey == key"
                     v-model="bet.status"
