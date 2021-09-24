@@ -3,6 +3,7 @@
     v-model="betData.event"
     mode="single"
     placeholder="Search a match"
+    noOptionsText="Start typing to find a match"
     :filterResults="false"
     :minChars="3"
     :resolveOnLoad="false"
