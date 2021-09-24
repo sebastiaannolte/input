@@ -66,7 +66,7 @@
                           <div class="py-6 px-4 sm:p-6">
                             <div class="grid grid-cols-4 gap-6">
                               <div class="col-span-4 sm:col-span-4">
-                                <Events :bet="betData" :errors="errors" />
+                                <EventsV2 :bet="betData" :errors="errors" />
                               </div>
 
                               <div class="col-span-4 sm:col-span-4">
@@ -343,6 +343,7 @@
 <script>
 import Button from "@/Components/Button.vue";
 import Events from "@/PageComponents/Events.vue";
+import EventsV2 from "@/PageComponents/EventsV2.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AutocompleteInput from "@/Components/AutocompleteInput.vue";
 import LoadingButton from "@/Components/LoadingButton.vue";
@@ -370,6 +371,7 @@ export default {
     XIcon,
     Button,
     Events,
+    EventsV2,
     TextInput,
     TextInputWithAddOn,
     Dropdown,
@@ -477,6 +479,7 @@ export default {
         this.title = "New bet";
         this.betData = this.$inertia.form({
           event: null,
+          match_id: null,
           selection: null,
           category: null,
           bookie: null,

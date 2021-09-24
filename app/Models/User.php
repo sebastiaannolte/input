@@ -61,38 +61,4 @@ class User extends Authenticatable
             return [$setting->name => ['value' => array_key_exists($setting->id, $userSettings->toArray()) ? ($setting->type == 'array' ? json_decode($userSettings[$setting->id]) : $userSettings[$setting->id]) : null, 'type' => $setting->type]];
         });
     }
-
-    public function getSpecialTabs()
-    {
-        $statsHelper = new StatsHelper;
-        $allTabs = collect($statsHelper->getSpecialStatsTabs());
-        $userTabs = $this->userSettingsFormatted()['special_tabs']['value'];
-
-        $filteredTabs = $allTabs->mapWithKeys(function ($value, $key) use ($userTabs){
-            return [$value['name'] => $value];
-        });
-        $tabs = [];
-        foreach ($userTabs as $key => $value) {
-           $tabs[] = $filteredTabs[$value];
-        }
-        
-        return $tabs;
-    }
-
-    public function getStatsTabs()
-    {
-        $statsHelper = new StatsHelper;
-        $allTabs = collect($statsHelper->getStatsTabs());
-        $userTabs = $this->userSettingsFormatted()['stats_tabs']['value'];
-
-        $filteredTabs = $allTabs->mapWithKeys(function ($value, $key) use ($userTabs){
-            return [$value => $value];
-        });
-        $tabs = [];
-        foreach ($userTabs as $key => $value) {
-           $tabs[] = $filteredTabs[$value];
-        }
-        
-        return $tabs;
-    }
 }

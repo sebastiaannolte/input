@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Lib\GamesApi;
 use App\Lib\Stats;
+use App\Lib\StatsHelper;
 use App\Models\League;
 use App\Models\Team;
 use App\Models\Venue;
@@ -56,13 +57,15 @@ class SpecialStatsController extends Controller
 
     public function special($username)
     {
+        $statsHelper = new StatsHelper;
         $filters = Request::get('filters');
         $type = Request::get('type');
         $sort = Request::get('sort') ?: [
             'sortType' => "Bets",
             'sortOrder' => "DESC"
         ];
-        $tabs = Auth::user()->getSpecialTabs();
+
+        $tabs = $statsHelper->getSpecialStatsTabs();
 
         return Inertia::render('SpecialStats', [
             'tabs' => $tabs,

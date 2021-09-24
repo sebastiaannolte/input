@@ -58,7 +58,7 @@ class BetController extends Controller
 
         Bet::create([
             'match_id' => Request::get('match_id'),
-            'event' => Request::get('event'),
+            'event' => Request::get('event')['label'],
             'selection' => Request::get('selection'),
             'category' => json_encode(Request::get('category')),
             'bookie' => Request::get('bookie'),
@@ -94,7 +94,7 @@ class BetController extends Controller
             ],
             [
                 'match_id' => Request::get('match_id'),
-                'event' => Request::get('event'),
+                'event' => Request::get('event')['label'],
                 'selection' => Request::get('selection'),
                 'category' => Request::get('category'),
                 'bookie' => Request::get('bookie'),

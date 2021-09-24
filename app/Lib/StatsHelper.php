@@ -19,18 +19,18 @@ class StatsHelper
     public function getStatsTabs()
     {
         return [
-            'tipster',
+            'profit',
             'odds',
             'selection',
+            'bookie',
+            'type',
             'stake',
             'sport',
-            'bookie',
-            'profit',
-            'type',
+            'tipster',
         ];
     }
 
-    public function statsSelect($round = false)
+    public function statsSelect()
     {
         return DB::raw('count(bets.id) as bets, 
         COUNT(CASE WHEN status = "won" THEN 1 END) AS won, 

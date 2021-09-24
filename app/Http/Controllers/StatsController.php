@@ -16,6 +16,7 @@ class StatsController extends Controller
 {
     public function index($username)
     {
+        $statsHelper = new StatsHelper;
         $userId = User::where('username', $username)->first()->id;
         $filters = FacadesRequest::get('filters');
         $type = FacadesRequest::get('type');
@@ -23,9 +24,8 @@ class StatsController extends Controller
             'sortType' => "Bets",
             'sortOrder' => "DESC"
         ];
-
         $bets = Bet::user($userId)->filters($filters);
-        $tabs = Auth::user()->getStatsTabs();
+        $tabs = $statsHelper->getStatsTabs();
         return Inertia::render('Stats', [
             'tabs' => $tabs,
             'filters' => $filters,
