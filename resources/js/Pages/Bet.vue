@@ -181,7 +181,7 @@
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Date</div>
         <div class="p-2 mb-2 font-bold">
-          {{ bet.date }}
+          {{ moment(bet.date).format('YYYY-MM-DD HH:mm') }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -205,7 +205,7 @@
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Placed on</div>
         <div class="p-2 mb-2 font-bold capitalize">
-          {{ bet.created_at }}
+          {{ moment(bet.created_at).format('YYYY-MM-DD HH:mm') }}
         </div>
       </div>
     </div>
@@ -215,6 +215,7 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import { ArrowNarrowLeftIcon } from "@heroicons/vue/outline";
+import moment from "moment";
 
 export default {
   layout: Layout,
@@ -233,6 +234,7 @@ export default {
   },
 
   created() {
+    this.moment = moment;
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("backUrl")) {
       this.backUrl = urlParams.get("backUrl");

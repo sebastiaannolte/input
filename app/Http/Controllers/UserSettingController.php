@@ -15,19 +15,8 @@ class UserSettingController extends Controller
 {
     public function index()
     {
-        $stats = new StatsHelper;
-        $specialTabNames = collect($stats->getSpecialStatsTabs())->map(function ($value) {
-            return $value['name'];
-        });
-        $specialTabsSettings = Auth::user()->userSettingsFormatted()['special_tabs']['value'];
-        $statsTabsSettings = Auth::user()->userSettingsFormatted()['stats_tabs']['value'];
-        $specialTabs = array_diff($specialTabNames->toArray(), $specialTabsSettings );
-        $statsTabs = array_diff($stats->getStatsTabs(), $statsTabsSettings );
-
         return Inertia::render('UserSettings', [
             'bookmakers' => Bookmaker::get(),
-            'specialTabs' => array_values($specialTabs),
-            'statsTabs' => array_values($statsTabs),
         ]);
     }
 
