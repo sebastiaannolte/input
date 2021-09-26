@@ -107,6 +107,7 @@
                                   v-model="betData.category"
                                   :searchable="true"
                                   :options="this.betTypes"
+                                  :addTagOn="['enter', 'tab', ';', ',']"
                                   label="name"
                                   valueProp="id"
                                   trackBy="name"
@@ -322,7 +323,7 @@
                   >
                     Cancel
                   </button>
-                  
+
                   <loading-button
                     class="ml-5"
                     @click.prevent="save"
@@ -493,7 +494,7 @@ export default {
         });
         this.setUserSettings();
       } else {
-        this.betData =  this.$inertia.form(this.bet);
+        this.betData = this.$inertia.form(this.bet);
         this.title = "Edit " + this.bet.event;
         this.betData.date = moment(this.betData.date).format(
           "YYYY-MM-DDTHH:mm"

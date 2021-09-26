@@ -13,6 +13,7 @@
     :createTag="true"
     :object="true"
     ref="multiselects"
+    add-tag-on="['enter']"
     :options="
       async function (query) {
         return await fetchMatches(query);
@@ -64,7 +65,10 @@ export default {
 
   mounted() {
     if (this.bet.event) {
-      this.bet.event = { value: this.bet.match_id ? this.bet.match_id : 0 , label: this.bet.event };
+      this.bet.event = {
+        value: this.bet.match_id ? this.bet.match_id : 0,
+        label: this.bet.event,
+      };
       // this.$refs.multiselects.refreshOptions();
     }
   },
