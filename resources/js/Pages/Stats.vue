@@ -149,7 +149,7 @@
       </div>
       <div class="grid gap-4 p-4"
       :class="{'grid-cols-1' : !currentTable.head,
-      'grid-cols-2' : currentTable.head}">
+      'grid-cols-1 sm:grid-cols-2' : currentTable.head}">
         <div class="w-full h-full flex-col">
           <vue3-chart-js
             v-if="!loading"
