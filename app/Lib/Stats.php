@@ -64,10 +64,9 @@ class Stats
         }
 
         $table = $this->oddsTable();
-        // $tableValues = array_column($table['body'], $type);
+
         $vals = [];
         foreach ($labels as $date => $values) {
-            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($values as $key => $value) {
                 $vals[$key][] = $value;
             }

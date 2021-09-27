@@ -1,6 +1,6 @@
 <template>
   <Head :title="title" />
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
     <div
       class="
         px-4
@@ -15,7 +15,7 @@
       "
     >
       <div>
-        <div class="flex flex-col mb-5">
+        <div class="flex flex-col mb-4">
           <span>ROI</span>
           <span class="text-xl font-bold">{{ stats.roi }}%</span>
         </div>
@@ -51,7 +51,7 @@
       "
     >
       <div>
-        <div class="flex flex-col mb-5">
+        <div class="flex flex-col mb-4">
           <span>Profit</span>
           <span class="text-xl font-bold">{{ stats.profit }} units</span>
         </div>
@@ -112,7 +112,7 @@
     </div>
     <div
       class="
-        mb-5
+        mb-4
         leading-4
         text-center
         bg-white

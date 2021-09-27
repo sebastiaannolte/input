@@ -3,7 +3,7 @@
     <div
       class="
         px-4
-        mb-5
+        mb-4
         leading-4
         bg-white
         p-4

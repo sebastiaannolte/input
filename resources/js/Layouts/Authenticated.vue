@@ -6,8 +6,10 @@
     @click="openBet"
     class="
       fixed
-      bottom-10
-      right-10
+      bottom-4
+      right-4
+      sm:bottom-10
+      sm:right-10
       inline-flex
       items-center
       p-3
@@ -231,7 +233,7 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
-  <div class="max-w-7xl mx-auto pt-10 pb-12 px-4 lg:pb-16">
+  <div class="max-w-7xl mx-auto pt-4 pb-12 px-4 lg:pb-16">
     <slot></slot>
   </div>
 </template>

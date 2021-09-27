@@ -38,7 +38,7 @@
   <div class="flex flex-col items-center">
     <div
       class="
-        mb-5
+        mb-4
         leading-4
         text-center
         bg-white
