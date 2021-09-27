@@ -64,7 +64,7 @@
                       <form action="#" method="POST">
                         <div class="">
                           <div class="py-6 px-4 sm:p-6">
-                            <div class="grid grid-cols-4 gap-6">
+                            <div class="grid grid-cols-4 gap-4">
                               <div class="col-span-4 sm:col-span-4">
                                 <EventsV2 :bet="betData" :errors="errors" />
                               </div>

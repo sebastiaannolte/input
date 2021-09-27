@@ -3,7 +3,7 @@
   <div
     class="
       px-4
-      mb-5
+      mb-4
       w-full
       leading-4
       text-right

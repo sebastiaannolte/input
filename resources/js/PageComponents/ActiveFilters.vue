@@ -9,7 +9,7 @@
       grid
       items-center
       bg-white
-      mb-5
+      mb-4
       shadow
       sm:rounded-md
       sm:overflow-hidden

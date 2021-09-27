@@ -13,7 +13,7 @@
           The default setting are used when adding new bets
         </p>
       </div>
-      <div class="mt-6 grid grid-cols-4 gap-6">
+      <div class="mt-6 grid grid-cols-4 gap-4">
         <div class="col-span-4 sm:col-span-2">
           <text-input
             v-model="userData.username"

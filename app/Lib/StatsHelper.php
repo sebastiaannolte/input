@@ -33,7 +33,7 @@ class StatsHelper
     public function statsSelect()
     {
         return DB::raw('count(bets.id) as bets, 
-        COUNT(CASE WHEN status = "won" THEN 1 END) AS won, 
+        COUNT(CASE WHEN status = "won" or status = "halfwon" THEN 1 END) AS won, 
         
         sum(stake) AS staked,
 
@@ -41,11 +41,21 @@ class StatsHelper
         SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
         SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
         SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) as profit,
+        (
+            SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
+            SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
+            SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
+            SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)
+        ) / sum(bets.stake) * 100 as roi
+        ');
+    }
 
-        ((SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
-        SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) / sum(bets.stake) * 100) as roi
+    public function advancedStats()
+    {
+        return DB::raw('
+        sum(odds) / count(*) as avgOdds,
+        sum(stake) / count(8) as avgStake,
+        avg(odds * (stake / 1)) as avgOddsStake
         ');
     }
 }

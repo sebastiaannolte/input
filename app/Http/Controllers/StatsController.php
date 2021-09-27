@@ -26,20 +26,26 @@ class StatsController extends Controller
         ];
         $bets = Bet::user($userId)->filters($filters);
         $tabs = $statsHelper->getStatsTabs();
+        $betStats = $bets->clone()->select((new StatsHelper)->statsSelect(), (new StatsHelper)->advancedStats())->whereNotNull('result')->first();
+
         return Inertia::render('Stats', [
             'tabs' => $tabs,
             'filters' => $filters,
             'type' => $type,
             'sort' => $sort,
             'stats' => [
-                'roi' => $bets->clone()->roi(2),
-                'bets' => $bets->clone()->betCount(),
-                'totalStake' => $bets->clone()->totalStaked(2),
-                'winRate' => $bets->clone()->winprecentage(2),
-                'profit' => $bets->clone()->units(2),
-                'avgStake' => $bets->clone()->avgStake(2),
-                'avgOdds' => $bets->clone()->avgOdds(2),
-                'avgOddsStake' => $bets->clone()->avgOddsStake(2),
+                'totalBets' => $betStats->bets,
+                'wonbets' => $betStats->won,
+                'winprecentage' => round($betStats->won / $betStats->bets * 100, 2),
+                'units' => round($betStats->profit, 2),
+                'roi' => round($betStats->roi, 2),
+                'bets' => $betStats->bets,
+                'totalStake' => $betStats->staked,
+                'winRate' => round($betStats->won / $betStats->bets * 100, 2),
+                'profit' =>  round($betStats->profit, 2),
+                'avgStake' => round($betStats->avgStake, 2),
+                'avgOdds' => round($betStats->avgOdds, 2),
+                'avgOddsStake' => round($betStats->avgOddsStake, 2),
             ],
         ]);
     }

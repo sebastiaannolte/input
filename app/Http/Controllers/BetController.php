@@ -25,7 +25,7 @@ class BetController extends Controller
         $filters = Request::get('filters');
 
         $bets = Bet::user($userId);
-        $betStats = $bets->clone()->select((new StatsHelper)->statsSelect())->first();
+        $betStats = $bets->clone()->select((new StatsHelper)->statsSelect())->whereNotNull('result')->first();
 
         return Inertia::render('Home', [
             'stats' => [

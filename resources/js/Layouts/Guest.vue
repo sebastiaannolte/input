@@ -78,7 +78,7 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
-  <div class="max-w-7xl mx-auto pt-10 pb-12 px-4 lg:pb-16">
+  <div class="max-w-7xl mx-auto pt-4 pb-12 px-4 lg:pb-16">
     <slot></slot>
   </div>
 </template>
