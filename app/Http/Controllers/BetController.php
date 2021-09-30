@@ -38,7 +38,7 @@ class BetController extends Controller
             ],
 
             'bets' => $bets->clone()->bets()->filters($filters)->paginate()->withQueryString(),
-            'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->take(3)->get(),
+            'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->orderBy('id')->take(3)->get(),
             'filters' => $filters,
         ]);
     }

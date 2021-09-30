@@ -16,7 +16,7 @@
       <span class="text-indigo-500 font-bold">Next bets:</span>
       <div>
         <div
-          v-for="(bet, key) in firstBets"
+          v-for="(bet, key) in upcommingBets"
           :key="key"
           class="first:text-lg first:font-bold"
         >
@@ -91,14 +91,6 @@ export default {
   methods: {
     scrollToElement(id) {
       this.emitter.emit("event:scroll", id);
-    },
-  },
-
-  computed: {
-    firstBets() {
-      return Object.fromEntries(
-        Object.entries(this.upcommingBets).filter(([key, value]) => key < 3)
-      );
     },
   },
 };
