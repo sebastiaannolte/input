@@ -2,16 +2,14 @@
   <div class="flex justify-center">
     <div
       class="
-        px-4
         mb-4
         leading-4
         bg-white
-        p-4
+        p-10
         shadow
         rounded-md
         sm:overflow-hidden
         w-full
-        sm:w-2/3
       "
     >
       <breeze-validation-errors class="mb-4" />
@@ -55,12 +53,13 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <breeze-button
+          <Button
+          class="w-full"
             :class="{ 'opacity-25': form.processing }"
             :disabled="form.processing"
           >
             Reset Password
-          </breeze-button>
+          </Button>
         </div>
       </form>
     </div>
@@ -73,15 +72,18 @@ import Layout from "@/Layouts/Guest";
 import BreezeInput from "@/Components/Input";
 import BreezeLabel from "@/Components/Label";
 import BreezeValidationErrors from "@/Components/ValidationErrors";
+import Button from "@/Components/Button.vue";
 
 export default {
-  layout: Guest,
+  layout: Layout,
 
   components: {
     BreezeButton,
     BreezeInput,
     BreezeLabel,
     BreezeValidationErrors,
+    Layout,
+    Button,
   },
 
   props: {
