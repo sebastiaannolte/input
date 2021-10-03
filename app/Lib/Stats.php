@@ -30,7 +30,7 @@ class Stats
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
 
-        $query = Bet::select(DB::raw("id, status, stake, odds, case
+        $query = Bet::select(DB::raw("id, status, stake, odds as odd, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
         when odds > 1.5 and odds <= 1.75 then '1.5-1.75'
         when odds > 1.75 and odds <= 2 then '1.75-2'
@@ -38,28 +38,28 @@ class Stats
         when odds > 2.25 and odds <= 2.50 then '2-2.25'
         when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
         else '2.75+'
-        end AS odd_range"),  $this->statsHelper->statsSelect(), $dateSelect['select'])
+        end AS odds"),  $this->statsHelper->statsSelect(), $dateSelect['select'])
             ->filters($this->filters)
             ->groupBy('formatted_date', 'id');
 
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odd_range, formatted_date'), $this->statsHelper->statsSelect())
-            ->groupBy('odd_range', 'formatted_date')
+            ->select(DB::raw('count(id), odds, formatted_date'), $this->statsHelper->statsSelect())
+            ->groupBy('odds', 'formatted_date')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
 
         $labels = [];
         foreach ($carbonDates as $key => $date) {
             foreach ($bets as $key => $odd) {
-                $labels[$date->format($dateSelect['format'])][$odd->odd_range] = 0;
+                $labels[$date->format($dateSelect['format'])][$odd->$type] = 0;
             }
         }
 
         foreach ($bets as $key => $value) {
             $date = $value->formatted_date;
-            $key = $value->odd_range;
+            $key = $value->$type;
             $labels[$date][$key] = $value->profit;
         }
 
@@ -229,7 +229,7 @@ class Stats
             ->filters($this->filters)
             ->select([
                 'bet_types.id',
-                'bet_types.name',
+                DB::raw('bet_types.name as selection'),
                 $dateSelect['select'],
                 $this->statsHelper->statsSelect()
             ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
@@ -244,7 +244,7 @@ class Stats
             ->filters($this->filters)
             ->select([
                 'bet_types.id',
-                'bet_types.name',
+                DB::raw('bet_types.name as selection'),
                 $this->statsHelper->statsSelect()
             ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->whereNotNull('name');
@@ -252,21 +252,19 @@ class Stats
         $labels = [];
         foreach ($carbonDates as $key => $date) {
             foreach ($selections as $key => $selection) {
-                $labels[$date->format($dateSelect['format'])][$selection->name] = 0;
+                $labels[$date->format($dateSelect['format'])][$selection->$type] = 0;
             }
         }
 
         foreach ($selections as $key => $value) {
             $date = $value->formatted_date;
-            $labels[$date][$value->name] = $value->profit;
+            $labels[$date][$value->$type] = $value->profit;
         }
 
         $table = $this->selectionTable($selectionsTable);
-        // $tableValues = array_column($table['body'], $type);
 
         $vals = [];
         foreach ($labels as $date => $values) {
-            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($values as $key => $value) {
                 $vals[$key][] = $value;
             }
@@ -277,110 +275,6 @@ class Stats
             'values' => $vals,
             'table' => $table,
         ];
-    }
-
-    // function sortArrayByArray(array $array, array $orderArray)
-    // {
-    //     $ordered = array();
-    //     foreach ($orderArray as $key) {
-    //         if (array_key_exists($key['value'], $array)) {
-    //             $ordered[$key['value']] = $array[$key['value']];
-    //             unset($array[$key['value']]);
-    //         }
-    //     }
-    //     return $ordered + $array;
-    // }
-
-
-    public function selectionMapping($selections)
-    {
-        $selectionMapping = [
-            'Corners' => [
-                'type' => [
-                    'end' => [
-                        'corners'
-                    ]
-                ]
-            ],
-            'Total goals' => [
-                'type' => [
-                    'end' => [
-                        'goals'
-                    ]
-                ]
-            ],
-            'FH goals' => [
-                'type' => [
-                    'end' => [
-                        'goals FH'
-                    ]
-                ]
-            ],
-            '1x2' => [
-                'type' => [
-                    'match' => [
-                        'home win',
-                        'away win',
-                    ]
-                ]
-            ],
-            'Cards' => [
-                'type' => [
-                    'end' => [
-                        'cards'
-                    ]
-                ]
-            ],
-            'BTTS' => [
-                'type' => [
-                    'match' => [
-                        'btts'
-                    ]
-                ]
-            ],
-            'Booking points' => [
-                'type' => [
-                    'match' => [
-                        'booking points'
-                    ]
-                ]
-            ],
-            'AH' => [
-                'type' => [
-                    'match' => [
-                        'ah'
-                    ]
-                ]
-            ],
-        ];
-        $bets = [];
-        foreach ($selectionMapping as $keyer => $type) {
-            foreach ($type as $type => $types) {
-                foreach ($types as $type => $typeValues) {
-                    if ($type == 'start') {
-                        foreach ($typeValues as $key => $typeValue) {
-                            $bets[$keyer] = $selections->clone()->where('selection', 'like', strtolower($typeValue) . '%');
-                            break;
-                        }
-                    } elseif ($type == 'end') {
-                        foreach ($typeValues as $key => $typeValue) {
-                            $bets[$keyer] = $selections->clone()->where('selection', 'like', '%' . strtolower($typeValue));
-                            break;
-                        }
-                    } elseif ($type == 'match') {
-                        foreach ($typeValues as $key => $typeValue) {
-                            if ($key == 0) {
-                                $bets[$keyer] = $selections->clone()->where('selection', strtolower($typeValue));
-                            } else {
-                                $bets[$keyer] = $bets[$keyer]->orWhere('selection', strtolower($typeValue));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $bets;
     }
 
     public function tableHeader($type)
@@ -437,7 +331,7 @@ class Stats
 
         $output = [];
         foreach ($selections->get() as $key => $selection) {
-            $key = $selection->name;
+            $key = $selection->$type;
             $output[$key] = $this->tableBodyRendered($key, $selection, $type);
         }
 
@@ -450,7 +344,7 @@ class Stats
         $type = 'odds';
         $head = $this->tableHeader($type);
 
-        $query = Bet::select(DB::raw("id, status, stake, odds, case
+        $query = Bet::select(DB::raw("id, status, stake, odds as odd, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
         when odds > 1.5 and odds <= 1.75 then '1.5-1.75'
         when odds > 1.75 and odds <= 2 then '1.75-2'
@@ -458,20 +352,20 @@ class Stats
         when odds > 2.25 and odds <= 2.50 then '2-2.25'
         when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
         else '2.75+'
-        end AS odd_range"),  $this->statsHelper->statsSelect())
+        end AS odds"),  $this->statsHelper->statsSelect())
             ->filters($this->filters)
             ->groupBy('id');
 
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odd_range'), $this->statsHelper->statsSelect())
+            ->select(DB::raw('count(id), odds'), $this->statsHelper->statsSelect())
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
-            ->groupBy('odd_range');
+            ->groupBy($type);
 
         $output = [];
         foreach ($bets->get() as $typeValue => $odd) {
-            $typeValue = $odd->odd_range;
+            $typeValue = $odd->$type;
             $output[$typeValue] = $this->tableBodyRendered($typeValue, $odd, $type);
         }
 
@@ -552,7 +446,7 @@ class Stats
                     'mode' => "index",
                     'intersect' => "true",
                 ],
-   
+
                 'animation' => [
                     'duration' => '0',
                 ]
