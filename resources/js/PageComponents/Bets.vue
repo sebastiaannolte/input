@@ -174,7 +174,6 @@
                             inline-flex
                             text-xs
                             leading-5
-                            font-semibold
                             rounded-full
                           "
                           :class="[statusColor(bet.status, 'label')]"
@@ -189,7 +188,6 @@
                           inline-flex
                           text-xs
                           leading-5
-                          font-semibold
                           rounded-full
                           bg-yellow-100
                           text-yellow-800

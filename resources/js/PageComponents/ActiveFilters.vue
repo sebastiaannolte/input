@@ -4,7 +4,6 @@
     aria-labelledby="filter-heading"
     class="
       relative
-      z-10
       border-t border-b border-gray-200
       grid
       items-center
