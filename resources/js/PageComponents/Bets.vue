@@ -125,12 +125,12 @@
                   {{ moment(bet.date).format("DD MMM HH:mm") }}
                 </td>
                 <td
-                  class="px-6 py-4 sm:whitespace-nowrap text-sm text-gray-500"
+                  class="px-6 py-4 text-sm text-gray-500"
                 >
                   {{ bet.event }}
                 </td>
                 <td
-                  class="px-6 py-4 sm:whitespace-nowrap text-sm text-gray-500"
+                  class="px-6 py-4 text-sm text-gray-500"
                 >
                   {{ bet.selection }}
                 </td>
