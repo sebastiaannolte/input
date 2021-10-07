@@ -177,6 +177,9 @@ class GamesApi
 
     public static function search($keyword)
     {
+        $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
+        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
+        dd($host, $requestHost, request()->ip());
         $fixtures = Fixture::with(['homeTeam', 'awayTeam'])->where('date', '>', now()->subDays(1)->startOfDay()->format('Y-m-d H:i:s'))->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
