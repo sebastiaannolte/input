@@ -216,9 +216,6 @@ class Stats
 
     public function selectionGraph()
     {
-        $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
-        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
-        dd($host, $requestHost, request()->ip());
         $type = 'selection';
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
