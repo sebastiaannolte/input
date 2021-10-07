@@ -20,8 +20,9 @@ class DomainCheckMiddleware
         $allowedHosts = explode(',', env('ALLOWED_DOMAINS'));
 
         $requestHost = parse_url($request->headers->get('origin'),  PHP_URL_HOST);
-        dd($request->ip());
-        // dd($requestHost);
+        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
+        dd($host, $requestHost, $request->ip());
+
         if(!app()->runningUnitTests()) {
             if(!\in_array($requestHost, $allowedHosts, false)) {
                 $requestInfo = [
