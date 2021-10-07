@@ -36,12 +36,11 @@ class StatsController extends Controller
             'stats' => [
                 'totalBets' => $betStats->bets,
                 'wonbets' => $betStats->won,
-                'winprecentage' => round($betStats->won / $betStats->bets * 100, 2),
                 'units' => round($betStats->profit, 2),
                 'roi' => round($betStats->roi, 2),
                 'bets' => $betStats->bets,
                 'totalStake' => $betStats->staked,
-                'winRate' => round($betStats->won / $betStats->bets * 100, 2),
+                'winRate' => $betStats->bets ? round($betStats->won / $betStats->bets * 100, 2) : 0,
                 'profit' =>  round($betStats->profit, 2),
                 'avgStake' => round($betStats->avgStake, 2),
                 'avgOdds' => round($betStats->avgOdds, 2),
@@ -86,8 +85,12 @@ class StatsController extends Controller
         }
     }
 
-    public function stats(Request $request)
+    public function stats($username, Request $request)
     {
+        $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
+        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
+        dd($host, $requestHost, request()->ip());
+        $userId = User::where('username', $username)->first()->id;
         $key = $request->get('key');
         $filters = $request->get('filters');
 
@@ -118,8 +121,7 @@ class StatsController extends Controller
             $filters['to'] = $defaultFilters['to'];
         }
         $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);
-
-        $userId = 1;
+        
         $stats = new Stats($userId, $filters, $sort);
         return $stats->renderStats($key, $sort);
     }
