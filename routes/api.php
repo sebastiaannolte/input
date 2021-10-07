@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
     Route::get('/match/{matchId}', function ($matchId) {
         return GamesApi::match($matchId);
     })->name('event.match');
@@ -33,8 +33,8 @@ Route::middleware(['auth'])->group(function () {
         return GamesApi::findPageOfBet($id);
     })->name('bet.pageNumber');
 
-    Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
+    Route::post('/stats/{username}', [StatsController::class, 'stats'])->name('stats.stats');
     Route::post('/comps', [SpecialStatsController::class, 'competitions'])->name('competitions.get');
     Route::post('/comp', [SpecialStatsController::class, 'competitionStats'])->name('competition.get');
     Route::post('/special', [SpecialStatsController::class, 'specialStats'])->name('api.special');
-});
+// });
