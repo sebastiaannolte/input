@@ -87,9 +87,6 @@ class StatsController extends Controller
 
     public function stats($username, Request $request)
     {
-        $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
-        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
-        dd($host, $requestHost, request()->ip());
         $userId = User::where('username', $username)->first()->id;
         $key = $request->get('key');
         $filters = $request->get('filters');

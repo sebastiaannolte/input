@@ -36,6 +36,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $authenticatedUser =  User::where('username',  explode("/", $request->path())[0])->first();
+        $user = $request->user() && $request->user()->username != $authenticatedUser && $authenticatedUser ? $authenticatedUser : $request->user();
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
@@ -43,8 +46,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'userInfo' =>
             [
-                'myPage' => $request->user() ? $request->user()->username ==  explode("/", $request->path())[0] : false,
-                'user' => $request->user() ? $request->user() : User::where('username',  explode("/", $request->path())[0])->first(),
+                'myPage' => $request->user() ? $request->user()->username == explode("/", $request->path())[0] : false,
+                'user' => $user,
             ],
             'betTypes' => BetType::get(),
             'flash' => function () use ($request) {

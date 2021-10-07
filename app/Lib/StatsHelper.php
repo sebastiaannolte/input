@@ -35,18 +35,18 @@ class StatsHelper
         return DB::raw('count(bets.id) as bets, 
         COUNT(CASE WHEN status = "won" or status = "halfwon" THEN 1 END) AS won, 
         
-        sum(stake) AS staked,
+        IFNULL(sum(stake), 0) AS staked,
 
-        (SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
+        ifnull(SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
         SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
         SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
-        SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)) as profit,
-        (
+        SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END), 0) as profit,
+        ifnull((
             SUM(CASE WHEN status = "won" THEN odds*stake - stake ELSE 0 END) + 
             SUM(CASE WHEN status = "lost" THEN -stake ELSE 0 END) +
             SUM(CASE WHEN status = "halfwon" THEN ((stake / 2) + (odds / 2)) - stake ELSE 0 END) +
             SUM(CASE WHEN status = "halflost" THEN -(stake / 2) ELSE 0 END)
-        ) / sum(bets.stake) * 100 as roi
+        ) / sum(bets.stake) * 100, 0) as roi
         ');
     }
 

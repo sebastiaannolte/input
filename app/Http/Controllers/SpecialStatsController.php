@@ -7,6 +7,7 @@ use App\Lib\Stats;
 use App\Lib\StatsHelper;
 use App\Models\League;
 use App\Models\Team;
+use App\Models\User;
 use App\Models\Venue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -31,8 +32,9 @@ class SpecialStatsController extends Controller
 
     public function team($username, $teamId, $leagueId = false)
     {
+        $userId = User::where('username', $username)->first()->id;
         $filters = Request::get('filters');
-        $stats = new Stats(1, $filters);
+        $stats = new Stats($userId, $filters);
         $teamTable = $stats->teamTable($teamId, $leagueId);
 
         return Inertia::render('Team', [
@@ -43,14 +45,12 @@ class SpecialStatsController extends Controller
         ]);
     }
 
-    public function competitionStats()
+    public function competitionStats($username)
     {
         $competitionId = Request::get('competition');
         $filters = Request::get('filters');
         $sort = Request::get('sort');
-
-
-        $userId = Auth::user()->id;
+        $userId = User::where('username', $username)->first()->id;
         $stats = new Stats($userId, $filters, $sort);
         return $stats->competitionTable($competitionId);
     }
@@ -75,21 +75,21 @@ class SpecialStatsController extends Controller
         ]);
     }
 
-    public function specialStats()
+    public function specialStats($username)
     {
+        $userId = User::where('username', $username)->first()->id;
         $filters = Request::get('filters');
         $key = Request::get('key');
         $sort = Request::get('sort');
-        $userId = Auth::user()->id;
         $stats = new Stats($userId, $filters, $sort);
         return $stats->getSpecialStats($key, $sort);
     }
 
     public function referee($username, $referee)
     {
+        $userId = User::where('username', $username)->first()->id;
         $filters = Request::get('filters');
-
-        $stats = new Stats(1, $filters);
+        $stats = new Stats($userId, $filters);
         $bets = $stats->refereeBets($referee);
 
         return Inertia::render('Table', [
@@ -103,9 +103,9 @@ class SpecialStatsController extends Controller
 
     public function venue($username, $venue)
     {
+        $userId = User::where('username', $username)->first()->id;
         $filters = Request::get('filters');
-
-        $stats = new Stats(1, $filters);
+        $stats = new Stats($userId, $filters);
         $bets = $stats->venueBets($venue);
         return Inertia::render('Table', [
             'bets' => $bets,
@@ -118,8 +118,9 @@ class SpecialStatsController extends Controller
 
     public function competitionBets($username, $leagueId)
     {
+        $userId = User::where('username', $username)->first()->id;
         $filters = Request::get('filters');
-        $stats = new Stats(1, $filters);
+        $stats = new Stats($userId, $filters);
         $bets = $stats->competitionBets($leagueId);
         return Inertia::render('Table', [
             'bets' => $bets,

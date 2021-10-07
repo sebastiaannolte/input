@@ -229,7 +229,7 @@ export default {
   },
   data() {
     return {
-      backUrl: this.route("userhome", this.$page.props.auth.user.username),
+      backUrl: this.route("userhome", this.$page.props.userInfo.user.username),
     };
   },
 

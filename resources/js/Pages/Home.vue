@@ -6,7 +6,7 @@
     :filters="filters"
     :filterButton="true"
     :filter-route="
-      this.route('userhome', this.$page.props.auth.user.username)
+      this.route('userhome', this.$page.props.userInfo.user.username)
     "
   />
 </template>

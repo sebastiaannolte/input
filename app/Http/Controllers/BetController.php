@@ -31,7 +31,7 @@ class BetController extends Controller
             'stats' => [
                 'totalBets' => $betStats->bets,
                 'wonbets' => $betStats->won,
-                'winprecentage' => round($betStats->won / $betStats->bets * 100, 2),
+                'winprecentage' => $betStats->bets ? round($betStats->won / $betStats->bets * 100, 2) : 0,
                 'units' => round($betStats->profit, 2),
                 'roi' => round($betStats->roi, 2),
                 'username' => $username,
@@ -136,15 +136,6 @@ class BetController extends Controller
             'bet' => $bet,
         ]);
     }
-
-    // public function edit($id)
-    // {
-    //     $bet = Bet::find($id);
-    //     return Inertia::render('BetEdit', [
-    //         'bet' => $bet,
-    //         // 'betTypes' => BetType::get(),
-    //     ]);
-    // }
 
     public function delete($id)
     {
