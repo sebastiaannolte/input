@@ -108,6 +108,7 @@
                   bg-white
                   ring-1 ring-black ring-opacity-5
                   focus:outline-none
+                  z-10
                 "
               >
                 <MenuItem v-slot="{ active }">

@@ -7,7 +7,7 @@
       :filters="filters"
       :filter-route="
         this.route(this.filterRoute, [
-          this.$page.props.auth.user.username,
+          this.$page.props.userInfo.user.username,
           type.id,
         ])
       "

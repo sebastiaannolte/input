@@ -518,7 +518,7 @@ class Stats
         $type = 'Team';
         $head = $this->tableHeader($type);
 
-        $bets = Bet::filters($this->filters);
+        $bets = Bet::filters($this->filters)->user($this->userId);
         $types = $bets
             ->join('fixtures', function ($join) use ($id) {
                 $join->on('match_id', '=', 'fixtures.id')->where('league_id', $id);
@@ -551,6 +551,7 @@ class Stats
             }
         })->whereNotNull('match_id')
             ->filters($this->filters)
+            ->user($this->userId)
             ->paginate(15);
 
         $bets = [
@@ -634,7 +635,7 @@ class Stats
             $q->where('referee', $referee);
         })->whereNotNull('match_id')->get();
 
-        $bets = Bet::whereIn('id', $bets->pluck('id'))->filters($this->filters)->paginate(15);
+        $bets = Bet::whereIn('id', $bets->pluck('id'))->filters($this->filters)->user($this->userId)->paginate(15);
         $betsByCompetition['bets'] =
             $bets;
 

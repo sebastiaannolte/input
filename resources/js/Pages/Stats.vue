@@ -299,7 +299,7 @@ export default {
   created() {
     this.createTabs();
     this.filterRoute = this.route("stats.index", {
-      username: this.$page.props.auth.user.username,
+      username: this.$page.props.userInfo.user.username,
       _query: pickBy({ type: this.type, sort: this.sort }),
     });
 
@@ -319,7 +319,7 @@ export default {
       }
       this.loading = true;
       this.$http
-        .post(this.route("stats.stats"), {
+        .post(this.route("stats.stats", this.$page.props.userInfo.user.username), {
           key: key,
           filters: this.filters,
           sort: this.sort,
@@ -352,7 +352,7 @@ export default {
       this.sort.sortType = "bets";
       this.currentTab = this.generatedTabs.find((tab) => tab.option == value);
       Inertia.get(
-        this.route("stats.index", this.$page.props.auth.user.username),
+        this.route("stats.index", this.$page.props.userInfo.user.username),
         pickBy({
           type: this.currentTab.option,
           filters: null, // reset filters if tab changes
@@ -401,7 +401,7 @@ export default {
       this.sort.sortType = tableHeader;
 
       Inertia.get(
-        this.route("stats.index", this.$page.props.auth.user.username),
+        this.route("stats.index", this.$page.props.userInfo.user.username),
         pickBy({
           type: this.currentTab.option,
           sort: this.sort,

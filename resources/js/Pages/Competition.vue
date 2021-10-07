@@ -102,7 +102,7 @@
                     <inertia-link
                       :href="
                         this.route('team', [
-                          this.$page.props.auth.user.username,
+                          this.$page.props.userInfo.user.username,
                           values.specialId[0],
                           values.specialId[1],
                         ])
@@ -186,7 +186,7 @@ export default {
 
   created() {
     this.filterRoute = this.route("competition", {
-      username: this.$page.props.auth.user.username,
+      username: this.$page.props.userInfo.user.username,
       id: this.competition.id,
       _query: pickBy({ sort: this.sort }),
     });
@@ -205,7 +205,7 @@ export default {
       this.loading = true;
       this.$http
         .post(
-          this.route("competition.get"),
+          this.route("competition.get", this.$page.props.userInfo.user.username),
           pickBy({
             competition: this.competition.id,
             filters: this.filters,
@@ -244,7 +244,7 @@ export default {
 
       Inertia.get(
         this.route("competition", [
-          this.$page.props.auth.user.username,
+          this.$page.props.userInfo.user.username,
           this.competition.id,
         ]),
         pickBy({

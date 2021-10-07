@@ -12,6 +12,7 @@
       shadow
       sm:rounded-md
       sm:overflow-hidden
+      z-0
     "
   >
     <h2 id="filter-heading" class="sr-only">Filters</h2>

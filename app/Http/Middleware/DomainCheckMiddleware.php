@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class DomainCheckMiddleware
 {
@@ -18,22 +19,18 @@ class DomainCheckMiddleware
     public function handle($request, Closure $next)
     {
         $allowedHosts = explode(',', env('ALLOWED_DOMAINS'));
+        $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
 
-        $requestHost = parse_url($request->headers->get('origin'),  PHP_URL_HOST);
-        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
-        dd($host, $requestHost, $request->ip());
-
-        if(!app()->runningUnitTests()) {
-            if(!\in_array($requestHost, $allowedHosts, false)) {
+        if(!app()->runningUnitTests() && App::environment() != 'local') {
+            if(!in_array($requestHost, $allowedHosts, false)) {
                 $requestInfo = [
                     'host' => $requestHost,
                     'ip' => $request->getClientIp(),
                     'url' => $request->getRequestUri(),
                     'agent' => $request->header('User-Agent'),
                 ];
-                // dd($requestInfo);
-                // event(new UnauthorizedAccess($requestInfo));
 
+                exit();
                 throw new Exception('This host is not allowed');
             }
         }
