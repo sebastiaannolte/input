@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
         return GamesApi::findPageOfBet($id);
     })->name('bet.pageNumber');
 
-    Route::post('/stats/{username}', [StatsController::class, 'stats'])->name('stats.stats');
+    Route::post('/stats', [StatsController::class, 'stats'])->name('stats.stats');
     Route::post('/comps', [SpecialStatsController::class, 'competitions'])->name('competitions.get');
     Route::post('/comp', [SpecialStatsController::class, 'competitionStats'])->name('competition.get');
     Route::post('/special', [SpecialStatsController::class, 'specialStats'])->name('api.special');
