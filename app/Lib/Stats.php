@@ -40,8 +40,8 @@ class Stats
         else '2.75+'
         end AS odds"),  $this->statsHelper->statsSelect(), $dateSelect['select'])
             ->filters($this->filters)
+            ->user($this->userId)
             ->groupBy('formatted_date', 'id');
-
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
@@ -49,6 +49,7 @@ class Stats
             ->groupBy('odds', 'formatted_date')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
+
 
         $labels = [];
         foreach ($carbonDates as $key => $date) {
@@ -127,11 +128,9 @@ class Stats
         }
 
         $table = $this->simpleTable($type, $columnsTable);
-        // $tableValues = array_column($table['body'], 'Type');
 
         $vals = [];
         foreach ($labels as $date => $values) {
-            // $sortedLabels = $this->sortArrayByArray($values, $tableValues);
             foreach ($values as $key => $value) {
                 $vals[ucfirst($key)][] = $value;
             }
@@ -217,6 +216,9 @@ class Stats
 
     public function selectionGraph()
     {
+        $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
+        $host = parse_url(request()->headers->get('referer'), PHP_URL_HOST);
+        dd($host, $requestHost, request()->ip());
         $type = 'selection';
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
@@ -227,6 +229,7 @@ class Stats
             ->whereRaw('category <> ""')
             ->groupBy('bet_types.id', 'formatted_date')
             ->filters($this->filters)
+            ->user($this->userId)
             ->select([
                 'bet_types.id',
                 DB::raw('bet_types.name as selection'),
@@ -242,6 +245,7 @@ class Stats
             ->whereRaw('category <> ""')
             ->groupBy('bet_types.id')
             ->filters($this->filters)
+            ->user($this->userId)
             ->select([
                 'bet_types.id',
                 DB::raw('bet_types.name as selection'),
@@ -354,6 +358,7 @@ class Stats
         else '2.75+'
         end AS odds"),  $this->statsHelper->statsSelect())
             ->filters($this->filters)
+            ->user($this->userId)
             ->groupBy('id');
 
 
