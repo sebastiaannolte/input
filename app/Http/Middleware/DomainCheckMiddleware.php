@@ -29,8 +29,7 @@ class DomainCheckMiddleware
                     'url' => $request->getRequestUri(),
                     'agent' => $request->header('User-Agent'),
                 ];
-
-                exit();
+                abort(403, 'Unauthorized action.');
                 throw new Exception('This host is not allowed');
             }
         }
