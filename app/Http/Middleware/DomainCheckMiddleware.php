@@ -20,7 +20,7 @@ class DomainCheckMiddleware
     {
         $allowedHosts = explode(',', env('ALLOWED_DOMAINS'));
         $requestHost = parse_url(request()->headers->get('origin'),  PHP_URL_HOST);
-
+        dd($allowedHosts, $requestHost);
         if(!app()->runningUnitTests() && App::environment() != 'local') {
             if(!in_array($requestHost, $allowedHosts, false)) {
                 $requestInfo = [
