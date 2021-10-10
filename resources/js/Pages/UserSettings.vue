@@ -68,7 +68,7 @@
                   "
                 />
               </div>
-              <loading-button :loading="loadingGames" @click.prevent="getGames">
+              <loading-button :loading="loadingGames" class="rounded-l-none" @click.prevent="getGames">
                 <span>Get games</span>
               </loading-button>
             </div>
