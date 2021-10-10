@@ -19,7 +19,7 @@ class BetController extends Controller
         $user = User::where('username', $username)->first();
 
         if ($user === null) {
-            return;
+            abort(404);
         }
         $userId = $user->id;
         $filters = Request::get('filters');
@@ -77,6 +77,11 @@ class BetController extends Controller
 
     public function update()
     {
+        $bet = Bet::find(Request::get('id'));
+
+        if (Request::user()->cannot('update', $bet)) {
+            abort(403);
+        }
         Request::validate([
             'event' => ['required', 'max:50'],
             'selection' => ['required', 'max:50'],
@@ -88,58 +93,59 @@ class BetController extends Controller
             'type' => ['required', 'max:50'],
         ]);
 
-        Bet::updateOrCreate(
-            [
-                'id' => Request::get('id')
-            ],
-            [
-                'match_id' => Request::get('match_id'),
-                'event' => Request::get('event')['label'],
-                'selection' => Request::get('selection'),
-                'category' => Request::get('category'),
-                'bookie' => Request::get('bookie'),
-                'stake' => Request::get('stake'),
-                'odds' => Request::get('odds'),
-                'tipster' => Request::get('tipster'),
-                'sport' => Request::get('sport'),
-                'type' => Request::get('type'),
-                'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
-                'user_id' => Auth::user()->id,
-                'result' => Request::get('result'),
-                'status' => Request::get('status')
-            ]
-        );
+        $bet->update([
+            'match_id' => Request::get('match_id'),
+            'event' => Request::get('event')['label'],
+            'selection' => Request::get('selection'),
+            'category' => Request::get('category'),
+            'bookie' => Request::get('bookie'),
+            'stake' => Request::get('stake'),
+            'odds' => Request::get('odds'),
+            'tipster' => Request::get('tipster'),
+            'sport' => Request::get('sport'),
+            'type' => Request::get('type'),
+            'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
+            'user_id' => Auth::user()->id,
+            'result' => Request::get('result'),
+            'status' => Request::get('status')
+        ]);
 
         return Redirect::route('bet.show', Request::get('id'))->with('success', 'Bet updated');;
     }
 
     public function updateStatus()
     {
-        Bet::updateOrCreate(
-            [
-                'id' => Request::get('id')
-            ],
-            [
-                'result' => Request::get('result'),
-                'status' => Request::get('status')
-            ]
-        );
+        $bet = Bet::find(Request::get('id'));
+        if (Request::user()->cannot('update', $bet)) {
+            abort(403);
+        }
+
+        $bet->update([
+            'result' => Request::get('result'),
+            'status' => Request::get('status')
+        ]);
 
         return Redirect::back();
     }
 
-    public function show($id)
+    public function show(Bet $bet)
     {
-        $bet = Bet::find($id);
+        if (Request::user()->cannot('view', $bet)) {
+            abort(403);
+        }
 
         return Inertia::render('Bet', [
             'bet' => $bet,
         ]);
     }
 
-    public function delete($id)
+    public function delete(Bet $bet)
     {
-        Bet::find($id)->delete();
+        if (Request::user()->cannot('delete', $bet)) {
+            abort(403);
+        }
+
+        $bet->delete();
         return Redirect::route('userhome', Auth::user()->username)->with('success', 'Bet deleted');;
     }
 }

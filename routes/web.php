@@ -32,8 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/bet', [BetController::class, 'store'])->name('bet.store');
     Route::put('/bet', [BetController::class, 'update'])->name('bet.update');
     Route::put('/bet/status', [BetController::class, 'updateStatus'])->name('bet.updateStatus');
-    Route::get('/bet/{id}', [BetController::class, 'show'])->name('bet.show');
-    Route::delete('/bet/{id}', [BetController::class, 'delete'])->name('bet.delete');
+    Route::get('/bet/{bet}', [BetController::class, 'show'])->name('bet.show');
+    Route::delete('/bet/{bet}', [BetController::class, 'delete'])->name('bet.delete');
     Route::get('/bet/{id}/edit', [BetController::class, 'edit'])->name('bet.edit');
 
     Route::get('{username}/stats', [StatsController::class, 'index'])->name('stats.index');
