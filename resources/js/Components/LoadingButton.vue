@@ -19,6 +19,7 @@
       focus:outline-none
       focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
     "
+    v-bind="$attrs"
   >
     <div v-if="loading" class="btn-spinner mr-2" />
     <slot />
