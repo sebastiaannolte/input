@@ -1,25 +1,76 @@
 <template>
-  <Multiselect
-    v-model="betData.event"
-    mode="single"
-    placeholder="Search a match"
-    noOptionsText="Start typing to find a match"
-    :filterResults="false"
-    :minChars="3"
-    :resolveOnLoad="false"
-    :delay="100"
-    :searchable="true"
-    @select="onSelect"
-    :createTag="true"
-    :object="true"
-    ref="multiselects"
-    add-tag-on="['enter']"
-    :options="
-      async function (query) {
-        return await fetchMatches(query);
-      }
-    "
-  />
+  <div class="flex">
+    <Multiselect
+      v-model="betData.event"
+      mode="single"
+      placeholder="Search a match"
+      noOptionsText="Start typing to find a match"
+      :filterResults="false"
+      :minChars="3"
+      :resolveOnLoad="false"
+      :delay="100"
+      :searchable="true"
+      @select="onSelect"
+      :createTag="true"
+      :object="true"
+      ref="multiselect"
+      add-tag-on="['enter']"
+      :clearOnSelect="false"
+      :clearOnSearch="false"
+      :options="
+        async function (query) {
+          return await fetchMatches(query, searchType);
+        }
+      "
+      class="rounded-r-0"
+    >
+      <template v-slot:option="{ option }">
+        <img class="h-4 mr-2" :src="option.icon" /> {{ option.label }}
+      </template>
+    </Multiselect>
+    <button
+      type="button"
+      @click="setSearchType('simple')"
+      :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'simple' }"
+      class="
+        inline-flex
+        items-center
+        px-2.5
+        py-1.5
+        border border-gray-300
+        shadow-sm
+        text-xs
+        font-medium
+        text-gray-700
+        bg-white
+      "
+    >
+      Simple
+    </button>
+    <button
+      type="button"
+      @click="setSearchType('full')"
+      :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'full' }"
+      class="
+        inline-flex
+        items-center
+        px-2.5
+        py-1.5
+        border border-gray-300
+        shadow-sm
+        text-xs
+        font-medium
+        rounded-r
+        text-gray-700
+        bg-white
+        hover:bg-gray-50
+        focus:outline-none
+        focus:bg-gray-300
+      "
+    >
+      Full
+    </button>
+  </div>
 </template>
 
 <script>
@@ -34,11 +85,14 @@ export default {
   },
 
   setup() {
-    const fetchMatches = async (query) => {
-      const response = await fetch("/api/search/" + query, {});
+    const fetchMatches = async (query, searchType) => {
+      const response = await fetch(
+        "/api/search/" + query + "/" + searchType,
+        {}
+      );
       const data = await response.json();
       return Object.values(data).map((item) => {
-        return { value: item.id, label: item.match };
+        return { value: item.id, label: item.match, icon: item.icon };
       });
     };
 
@@ -49,6 +103,7 @@ export default {
   data() {
     return {
       betData: {},
+      searchType: "simple",
     };
   },
 
@@ -95,8 +150,12 @@ export default {
     setBet() {
       this.emitter.emit("event:search", this.betData);
     },
+
+    setSearchType(type) {
+      this.searchType = type;
+      // this.$refs.multiselect.open();
+    },
   },
 };
 </script>
 
-<style src="@vueform/multiselect/themes/default.css"></style>

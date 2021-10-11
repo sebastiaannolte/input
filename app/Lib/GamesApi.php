@@ -175,9 +175,17 @@ class GamesApi
         }
     }
 
-    public static function search($keyword)
+    public static function search($keyword, $type)
     {
-        $fixtures = Fixture::with(['homeTeam', 'awayTeam'])->where('date', '>', now()->subDays(1)->startOfDay()->format('Y-m-d H:i:s'))->get();
+        $daysBefore = 1;
+        $daysAfer = 5;
+        if ($type == "full") {
+            $daysBefore = 30;
+            $daysAfer = 30;
+        }
+        $fixtures = Fixture::with(['homeTeam', 'awayTeam'])
+            ->where('date', '>', now()->subDays($daysBefore)->startOfDay()->format('Y-m-d H:i:s'))
+            ->where('date', '<', now()->addDays($daysAfer)->endOfDay()->format('Y-m-d H:i:s'))->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
             $hasV = array_filter(explode(' v ', $keyword));
@@ -207,7 +215,7 @@ class GamesApi
         });
 
         $output = $fixtures->map(function ($item) {
-            return ['match' => $item->homeTeam->name . ' v ' . $item->awayTeam->name, 'id' => $item->id];
+            return ['match' => $item->homeTeam->name . ' v ' . $item->awayTeam->name, 'id' => $item->id, 'icon' => $item->league->flag ?: $item->league->logo];
         });
 
         return $output;
