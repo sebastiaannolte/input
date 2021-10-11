@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import '../../node_modules/@vueform/multiselect/themes/tailwind.scss';
 .btn-spinner,
 .btn-spinner:after {
     border-radius: 50%;
@@ -39,4 +40,11 @@
 
 .moving-card {
     @apply border opacity-50 border-gray-500 bg-gray-100;
+}
+
+.inner-shadow {
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgb(0 0 0 / 13%);
+    box-shadow: inset 0 3px 5px rgb(0 0 0 / 13%);
+    @apply border border-gray-300
 }

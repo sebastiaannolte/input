@@ -21,8 +21,8 @@ Route::middleware(['auth', 'isHost'])->group(function () {
         return GamesApi::match($matchId);
     })->name('event.match');
 
-    Route::get('/search/{search}', function ($search) {
-        return GamesApi::search($search);
+    Route::get('/search/{search}/{type}', function ($search, $type) {
+        return GamesApi::search($search, $type);
     })->name('event.search');
 
     Route::get('/games/{date}', function ($search) {

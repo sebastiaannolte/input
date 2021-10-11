@@ -30,4 +30,11 @@ class Fixture extends Model
     {
         return $this->hasOne(Venue::class, 'id', 'venue_id');
     }
+
+    public function league()
+    {
+        return $this->hasOne(League::class, 'id', 'league_id');
+    }
+
+
 }
