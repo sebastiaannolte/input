@@ -178,14 +178,12 @@ class GamesApi
     public static function search($keyword, $type)
     {
         $daysBefore = 1;
-        $daysAfer = 5;
         if ($type == "full") {
             $daysBefore = 30;
-            $daysAfer = 30;
         }
         $fixtures = Fixture::with(['homeTeam', 'awayTeam'])
             ->where('date', '>', now()->subDays($daysBefore)->startOfDay()->format('Y-m-d H:i:s'))
-            ->where('date', '<', now()->addDays($daysAfer)->endOfDay()->format('Y-m-d H:i:s'))->get();
+            ->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
             $hasV = array_filter(explode(' v ', $keyword));
