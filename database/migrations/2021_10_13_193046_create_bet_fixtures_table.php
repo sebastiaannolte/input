@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBetsTable extends Migration
+class CreateBetFixturesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateBetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bets', function (Blueprint $table) {
+        Schema::create('bet_fixtures', function (Blueprint $table) {
             $table->id();
-            $table->string('bookie');
-            $table->double('stake');
-            $table->double('odds');
-            $table->string('tipster')->nullable();
-            $table->string('sport');
-            $table->string('type');
-            $table->string('result')->nullable();
+            $table->integer('bet_id');
+            $table->integer('fixture_id')->nullable();
+            $table->string('event');
+            $table->string('selection');
+            $table->string('category');
             $table->string('status');
-            $table->integer('user_id');
+            $table->timestamp('date');
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ class CreateBetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bets');
+        Schema::dropIfExists('bet_fixtures');
     }
 }

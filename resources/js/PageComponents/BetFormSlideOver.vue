@@ -42,8 +42,7 @@
                             rounded-md
                             text-indigo-200
                             hover:text-white
-                            focus:outline-none
-                            focus:ring-2 focus:ring-white
+                            focus:outline-none focus:ring-2 focus:ring-white
                           "
                           @click="open = false"
                         >
@@ -65,91 +64,46 @@
                         <div class="">
                           <div class="py-6 px-4 sm:p-6">
                             <div class="grid grid-cols-4 gap-4">
-                              <div class="col-span-4 sm:col-span-4">
-                                <EventsV2 :bet="betData" :errors="errors" />
-                              </div>
-
-                              <div class="col-span-4 sm:col-span-4">
-                                <text-input
-                                  v-model="betData.selection"
-                                  :error="errors.selection"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                  label="Selection"
-                                />
-                              </div>
-
-                              <div class="col-span-4 sm:col-span-4">
-                                <label
-                                  class="
-                                    block
-                                    text-sm
-                                    font-medium
-                                    text-gray-700
-                                    dark:text-gray-400
-                                    capitalize
-                                  "
-                                  >Category:</label
+                              <div
+                                class="col-span-4 sm:col-span-4"
+                                v-if="renderComponent"
+                              >
+                                <Event
+                                  v-for="(game, key) in addedGames"
+                                  :key="key"
+                                  v-model="games[key]"
+                                  :errors="errors"
+                                  :name="index"
+                                  :game="game"
+                                  :index="key"
+                                  :isEdit="isEdit"
                                 >
-                                <Multiselect
-                                  v-model="betData.category"
-                                  :searchable="true"
-                                  :options="this.betTypes"
-                                  :addTagOn="['enter', 'tab', ';', ',']"
-                                  label="name"
-                                  valueProp="id"
-                                  trackBy="name"
-                                  mode="tags"
-                                />
-                              </div>
-                              <div class="col-span-4 sm:col-span-2">
-                                <autocomplete-input
-                                  :options="
-                                    $page.props.auth.settings.bookmakers.value
-                                  "
-                                  v-model="betData.bookie"
-                                  :error="errors.bookie"
-                                  label="Bookie"
-                                  type="text"
-                                  id="bookie"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                />
-                              </div>
-                              <div class="col-span-4 sm:col-span-2">
-                                <dropdown
-                                  v-model="betData.type"
-                                  :error="errors.type"
-                                  label="Type"
-                                  :options="{
-                                    prematch: 'Prematch',
-                                    inplay: 'Inplay',
-                                  }"
-                                />
+                                </Event>
+                                <div class="flex justify-end">
+                                  <button
+                                    class="
+                                      inline-flex
+                                      items-center
+                                      px-1.5
+                                      py-1.5
+                                      border border-transparent
+                                      text-xs
+                                      font-medium
+                                      rounded
+                                      shadow-sm
+                                      text-white
+                                      bg-indigo-600
+                                      hover:bg-indigo-700
+                                      focus:outline-none
+                                      focus:ring-2
+                                      focus:ring-offset-2
+                                      focus:ring-indigo-500
+                                    "
+                                    @click.prevent="addGame"
+                                  >
+                                   <PlusIcon class="h-4 w-4" aria-hidden="true" />
+                                  </button>
+                                </div>
                               </div>
                               <div class="col-span-4 sm:col-span-2">
                                 <text-input-with-add-on
@@ -199,13 +153,16 @@
                                   "
                                 />
                               </div>
-                              <div class="col-span-4 sm:col-span-4">
-                                <text-input
-                                  v-model="betData.date"
-                                  :error="errors.date"
-                                  label="Date"
-                                  type="datetime-local"
-                                  id="date"
+                              <div class="col-span-4 sm:col-span-2">
+                                <autocomplete-input
+                                  :options="
+                                    $page.props.auth.settings.bookmakers.value
+                                  "
+                                  v-model="betData.bookie"
+                                  :error="errors.bookie"
+                                  label="Bookie"
+                                  type="text"
+                                  id="bookie"
                                   class="
                                     mt-1
                                     block
@@ -220,6 +177,17 @@
                                     focus:border-gray-900
                                     sm:text-sm
                                   "
+                                />
+                              </div>
+                              <div class="col-span-4 sm:col-span-2">
+                                <dropdown
+                                  v-model="betData.type"
+                                  :error="errors.type"
+                                  label="Type"
+                                  :options="{
+                                    prematch: 'Prematch',
+                                    inplay: 'Inplay',
+                                  }"
                                 />
                               </div>
                               <div class="col-span-4 sm:col-span-2">
@@ -317,7 +285,9 @@
                       text-gray-700
                       hover:bg-gray-50
                       focus:outline-none
-                      focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                      focus:ring-2
+                      focus:ring-offset-2
+                      focus:ring-indigo-500
                     "
                     @click="open = false"
                   >
@@ -344,7 +314,7 @@
 <script>
 import Button from "@/Components/Button.vue";
 import Events from "@/PageComponents/Events.vue";
-import EventsV2 from "@/PageComponents/EventsV2.vue";
+import Event from "@/PageComponents/Event.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AutocompleteInput from "@/Components/AutocompleteInput.vue";
 import LoadingButton from "@/Components/LoadingButton.vue";
@@ -359,7 +329,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { XIcon } from "@heroicons/vue/outline";
+import { XIcon, PlusIcon } from "@heroicons/vue/outline";
 import { ref } from "vue";
 
 export default {
@@ -370,9 +340,10 @@ export default {
     TransitionChild,
     TransitionRoot,
     XIcon,
+    PlusIcon,
     Button,
     Events,
-    EventsV2,
+    Event,
     TextInput,
     TextInputWithAddOn,
     Dropdown,
@@ -397,43 +368,62 @@ export default {
       betData: {},
       betTypes: this.$page.props.betTypes,
       title: null,
+      addedGames: { 0: 0 },
+      currentGameId: 0,
+      games: {},
+      renderComponent: true,
+      isEdit: false,
     };
   },
 
   created() {
     this.emitter.on("betForm:show", () => {
       this.open = true;
+      this.isEdit = this.bet && Object.keys(this.bet).length > 0;
+      if (!this.bet) {
+        // Reset games if slide over is opened
+        this.games = {};
+        this.addedGames = { 0: 0 };
+      }
       this.setBetData();
+    });
+
+    this.emitter.on("game:delete", (index) => {
+      delete this.addedGames[index];
+      delete this.games[index];
+
+      // this.betData.games = this.games;
+
+      if (this.bet) {
+        // Looks not needed
+        // this.renderComponent = false;
+        // this.$nextTick(() => {
+        //   // Add the component back in
+        //   this.renderComponent = true;
+        // });
+      }
     });
 
     this.moment = moment;
     this.emitter.on("event:search", (event) => {
       this.betData.event = event.event;
-      if (event.match) {
-        this.betData.date = moment(event.match.date).format("YYYY-MM-DDTHH:mm");
-        this.betData.match_id = event.match.id;
-      } else {
-        this.betData.date = null;
-        this.betData.match_id = null;
-      }
     });
 
     this.emitter.on("event:edit", (event) => {
       this.bet = event;
+      this.currentGameId = this.bet.bet_fixture.length - 1;
+      this.addedGames = Object.assign({}, this.bet.bet_fixture);
       this.emitter.emit("betForm:show");
     });
 
     this.emitter.on("event:clear", (event) => {
       this.betData = this.$inertia.form({
-        event: null,
-        selection: null,
         bookie: null,
-        stake: null,
-        odds: null,
         tipster: null,
+        odds: null,
+        stake: null,
         sport: null,
         type: null,
-        date: moment().format("YYYY-MM-DDTHH:mm"),
         clearInputs: true,
       });
       this.setUserSettings();
@@ -448,10 +438,17 @@ export default {
         this.betData[key] = setting.value;
       }
     },
+
+    addGame() {
+      this.currentGameId++;
+      this.addedGames[this.currentGameId] = 0;
+    },
     save() {
       var route = "";
       if (this.bet) {
         route = this.route("bet.update");
+        this.betData.games = this.games;
+
         this.betData.put(route, {
           preserveScroll: true,
           onSuccess: () => {
@@ -462,6 +459,7 @@ export default {
         });
       } else {
         route = this.route("bet.store");
+        this.betData.games = this.games;
         this.betData.post(route, {
           preserveScroll: true,
           onSuccess: () => {
@@ -479,32 +477,20 @@ export default {
       if (!this.bet) {
         this.title = "New bet";
         this.betData = this.$inertia.form({
-          event: null,
-          match_id: null,
-          selection: null,
-          category: null,
           bookie: null,
-          stake: null,
-          odds: null,
           tipster: null,
           sport: null,
+          odds: null,
+          stake: null,
           type: null,
-          date: moment().format("YYYY-MM-DDTHH:mm"),
+          games: null,
           clearInputs: true,
         });
         this.setUserSettings();
       } else {
+        this.bet.games = {};
         this.betData = this.$inertia.form(this.bet);
         this.title = "Edit " + this.bet.event;
-        this.betData.date = moment(this.betData.date).format(
-          "YYYY-MM-DDTHH:mm"
-        );
-
-        if (!this.betData.category) {
-          this.betData.category = [];
-        } else {
-          this.betData.category = JSON.parse(this.betData.category);
-        }
       }
     },
   },

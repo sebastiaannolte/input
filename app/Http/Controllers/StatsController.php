@@ -8,7 +8,6 @@ use App\Models\Bet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Inertia\Inertia;
 
@@ -24,9 +23,14 @@ class StatsController extends Controller
             'sortType' => "Bets",
             'sortOrder' => "DESC"
         ];
+        
         $bets = Bet::user($userId)->filters($filters);
+        $betStats = $bets->clone();
+        $statsSelect = 'statsSelect';
+        $advancedStats = 'advancedStats';
+
         $tabs = $statsHelper->getStatsTabs();
-        $betStats = $bets->clone()->select((new StatsHelper)->statsSelect(), (new StatsHelper)->advancedStats())->whereNotNull('result')->first();
+        $betStats = $betStats->clone()->select((new StatsHelper)->statsSelect(), (new StatsHelper)->advancedStats())->whereNotNull('result')->first();
 
         return Inertia::render('Stats', [
             'tabs' => $tabs,

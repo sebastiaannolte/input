@@ -3,6 +3,7 @@
 namespace App\Lib;
 
 use App\Models\Bet;
+use App\Models\BetFixture;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class Stats
     protected $sort = null;
     protected $statsHelper = null;
 
-    public function __construct($userId, $filters, $sort = false) //maybe optional
+    public function __construct($userId, $filters, $sort = false)
     {
         $this->userId = $userId;
         $this->filters = $filters;
@@ -30,7 +31,7 @@ class Stats
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
 
-        $query = Bet::select(DB::raw("id, status, stake, odds as odd, case
+        $query = Bet::select(DB::raw("bets.id, stake, bets.status, odds as odd, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
         when odds > 1.5 and odds <= 1.75 then '1.5-1.75'
         when odds > 1.75 and odds <= 2 then '1.75-2'
@@ -40,16 +41,17 @@ class Stats
         else '2.75+'
         end AS odds"),  $this->statsHelper->statsSelect(), $dateSelect['select'])
             ->filters($this->filters)
+            ->joinBets()
             ->user($this->userId)
-            ->groupBy('formatted_date', 'id');
+            ->groupBy('formatted_date', 'bets.id');
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odds, formatted_date'), $this->statsHelper->statsSelect())
+            ->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->select(DB::raw('count(bets.id), odds, formatted_date'), $this->statsHelper->statsSelect())
             ->groupBy('odds', 'formatted_date')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
-
 
         $labels = [];
         foreach ($carbonDates as $key => $date) {
@@ -91,28 +93,24 @@ class Stats
         $type = $column;
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
+
         $bets = Bet::user($this->userId)
-            ->filters($this->filters);
+            ->filters($this->filters)
+            ->joinBets();
 
-        $columnsTable = $bets->clone()
+        $columnsTable = $bets
+            ->clone()
+            ->select($type, $this->statsHelper->statsSelect())
+            ->whereNotNull($type)
             ->groupBy($type)
-            ->select([
-                $type,
-                $this->statsHelper->statsSelect(),
-            ])
-            ->whereNotNull($type)
-            ->orderBy($this->sort['sortType'], $this->sort['sortOrder']);
+            ->get();
 
-        $columns = $bets->clone()
+        $columns = $bets
+            ->clone()
+            ->select($type,  $dateSelect['select'], $this->statsHelper->statsSelect())
+            ->whereNotNull($type)
             ->groupBy($type, 'formatted_date')
-            ->select([
-                $type,
-                $dateSelect['select'],
-                $this->statsHelper->statsSelect()
-
-            ])
-            ->whereNotNull($type)
-            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])->get();
+            ->get();
 
         $labels = [];
 
@@ -154,7 +152,8 @@ class Stats
         ];
 
         $bets = Bet::user($this->userId)
-            ->filters($this->filters);
+            ->filters($this->filters)
+            ->joinBets();
 
         $bets = $bets
             ->groupBy('formatted_date')
@@ -202,7 +201,6 @@ class Stats
         ];
     }
 
-
     public function getFormattedDate($date, $i)
     {
         $date = Carbon::parse($date);
@@ -213,56 +211,56 @@ class Stats
         return $formattedDate;
     }
 
-
     public function selectionGraph()
     {
         $type = 'selection';
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
 
-        $selections = Bet::leftJoin('bet_types', function ($join) {
-            $join->whereRaw('JSON_CONTAINS(bets.category, CAST(bet_types.id as JSON), "$")');
+        $bets = Bet::joinBets()->leftJoin('bet_types', function ($join) {
+            $join->whereRaw('JSON_CONTAINS(category, CAST(bet_types.id as JSON), "$")');
         })
             ->whereRaw('category <> ""')
-            ->groupBy('bet_types.id', 'formatted_date')
             ->filters($this->filters)
-            ->user($this->userId)
+            ->user($this->userId);
+
+        $selections = $bets
+            ->clone()
+            ->select([
+                'bet_types.id',
+                DB::raw('bet_types.name as selection'),
+                $this->statsHelper->statsSelect('')
+            ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
+            ->groupBy('bet_types.id')
+            ->whereNotNull('name')
+            ->get();
+
+
+        $selectionsGraph = $bets
+            ->clone()
             ->select([
                 'bet_types.id',
                 DB::raw('bet_types.name as selection'),
                 $dateSelect['select'],
                 $this->statsHelper->statsSelect()
             ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
+            ->groupBy('bet_types.id', 'formatted_date')
             ->whereNotNull('name')
             ->get();
 
-        $selectionsTable = Bet::leftJoin('bet_types', function ($join) {
-            $join->whereRaw('JSON_CONTAINS(bets.category, CAST(bet_types.id as JSON), "$")');
-        })
-            ->whereRaw('category <> ""')
-            ->groupBy('bet_types.id')
-            ->filters($this->filters)
-            ->user($this->userId)
-            ->select([
-                'bet_types.id',
-                DB::raw('bet_types.name as selection'),
-                $this->statsHelper->statsSelect()
-            ])->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
-            ->whereNotNull('name');
-
         $labels = [];
         foreach ($carbonDates as $key => $date) {
-            foreach ($selections as $key => $selection) {
+            foreach ($selectionsGraph as $key => $selection) {
                 $labels[$date->format($dateSelect['format'])][$selection->$type] = 0;
             }
         }
 
-        foreach ($selections as $key => $value) {
+        foreach ($selectionsGraph as $key => $value) {
             $date = $value->formatted_date;
             $labels[$date][$value->$type] = $value->profit;
         }
 
-        $table = $this->selectionTable($selectionsTable);
+        $table = $this->selectionTable($selections);
 
         $vals = [];
         foreach ($labels as $date => $values) {
@@ -316,7 +314,7 @@ class Stats
         $type = $column;
         $head = $this->tableHeader($type);
         $output = [];
-        foreach ($types->get() as $key => $typeValue) {
+        foreach ($types as $key => $typeValue) {
             $bets = $typeValue;
             $typeValue = ucfirst($typeValue->$type);
             $output[$typeValue] = $this->tableBodyRendered($typeValue, $bets, $type);
@@ -331,7 +329,7 @@ class Stats
         $head = $this->tableHeader($type);
 
         $output = [];
-        foreach ($selections->get() as $key => $selection) {
+        foreach ($selections as $key => $selection) {
             $key = $selection->$type;
             $output[$key] = $this->tableBodyRendered($key, $selection, $type);
         }
@@ -344,8 +342,11 @@ class Stats
     {
         $type = 'odds';
         $head = $this->tableHeader($type);
+        $bets = Bet::filters($this->filters)
+            ->bets()
+            ->user($this->userId);
 
-        $query = Bet::select(DB::raw("id, status, stake, odds as odd, case
+        $query = $bets->select(DB::raw("bets.id, bets.status, stake, odds as odd, case
         when odds > 0 and odds <= 1.5 then '< 1.5'
         when odds > 1.5 and odds <= 1.75 then '1.5-1.75'
         when odds > 1.75 and odds <= 2 then '1.75-2'
@@ -354,14 +355,13 @@ class Stats
         when odds > 2.50 and odds <= 2.75 then '2.50-2.75'
         else '2.75+'
         end AS odds"),  $this->statsHelper->statsSelect())
-            ->filters($this->filters)
-            ->user($this->userId)
-            ->groupBy('id');
+
+            ->groupBy('id', 'bet_fixtures.date');
 
 
         $bets = DB::table(DB::raw("({$query->toSql()}) as bets"))
             ->mergeBindings($query->getQuery())
-            ->select(DB::raw('count(id), odds'), $this->statsHelper->statsSelect())
+            ->select(DB::raw('count(bets.id), odds'), $this->statsHelper->statsSelect())
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->groupBy($type);
 
@@ -488,7 +488,8 @@ class Stats
             ->filters($this->filters);
 
         $types = $bets->clone()
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->join('leagues', 'league_id', '=', 'leagues.id')
             ->groupBy('fixtures.league_id')
             ->whereNotNull('fixtures.league_id')
@@ -520,8 +521,9 @@ class Stats
 
         $bets = Bet::filters($this->filters)->user($this->userId);
         $types = $bets
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
             ->join('fixtures', function ($join) use ($id) {
-                $join->on('match_id', '=', 'fixtures.id')->where('league_id', $id);
+                $join->on('bet_fixtures.fixture_id', '=', 'fixtures.id')->where('league_id', $id);
             })
             ->leftjoin('teams', function ($join) {
                 $join->on('teams.id', '=', 'fixtures.home_team');
@@ -544,12 +546,16 @@ class Stats
 
     public function teamTable($teamId, $leagueId)
     {
-        $bets = Bet::whereHas('fixture', function ($q) use ($teamId, $leagueId) {
+        //@TODO home/away filter for teams
+        $bets = BetFixture::whereHas('fixture', function ($q) use ($teamId, $leagueId) {
             $q->where('home_team', $teamId)->orWhere('away_team', $teamId);
             if ($leagueId) {
                 $q->where('league_id', $leagueId);
             }
-        })->whereNotNull('match_id')
+        });
+
+        $bets = Bet::joinBets()
+            ->whereIn('fixture_id', $bets->pluck('fixture_id'))
             ->filters($this->filters)
             ->user($this->userId)
             ->paginate(15);
@@ -571,7 +577,8 @@ class Stats
             ->filters($this->filters);
 
         $types = $bets->clone()
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->groupBy('fixtures.referee')
             ->whereNotNull('fixtures.referee')
             ->select(['referee', $this->statsHelper->statsSelect()])
@@ -597,7 +604,8 @@ class Stats
             ->filters($this->filters);
 
         $types = $bets->clone()
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->join('venues', 'venue_id', '=', 'venues.id')
             ->groupBy('fixtures.venue_id')
             ->whereNotNull('fixtures.venue_id')
@@ -631,13 +639,12 @@ class Stats
 
     public function refereeBets($referee)
     {
-        $bets = Bet::whereHas('fixture', function ($q) use ($referee) {
+        $bets = BetFixture::whereHas('fixture', function ($q) use ($referee) {
             $q->where('referee', $referee);
-        })->whereNotNull('match_id')->get();
+        })->get();
 
-        $bets = Bet::whereIn('id', $bets->pluck('id'))->filters($this->filters)->user($this->userId)->paginate(15);
-        $betsByCompetition['bets'] =
-            $bets;
+        $bets = Bet::joinBets()->whereIn('fixture_id', $bets->pluck('fixture_id'))->filters($this->filters)->user($this->userId)->paginate(15);
+        $betsByCompetition['bets'] = $bets;
 
         return $betsByCompetition;
     }
@@ -648,9 +655,10 @@ class Stats
             ->filters($this->filters);
 
         $bets = $bets
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->join('venues', 'venue_id', '=', 'venues.id')
-            ->groupBy('bets.id')
+            ->groupBy('bets.id', 'bet_fixtures.id')
             ->whereNotNull('fixtures.venue_id')
             ->where('fixtures.venue_id', $venueId)
             ->paginate(15);
@@ -667,9 +675,10 @@ class Stats
             ->filters($this->filters);
 
         $bets = $bets
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->join('leagues', 'league_id', '=', 'leagues.id')
-            ->groupBy('bets.id')
+            ->groupBy('bets.id', 'bet_fixtures.id')
             ->whereNotNull('fixtures.league_id')
             ->where('fixtures.league_id', $league_id)
             ->paginate(15);
@@ -689,25 +698,23 @@ class Stats
             ->filters($this->filters);
 
         $home = $bets->clone()
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->joinFixtures()
             ->leftjoin('teams', function ($join) {
                 $join->on('teams.id', '=', 'fixtures.home_team');
             })
-            ->select(['teams.id as id', 'teams.name as team', 'status', 'stake', 'odds']);
+            ->select(['teams.id as id', 'teams.name as team', 'bet_fixtures.status', 'stake', 'odds']);
 
         $homeAndAway = $bets->clone()
-            ->join('fixtures', 'match_id', '=', 'fixtures.id')
+            ->joinFixtures()
             ->leftjoin('teams', function ($join) {
                 $join->on('teams.id', '=', 'fixtures.away_team');
             })
-            ->select(['teams.id as id', 'teams.name as team', 'status', 'stake', 'odds'])
+            ->select(['teams.id as id', 'teams.name as team', 'bet_fixtures.status', 'stake', 'odds'])
             ->unionAll($home);
-
-
 
         $types = DB::table(DB::raw("({$homeAndAway->toSql()}) as bets"))
             ->mergeBindings($homeAndAway->getQuery())
-            ->select(DB::raw('id, team'), $this->statsHelper->statsSelect())
+            ->select(DB::raw('id, team'), $this->statsHelper->statsSelect(''))
             ->groupBy('team', 'id')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);

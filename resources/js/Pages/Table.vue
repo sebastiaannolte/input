@@ -11,6 +11,7 @@
           type.id,
         ])
       "
+      :is-stats="true"
     />
   </span>
 </template>

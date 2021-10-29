@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Lib\GamesApi;
 use App\Lib\Stats;
 use App\Lib\StatsHelper;
 use App\Models\League;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Venue;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 

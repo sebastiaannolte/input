@@ -56,7 +56,7 @@
             flex-1
           "
         >
-          {{ bet.event }}
+          {{bet.event}}
         </h2>
         <div class="flex justify-between">
           <div>
@@ -139,7 +139,7 @@
       <div class="col-span-8 sm:col-span-4">
         <div class="p-2">Event</div>
         <div class="p-2 mb-2 font-bold">
-          {{ bet.event }}
+          {{bet.event}}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -175,13 +175,13 @@
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Result</div>
         <div class="p-2 mb-2 font-bold">
-          {{ bet.result }}
+          {{ betResult }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Date</div>
         <div class="p-2 mb-2 font-bold">
-          {{ moment(bet.date).format('YYYY-MM-DD HH:mm') }}
+          {{ moment(bet.date).format("YYYY-MM-DD HH:mm") }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -205,7 +205,7 @@
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Placed on</div>
         <div class="p-2 mb-2 font-bold capitalize">
-          {{ moment(bet.created_at).format('YYYY-MM-DD HH:mm') }}
+          {{ moment(bet.created_at).format("YYYY-MM-DD HH:mm") }}
         </div>
       </div>
     </div>
@@ -266,5 +266,11 @@ export default {
       return categoryNames.join(", ");
     },
   },
+
+  computed: {
+    betResult() {
+      return this.bet.result ? this.bet.result : 'No result';
+    }
+  }
 };
 </script>

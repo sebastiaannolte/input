@@ -1,87 +1,99 @@
 <template>
-  <div class="flex">
-    <Multiselect
-      v-model="betData.event"
-      mode="single"
-      placeholder="Search a match"
-      noOptionsText="Start typing to find a match"
-      :filterResults="false"
-      :minChars="3"
-      :resolveOnLoad="false"
-      :delay="100"
-      :searchable="true"
-      @select="onSelect"
-      :createTag="true"
-      :object="true"
-      ref="multiselect"
-      add-tag-on="['enter']"
-      :clearOnSelect="false"
-      :clearOnSearch="false"
-      :options="
-        async function (query) {
-          return await fetchMatches(query, searchType);
-        }
-      "
-      class="rounded-r-0"
+  <div>
+    <div class="flex">
+      <Multiselect
+        v-model="event"
+        mode="single"
+        placeholder="Search a match"
+        noOptionsText="Start typing to find a match"
+        :filterResults="false"
+        :minChars="3"
+        :caret="false"
+        :resolveOnLoad="false"
+        :delay="300"
+        :searchable="true"
+        @select="onSelect"
+        :createTag="true"
+        :object="true"
+        ref="multiselect"
+        :clearOnSelect="false"
+        :clearOnSearch="false"
+        :options="
+          async function (query) {
+            return await fetchMatches(query, searchType);
+          }
+        "
+        class="rounded-r-0"
+      >
+        <template v-slot:option="{ option }">
+          <img class="h-4 mr-2" :src="option.icon" /> {{ option.label }}
+        </template>
+      </Multiselect>
+      <button
+        type="button"
+        @click="setSearchType('simple')"
+        :class="{
+          'bg-gray-200 text-white inner-shadow': searchType == 'simple',
+        }"
+        class="
+          inline-flex
+          items-center
+          px-2.5
+          py-1.5
+          border border-gray-300
+          shadow-sm
+          text-xs
+          font-medium
+          text-gray-700
+          bg-white
+        "
+      >
+        <LockClosedIcon class="h-4 w-4" aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        @click="setSearchType('full')"
+        :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'full' }"
+        class="
+          inline-flex
+          items-center
+          px-2.5
+          py-1.5
+          border border-gray-300
+          shadow-sm
+          text-xs
+          font-medium
+          rounded-r
+          text-gray-700
+          bg-white
+          hover:bg-gray-50
+          focus:outline-none focus:bg-gray-300
+        "
+      >
+        <LockOpenIcon class="h-4 w-4" aria-hidden="true" />
+      </button>
+    </div>
+    <div
+      v-if="errors['games.' + index + '.event']"
+      class="form-error text-gray-400"
     >
-      <template v-slot:option="{ option }">
-        <img class="h-4 mr-2" :src="option.icon" /> {{ option.label }}
-      </template>
-    </Multiselect>
-    <button
-      type="button"
-      @click="setSearchType('simple')"
-      :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'simple' }"
-      class="
-        inline-flex
-        items-center
-        px-2.5
-        py-1.5
-        border border-gray-300
-        shadow-sm
-        text-xs
-        font-medium
-        text-gray-700
-        bg-white
-      "
-    >
-      Simple
-    </button>
-    <button
-      type="button"
-      @click="setSearchType('full')"
-      :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'full' }"
-      class="
-        inline-flex
-        items-center
-        px-2.5
-        py-1.5
-        border border-gray-300
-        shadow-sm
-        text-xs
-        font-medium
-        rounded-r
-        text-gray-700
-        bg-white
-        hover:bg-gray-50
-        focus:outline-none
-        focus:bg-gray-300
-      "
-    >
-      Full
-    </button>
+      <small>{{ errors["games." + index + ".event"] }}</small>
+    </div>
   </div>
 </template>
 
 <script>
 import TextInput from "@/Components/TextInput.vue";
 import Multiselect from "@vueform/multiselect";
+import { LockClosedIcon, LockOpenIcon } from "@heroicons/vue/solid";
 
 export default {
-  components: { TextInput, Multiselect },
+  components: { TextInput, Multiselect, LockClosedIcon, LockOpenIcon },
   props: {
+    modelValue: Object,
     errors: Object,
     bet: Object,
+    index: String,
   },
 
   setup() {
@@ -104,6 +116,7 @@ export default {
     return {
       betData: {},
       searchType: "simple",
+      event: null,
     };
   },
 
@@ -120,11 +133,13 @@ export default {
 
   mounted() {
     if (this.bet.event) {
-      this.bet.event = {
-        value: this.bet.match_id ? this.bet.match_id : 0,
+      this.event = {
+        value: this.bet.fixture_id ? this.bet.fixture_id : 0,
         label: this.bet.event,
       };
+
       // this.$refs.multiselects.refreshOptions();
+      this.setBet();
     }
   },
 
@@ -133,9 +148,9 @@ export default {
       this.findGame(option.value);
     },
 
-    findGame(matchId) {
-      if (matchId) {
-        this.$http.get(this.route("event.match", matchId)).then((response) => {
+    findGame(option) {
+      if (option) {
+        this.$http.get(this.route("event.match", option)).then((response) => {
           if (response.data) {
             this.betData.match = response.data;
             this.setBet();
@@ -148,7 +163,11 @@ export default {
     },
 
     setBet() {
-      this.emitter.emit("event:search", this.betData);
+      var newData = {
+        event: this.event,
+        match: this.betData.match,
+      };
+      this.$emit("update:modelValue", newData);
     },
 
     setSearchType(type) {
