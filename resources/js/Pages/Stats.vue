@@ -147,9 +147,13 @@
       <div class="relative" :style="loading ? 'height: 500px' : ''">
         <loading v-model:active="loading" :is-full-page="false" />
       </div>
-      <div class="grid gap-4 p-4"
-      :class="{'grid-cols-1' : !currentTable.head,
-      'grid-cols-1 sm:grid-cols-2' : currentTable.head}">
+      <div
+        class="grid gap-4 p-4"
+        :class="{
+          'grid-cols-1': !currentTable.head,
+          'grid-cols-1 sm:grid-cols-2': currentTable.head,
+        }"
+      >
         <div class="w-full h-full flex-col">
           <vue3-chart-js
             v-if="!loading"
@@ -160,12 +164,8 @@
             height="400"
           />
         </div>
-        <div class="overflow-x-auto w-full"
-         v-if="currentTable.head">
-          <div
-            class="py-2 align-middle inline-block min-w-full"
-           
-          >
+        <div class="overflow-x-auto w-full" v-if="currentTable.head">
+          <div class="py-2 align-middle inline-block min-w-full">
             <div
               class="shadow overflow-hidden border-b border-gray-200 rounded-md"
             >
@@ -279,6 +279,7 @@ export default {
     },
     type: Number,
     sort: Object,
+    gamesStatus: Boolean,
   },
 
   data() {
@@ -319,11 +320,15 @@ export default {
       }
       this.loading = true;
       this.$http
-        .post(this.route("stats.stats", this.$page.props.userInfo.user.username), {
-          key: key,
-          filters: this.filters,
-          sort: this.sort,
-        })
+        .post(
+          this.route("stats.stats", this.$page.props.userInfo.user.username),
+          {
+            key: key,
+            filters: this.filters,
+            sort: this.sort,
+            status: this.gamesStatus,
+          }
+        )
         .then((response) => {
           if (response.data) {
             this.currentGraph = response.data[key].graph;
@@ -414,6 +419,29 @@ export default {
           only: ["type", "sort", "filters"],
         }
       );
+    },
+
+    changeStatus(status) {
+      Inertia.get(
+        this.route("stats.index", this.$page.props.userInfo.user.username),
+        pickBy({
+          type: this.currentTab.option,
+          sort: this.sort,
+          filters: this.filters,
+          status: status,
+        }),
+        {
+          preserveScroll: true,
+        },
+        {
+          only: ["type", "sort", "filters"],
+        }
+      );
+    },
+  },
+  watch: {
+    gamesStatus: function (status) {
+      this.changeStatus(status);
     },
   },
 };

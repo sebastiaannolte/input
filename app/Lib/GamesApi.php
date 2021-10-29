@@ -3,6 +3,7 @@
 namespace App\Lib;
 
 use App\Models\Bet;
+use App\Models\BetFixture;
 use App\Models\BetType;
 use App\Models\Bookmaker;
 use App\Models\Fixture;
@@ -234,6 +235,25 @@ class GamesApi
                 $index++;
                 return ceil($index / 15);
             }
+        }
+    }
+
+    public static function fixUpdatev2()
+    {
+        $bets = Bet::get();
+
+        foreach ($bets as $key => $bet) {
+            BetFixture::create([
+                'bet_id' => $bet->id,
+                'fixture_id' => $bet->match_id,
+                'event' => $bet->event,
+                'selection' => $bet->selection,
+                'category' => $bet->category,
+                'status' => $bet->status,
+                'date' =>$bet->date,
+                'created_at' => $bet->created_at,
+                'updated_at' => $bet->updated_at,
+            ]);
         }
     }
 }

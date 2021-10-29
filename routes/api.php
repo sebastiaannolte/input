@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth', 'isHost'])->group(function () {
-    Route::get('/match/{matchId}', function ($matchId) {
-        return GamesApi::match($matchId);
+    Route::get('/match/{id}', function ($id) {
+        return GamesApi::match($id);
     })->name('event.match');
 
     Route::get('/search/{search}/{type}', function ($search, $type) {

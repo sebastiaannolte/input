@@ -5,6 +5,7 @@ use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\UserSettingController;
+use App\Lib\GamesApi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -41,11 +42,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('{username}/settings', [UserSettingController::class, 'store'])->name('userSettings.store');
     Route::get('{username}/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('{username}/competition/{id}', [SpecialStatsController::class, 'competition'])->name('competition');
-    // Route::get('{username}/competition/{id}/bets', [SpecialStatsController::class, 'competitionBets'])->name('competition.bets');
+    Route::get('{username}/competition/{id}/bets', [SpecialStatsController::class, 'competitionBets'])->name('competition.bets');
     Route::get('{username}/special', [SpecialStatsController::class, 'special'])->name('special');
     Route::get('{username}/referee/{name}', [SpecialStatsController::class, 'referee'])->name('referee');
     Route::get('{username}/venue/{name}', [SpecialStatsController::class, 'venue'])->name('venue');
     Route::get('{username}/team/{id}/{league?}', [SpecialStatsController::class, 'team'])->name('team');
     Route::put('{username}/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/fix', function () {
+        return GamesApi::fixUpdatev2();
+    });
     Route::get('/{username}', [BetController::class, 'index'])->name('userhome');
 });

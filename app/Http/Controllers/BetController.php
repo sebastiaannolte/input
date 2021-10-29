@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Lib\StatsHelper;
 use App\Models\Bet;
-use App\Models\BetType;
+use App\Models\BetFixture;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -26,6 +26,22 @@ class BetController extends Controller
 
         $bets = Bet::user($userId);
         $betStats = $bets->clone()->select((new StatsHelper)->statsSelect())->whereNotNull('result')->first();
+        $allBets = $bets
+            ->clone()
+            ->bets()
+            ->with('betFixture.fixture')
+            ->filters($filters)
+            ->paginate()
+            ->withQueryString();
+
+        $upcommintBets = Bet::joinBets()
+            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'bookie', 'sport', 'tipster', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event'))
+            ->whereNull('result')
+            ->orderBy('date')
+            ->orderBy('bets.id')
+            ->groupBy('bet_fixtures.bet_id', 'bet.bets.stake',  'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id')
+            ->get()
+            ->take(3);
 
         return Inertia::render('Home', [
             'stats' => [
@@ -36,100 +52,165 @@ class BetController extends Controller
                 'roi' => round($betStats->roi, 2),
                 'username' => $username,
             ],
-
-            'bets' => $bets->clone()->bets()->filters($filters)->paginate()->withQueryString(),
-            'upcommingBets' => $bets->clone()->whereNull('result')->orderBy('date')->orderBy('id')->take(3)->get(),
+            'bets' => $allBets,
+            'upcommingBets' => $upcommintBets,
             'filters' => $filters,
         ]);
     }
 
     public function store()
     {
-        Request::validate([
-            'event' => ['required', 'max:50'],
-            'selection' => ['required', 'max:50'],
-            'category' => ['required', 'max:50'],
-            'bookie' => ['required', 'max:50'],
-            'stake' => ['required', 'max:50'],
-            'odds' => ['required', 'max:50'],
-            'sport' => ['required', 'max:50'],
-            'type' => ['required', 'max:50'],
-        ]);
+        $games = collect(Request::get('games'));
+        $statsHelper = new StatsHelper;
 
-        Bet::create([
-            'match_id' => Request::get('match_id'),
-            'event' => Request::get('event')['label'],
-            'selection' => Request::get('selection'),
-            'category' => json_encode(Request::get('category')),
+        Request::validate(
+            [
+                'bookie' => ['required', 'max:50'],
+                'tipster' => ['required', 'max:50'],
+                'sport' => ['required', 'max:50'],
+                'type' => ['required', 'max:50'],
+                'stake' => ['required', 'max:50'],
+                'odds' => ['required', 'max:50'],
+                //games
+                'games.*.event' => ['required', 'max:50'],
+                'games.*.selection' => ['required', 'max:50'],
+                'games.*.date' => ['required', 'max:50'],
+                'games.*.category' => ['required', 'max:50'],
+
+            ],
+            $statsHelper->betValidationTranslations(),
+        );
+
+        $bet = Bet::create([
             'bookie' => Request::get('bookie'),
-            'stake' => Request::get('stake'),
-            'odds' => Request::get('odds'),
             'tipster' => Request::get('tipster'),
             'sport' => Request::get('sport'),
             'type' => Request::get('type'),
-            'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
+            'stake' => Request::get('stake'),
+            'odds' => Request::get('odds'),
             'user_id' => Auth::user()->id,
             'status' => 'new',
         ]);
 
-        return Redirect::back()->with('success', 'Bet created');;
+        foreach ($games as $key => $game) {
+            $event = $game['event']['event'];
+            BetFixture::create([
+                'bet_id' => $bet->id,
+                'fixture_id' => is_int($event['value']) ? $event['value'] : null,
+                'event' => $event['label'],
+                'selection' => $game['selection'],
+                'date' => $game['date'] ?: now(),
+                'category' => json_encode($game['category']),
+                'status' => 'new',
+            ]);
+        }
+
+
+        return Redirect::back()->with('success', 'Bet created');
     }
 
     public function update()
     {
+
         $bet = Bet::find(Request::get('id'));
+        $statsHelper = new StatsHelper;
 
         if (Request::user()->cannot('update', $bet)) {
             abort(403);
         }
-        Request::validate([
-            'event' => ['required', 'max:50'],
-            'selection' => ['required', 'max:50'],
-            'category' => ['required', 'max:50'],
-            'bookie' => ['required', 'max:50'],
-            'stake' => ['required', 'max:50'],
-            'odds' => ['required', 'max:50'],
-            'sport' => ['required', 'max:50'],
-            'type' => ['required', 'max:50'],
-        ]);
+
+        $games = collect(Request::get('games'));
+
+        Request::validate(
+            [
+                'bookie' => ['required', 'max:50'],
+                'tipster' => ['required', 'max:50'],
+                'sport' => ['required', 'max:50'],
+                'type' => ['required', 'max:50'],
+                'stake' => ['required', 'max:50'],
+                'odds' => ['required', 'max:50'],
+                //games
+                'games.*.selection' => ['required', 'max:50'],
+                'games.*.date' => ['required', 'max:50'],
+                'games.*.category' => ['required', 'max:50'],
+
+            ],
+            $statsHelper->betValidationTranslations(),
+        );
 
         $bet->update([
-            'match_id' => Request::get('match_id'),
-            'event' => Request::get('event')['label'],
-            'selection' => Request::get('selection'),
-            'category' => Request::get('category'),
             'bookie' => Request::get('bookie'),
-            'stake' => Request::get('stake'),
-            'odds' => Request::get('odds'),
             'tipster' => Request::get('tipster'),
             'sport' => Request::get('sport'),
             'type' => Request::get('type'),
-            'date' => (Request::get('date') ? Carbon::parse(Request::get('date')) : now()),
+            'stake' => Request::get('stake'),
+            'odds' => Request::get('odds'),
             'user_id' => Auth::user()->id,
-            'result' => Request::get('result'),
-            'status' => Request::get('status')
         ]);
 
-        return Redirect::route('bet.show', Request::get('id'))->with('success', 'Bet updated');;
+        $betFixtureIds = $bet->betFixture->pluck('id');
+        $gameIds = $games->pluck('id');
+        $idsToDelete = $betFixtureIds->diff($gameIds);
+        if (!$idsToDelete->isEmpty()) {
+            $bet->betFixture()->whereIn('id', $idsToDelete)->delete();
+        }
+
+        foreach ($games as $key => $game) {
+            $event = $game['event']['event'];
+
+            $data = [
+                'fixture_id' => is_int($event['value']) ? $event['value'] : null,
+                'event' => $event['label'],
+                'selection' => $game['selection'],
+                'date' => $game['date'] ?: now(),
+                'category' => json_encode($game['category']),
+            ];
+
+            if (array_key_exists('id', $game)) {
+                $betFixture = BetFixture::find($game['id']);
+                $betFixture->update($data);
+            } else {
+                $betFixture = new BetFixture;
+                $data['bet_id'] = $bet->id;
+                $data['status'] = 'new';
+                $betFixture->create($data);
+            }
+        }
+
+        return Redirect::route('bet.show', Request::get('id'))->with('success', 'Bet updated');
     }
 
     public function updateStatus()
     {
-        $bet = Bet::find(Request::get('id'));
-        if (Request::user()->cannot('update', $bet)) {
-            abort(403);
+        if (Request::get('bet_id')) {
+            $bet = BetFixture::find(Request::get('id'));
+            $bet->update([
+                'status' => Request::get('status')
+            ]);
+        } else {
+
+            $bet = Bet::find(Request::get('id'));
+            // update all fixtures
+            $bet->betFixture()->update(['status' => Request::get('status')]);
+            $bet->update([
+                'result' => Request::get('result'),
+                'status' => Request::get('status')
+            ]);
         }
 
-        $bet->update([
-            'result' => Request::get('result'),
-            'status' => Request::get('status')
-        ]);
+        // if (Request::user()->cannot('update', $bet)) {
+        //     abort(403);
+        // }
+
+
 
         return Redirect::back();
     }
 
-    public function show(Bet $bet)
+    public function show($id)
     {
+        $bet = Bet::bet($id)->first();
+
         if (Request::user()->cannot('view', $bet)) {
             abort(403);
         }

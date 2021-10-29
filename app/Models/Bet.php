@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Lib\StatsHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Bet extends Model
 {
@@ -13,9 +15,9 @@ class Bet extends Model
 
     public $fillable = ['match_id', 'event', 'selection', 'category', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result', 'type'];
 
-    public function fixture()
+    public function betFixture()
     {
-        return $this->hasOne(Fixture::class, 'id', 'match_id');
+        return $this->hasMany(BetFixture::class, 'bet_id', 'id');
     }
 
     public function scopeUser($query, $id)
@@ -25,7 +27,11 @@ class Bet extends Model
 
     public function scopeBets($query)
     {
-        return $query->orderByDesc('date')->orderByDesc('id');
+        return $query
+            ->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'bookie', 'sport', 'tipster', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event'))
+            ->groupBy('bet_fixtures.bet_id', 'bet.bets.stake',  'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id')
+            ->orderByDesc('date')->orderByDesc('bets.id');
     }
 
     public function scopeBetCount($query)
@@ -49,6 +55,30 @@ class Bet extends Model
             return $winPercentage;
         }
         return 0;
+    }
+
+    public function scopeBet($query, $id)
+    {
+        return $query->find($id)
+            ->joinBets()
+            ->with('betFixture.fixture')
+            ->where('bets.id', $id)
+            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'user_id', 'bookie', 'tipster', 'sport', 'bets.created_at', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event, REPLACE(GROUP_CONCAT(category SEPARATOR "%SEP_ARRAY%"), "]%SEP_ARRAY%[",",") as category'))
+            ->groupBy('bet_fixtures.bet_id', 'bet.bets.stake',  'bets.odds', 'bets.type', 'result', 'status', 'bets.id')
+            ->orderByDesc('date')->orderByDesc('bets.id');
+    }
+
+    public function scopeJoinBets($query)
+    {
+        return $query
+            ->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id');
+    }
+
+    public function scopejoinFixtures($query)
+    {
+        return $query
+            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id');
     }
 
     public function scopeUnits($query, $round = false)

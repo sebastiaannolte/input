@@ -7,6 +7,7 @@
     :filter-route="
       this.route('team', [$page.props.auth.user.username, team.id, league.id])
     "
+    :is-stats="true"
   />
 </template>
 
