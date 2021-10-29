@@ -30,7 +30,7 @@ class Bet extends Model
         return $query
             ->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
             ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'bookie', 'sport', 'tipster', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event'))
-            ->groupBy('bet_fixtures.bet_id', 'bet.bets.stake',  'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id')
+            ->groupBy('bet_fixtures.bet_id', 'bets.stake',  'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id')
             ->orderByDesc('date')->orderByDesc('bets.id');
     }
 
