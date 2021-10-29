@@ -153,7 +153,10 @@ class Stats
 
         $bets = Bet::user($this->userId)
             ->filters($this->filters)
-            ->joinBets();
+            ->join('bet_fixtures', function ($join) {
+                $join->on('bet_fixtures.bet_id', '=', 'bets.id')
+                    ->on('bet_fixtures.id', '=', DB::raw("(select id from bet_fixtures WHERE bet_fixtures.bet_id = bets.id order by date desc limit 1)"));
+            });
 
         $bets = $bets
             ->groupBy('formatted_date')
