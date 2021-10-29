@@ -39,7 +39,7 @@ class BetController extends Controller
             ->whereNull('result')
             ->orderBy('date')
             ->orderBy('bets.id')
-            ->groupBy('bet_fixtures.bet_id', 'bet.bets.stake',  'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id')
+            ->groupBy('bet_fixtures.bet_id', 'bets.stake',  'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id')
             ->get()
             ->take(3);
 
