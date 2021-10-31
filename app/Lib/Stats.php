@@ -103,6 +103,7 @@ class Stats
             ->select($type, $this->statsHelper->statsSelect())
             ->whereNotNull($type)
             ->groupBy($type)
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
 
         $columns = $bets
@@ -110,6 +111,7 @@ class Stats
             ->select($type,  $dateSelect['select'], $this->statsHelper->statsSelect())
             ->whereNotNull($type)
             ->groupBy($type, 'formatted_date')
+            ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
 
         $labels = [];
