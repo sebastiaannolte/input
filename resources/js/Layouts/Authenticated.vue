@@ -5,6 +5,8 @@
     type="button"
     @click="openBet"
     class="
+      hidden
+      md:block
       fixed
       bottom-4
       right-4
@@ -236,6 +238,7 @@
   </Disclosure>
   <div class="max-w-7xl mx-auto pt-4 pb-12 px-4 lg:pb-16">
     <slot></slot>
+    <bottom-menu/>
   </div>
 </template>
 
@@ -261,6 +264,7 @@ import FlashMessages from "@/Components/FlashMessages";
 import { computed } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
 import BetFormSlideOver from "@/PageComponents/BetFormSlideOver";
+import BottomMenu from '@/Components/BottomMenu.vue';
 
 export default {
   props: {
@@ -282,6 +286,7 @@ export default {
     FlashMessages,
     BetFormSlideOver,
     PlusIconOutline,
+    BottomMenu,
   },
 
   data() {
