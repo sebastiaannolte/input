@@ -12,16 +12,10 @@
           @click="clickAction(item)"
           v-for="item in menu"
           :key="item.name"
-          class="
-            w-full
-            focus:text-teal-500
-            hover:text-teal-500
-            justify-center
-            inline-block
-            text-center
-            pt-2
-            pb-1
-          "
+          class="w-full justify-center inline-block text-center pt-2 pb-1"
+          :class="{
+            'text-indigo-500': activeItem == item.name,
+          }"
         >
           <component class="w-6 h-6 inline-block mb-1" :is="item.icon" />
           <span class="tab tab-home block text-xs">{{ item.name }}</span>
@@ -57,7 +51,13 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      activeItem: null,
+    };
+  },
+
+  created() {
+    this.getActiveItem();
   },
 
   setup() {
@@ -103,9 +103,23 @@ export default {
       this.emitter.emit("betForm:show");
     },
 
+    getActiveItem(item) {
+      if (item) {
+        this.activeItem = item.name;
+        return;
+      }
+      this.menu.forEach((item) => {
+        if (item.url == "/" + window.location.pathname.substr(1)) {
+          this.activeItem = item.name;
+          return;
+        }
+      });
+    },
+
     clickAction(item) {
+      this.getActiveItem(item);
       if (item.url) {
-        this.$inertia.get(item.url);
+        this.$inertia.visit(item.url);
         return;
       }
       this[item.click]();
