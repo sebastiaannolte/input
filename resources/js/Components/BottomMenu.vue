@@ -1,7 +1,7 @@
 <template>
   <section
     id="bottom-navigation"
-    class="md:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
+    class="sm:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
   >
     <section
       id="bottom-navigation"
@@ -13,11 +13,9 @@
           v-for="item in menu"
           :key="item.name"
           class="w-full justify-center inline-block text-center pt-2 pb-1"
-          :class="{
-            'text-indigo-500': activeItem == item.name,
-          }"
+
         >
-          <component class="w-6 h-6 inline-block mb-1" :is="item.icon" />
+          <component class="w-6 h-6 inline-block mb-1" :is=" activeItem == item.name ? item.icon+'Solid' : item.icon" />
           <span class="tab tab-home block text-xs">{{ item.name }}</span>
         </span>
       </div>
@@ -31,11 +29,19 @@ import { usePage } from "@inertiajs/inertia-vue3";
 
 import {
   HomeIcon,
-  PlusIcon,
+  PlusCircleIcon,
   CogIcon,
   SearchCircleIcon,
-  TrendingUpIcon,
+  DocumentReportIcon,
 } from "@heroicons/vue/outline";
+
+import {
+  HomeIcon as HomeIconSolid,
+  PlusCircleIcon as PlusCircleIconSolid,
+  CogIcon as CogIconSolid,
+  SearchCircleIcon as SearchCircleIconSolid,
+  DocumentReportIcon as DocumentReportIconSolid,
+} from "@heroicons/vue/solid";
 
 export default {
   props: {
@@ -43,11 +49,17 @@ export default {
     bet: Object,
   },
   components: {
-    PlusIcon,
+    PlusCircleIcon,
     HomeIcon,
     CogIcon,
     SearchCircleIcon,
-    TrendingUpIcon,
+    DocumentReportIcon,
+
+    HomeIconSolid,
+    PlusCircleIconSolid,
+    CogIconSolid,
+    SearchCircleIconSolid,
+    DocumentReportIconSolid,
   },
 
   data() {
@@ -72,7 +84,7 @@ export default {
       {
         name: "Your stats",
         url: "/" + user.value.username + "/stats",
-        icon: "TrendingUpIcon",
+        icon: "DocumentReportIcon",
       },
       {
         name: "Special stats",
@@ -88,7 +100,7 @@ export default {
         name: "New bet",
         url: "",
         click: "openBet",
-        icon: "PlusIcon",
+        icon: "PlusCircleIcon",
       },
     ];
 
@@ -104,7 +116,7 @@ export default {
     },
 
     getActiveItem(item) {
-      if (item) {
+      if (item && item.url) {
         this.activeItem = item.name;
         return;
       }
