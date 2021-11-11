@@ -145,7 +145,7 @@
         </div>
       </div>
       <div class="relative" :style="loading ? 'height: 500px' : ''">
-        <loading v-model:active="loading" :is-full-page="false" />
+        <loading z-index="10" v-model:active="loading" :is-full-page="false" />
       </div>
       <div
         class="grid gap-4 p-4"
