@@ -1,8 +1,9 @@
 <template>
   <Head title="Settings" />
   <form action="#" method="POST">
-    <div class="shadow sm:rounded-md sm:overflow-hidden">
-      <div class="bg-white py-6 px-4 sm:p-6 h-96">
+    <div class="">
+      <div class="py-6 px-4 sm:p-6 h-96">
+        <settings-tabs/>
         <div>
           <h2 class="text-xl leading-6 font-medium text-gray-900 font-bold">
             Settings
@@ -28,9 +29,7 @@
                 shadow-sm
                 py-2
                 px-3
-                focus:outline-none
-                focus:ring-gray-900
-                focus:border-gray-900
+                focus:outline-none focus:ring-gray-900 focus:border-gray-900
                 sm:text-sm
               "
               :label="key"
@@ -57,8 +56,7 @@
                   v-model="date"
                   id="email"
                   class="
-                    focus:ring-indigo-500
-                    focus:border-indigo-500
+                    focus:ring-indigo-500 focus:border-indigo-500
                     block
                     w-full
                     rounded-none rounded-l-md
@@ -68,7 +66,11 @@
                   "
                 />
               </div>
-              <loading-button :loading="loadingGames" class="rounded-l-none" @click.prevent="getGames">
+              <loading-button
+                :loading="loadingGames"
+                class="rounded-l-none"
+                @click.prevent="getGames"
+              >
                 <span>Get games</span>
               </loading-button>
             </div>
@@ -103,12 +105,13 @@ import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import TextInput from "@/Components/TextInput.vue";
 import LoadingButton from "@/Components/LoadingButton";
+import Settings from "@/Pages/Settings";
 import moment from "moment";
 import Multiselect from "@vueform/multiselect";
 
 export default {
-  components: { Button, TextInput, LoadingButton, Multiselect },
-  layout: Layout,
+  components: { Button, TextInput, LoadingButton, Multiselect, Settings },
+  layout: [Layout, Settings],
 
   props: {
     bookmakers: Object,

@@ -1,7 +1,7 @@
 <template>
   <Head title="Profile" />
-  <div class="shadow sm:rounded-md sm:overflow-hidden">
-    <div class="bg-white py-6 px-4 sm:p-6">
+  <div class="n">
+    <div class="py-6 px-4 sm:p-6">
       <div>
         <h2
           id="payment-details-heading"
@@ -38,7 +38,33 @@
         </div>
       </div>
     </div>
-    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 flex justify-between">
+      <inertia-link
+        href="/logout"
+        method="post"
+        as="button"
+        class="
+          mr-2
+          bg-white
+          border border-gray-300
+          rounded-md
+          shadow-sm
+          py-2
+          px-4
+          inline-flex
+          justify-center
+          text-sm
+          font-medium
+          text-black
+          hover:bg-gray-100
+          focus:outline-none
+          focus:ring-2
+          focus:ring-offset-2
+          focus:ring-gray-300
+        "
+      >
+        Logout
+      </inertia-link>
       <loading-button @click.prevent="save" :loading="userData.processing">
         Save
       </loading-button>
@@ -51,10 +77,11 @@ import Layout from "@/Layouts/Authenticated";
 import Button from "@/Components/Button.vue";
 import TextInput from "@/Components/TextInput.vue";
 import LoadingButton from "@/Components/LoadingButton";
+import Settings from "@/Pages/Settings";
 
 export default {
   components: { Button, TextInput, LoadingButton },
-  layout: Layout,
+  layout: [Layout, Settings],
 
   props: {
     errors: Object,
