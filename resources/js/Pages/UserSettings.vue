@@ -3,7 +3,7 @@
   <form action="#" method="POST">
     <div class="">
       <div class="py-6 px-4 sm:p-6 h-96">
-        <settings-tabs/>
+        <settings-tabs />
         <div>
           <h2 class="text-xl leading-6 font-medium text-gray-900 font-bold">
             Settings
@@ -36,6 +36,17 @@
             />
           </div>
           <div class="col-span-4 sm:col-span-2">
+            <label
+              class="
+                block
+                text-sm
+                font-medium
+                text-gray-700
+                dark:text-gray-400
+                capitalize
+              "
+              >Games:</label
+            >
             <div class="mt-1 flex rounded-md shadow-sm">
               <div
                 class="relative flex items-stretch flex-grow focus-within:z-10"
@@ -66,6 +77,35 @@
                   "
                 />
               </div>
+              <button
+                v-for="sport in sports"
+                :key="sport.name"
+                type="button"
+                @click="setSportType(sport.name)"
+                :class="{
+                  'bg-gray-200 text-white inner-shadow':
+                    activeSport == sport.name,
+                }"
+                class="
+                  w-10
+                  h-10
+                  inline-flex
+                  items-center
+                  px-1.5
+                  py-1.5
+                  border border-gray-300
+                  shadow-sm
+                  text-xs
+                  font-medium
+                  rounded
+                  text-gray-700
+                  bg-white
+                  hover:bg-gray-50
+                  focus:outline-none focus:bg-gray-300
+                "
+              >
+                <sport-icon class="w-6 h-6" :name="sport.name" />
+              </button>
               <loading-button
                 :loading="loadingGames"
                 class="rounded-l-none"
@@ -77,6 +117,17 @@
             <span>{{ gamesResponse }}</span>
           </div>
           <div class="col-span-4 sm:col-span-2">
+            <label
+              class="
+                block
+                text-sm
+                font-medium
+                text-gray-700
+                dark:text-gray-400
+                capitalize
+              "
+              >Bookies:</label
+            >
             <Multiselect
               v-model="newSettings.bookmakers.value"
               mode="tags"
@@ -108,9 +159,17 @@ import LoadingButton from "@/Components/LoadingButton";
 import Settings from "@/Pages/Settings";
 import moment from "moment";
 import Multiselect from "@vueform/multiselect";
+import SportIcon from "@/Components/SportIcon.vue";
 
 export default {
-  components: { Button, TextInput, LoadingButton, Multiselect, Settings },
+  components: {
+    Button,
+    TextInput,
+    LoadingButton,
+    Multiselect,
+    Settings,
+    SportIcon,
+  },
   layout: [Layout, Settings],
 
   props: {
@@ -124,6 +183,7 @@ export default {
       gamesResponse: null,
       loadingGames: false,
       speiclaTabsFiltered: null,
+      activeSport: "football",
     };
   },
 
@@ -144,18 +204,27 @@ export default {
       );
     },
 
+    setSportType(type) {
+      this.activeSport = type;
+    },
+
     getGames() {
       this.loadingGames = true;
-      this.$http.get(this.route("games.get", this.date)).then((response) => {
-        this.loadingGames = false;
-        if (response.data) {
-          this.gamesResponse = response.data.message;
-        }
-      });
+      this.$http
+        .get(this.route("games.get", [this.date, this.activeSport]))
+        .then((response) => {
+          this.loadingGames = false;
+          if (response.data) {
+            this.gamesResponse = response.data.message;
+          }
+        });
     },
   },
 
   computed: {
+    sports() {
+      return this.$page.props.sports;
+    },
     bookmakerNames() {
       return this.bookmakers
         .map((el) => el.name)

@@ -21,12 +21,12 @@ Route::middleware(['auth', 'isHost'])->group(function () {
         return GamesApi::match($id);
     })->name('event.match');
 
-    Route::get('/search/{search}/{type}', function ($search, $type) {
-        return GamesApi::search($search, $type);
+    Route::get('/search/{search}/{type}/{sport}', function ($search, $type, $sport) {
+        return GamesApi::search($search, $type, $sport);
     })->name('event.search');
 
-    Route::get('/games/{date}', function ($search) {
-        return GamesApi::get($search);
+    Route::get('/games/{date}/{sport}', function ($search, $sport) {
+        return GamesApi::get($search, $sport);
     })->name('games.get');
 
     Route::get('/find-bet/{id}', function ($id) {

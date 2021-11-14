@@ -260,7 +260,7 @@ export default {
       for (var key in categories) {
         var value = categories[key];
         categoryNames.push(
-          this.$page.props.betTypes.find((betType) => betType.id == value).name
+          this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == value).name
         );
       }
       return categoryNames.join(", ");

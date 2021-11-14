@@ -491,7 +491,6 @@ class Stats
 
         $bets = Bet::user($this->userId)
             ->filters($this->filters);
-
         $types = $bets->clone()
             ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
             ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')

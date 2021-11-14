@@ -64,6 +64,41 @@
                         <div class="">
                           <div class="py-6 px-4 sm:p-6">
                             <div class="grid grid-cols-4 gap-4">
+                              <span class="col-span-4">
+                                <button
+                                  v-for="sport in sports"
+                                  :key="sport.name"
+                                  type="button"
+                                  @click="setSportType(sport.name)"
+                                  :class="{
+                                    'bg-gray-200 text-white inner-shadow':
+                                      activeSport == sport.name,
+                                  }"
+                                  class="
+                                    mr-2
+                                    w-10
+                                    h-10
+                                    inline-flex
+                                    items-center
+                                    px-1.5
+                                    py-1.5
+                                    border border-gray-300
+                                    shadow-sm
+                                    text-xs
+                                    font-medium
+                                    rounded
+                                    text-gray-700
+                                    bg-white
+                                    hover:bg-gray-50
+                                    focus:outline-none focus:bg-gray-300
+                                  "
+                                >
+                                  <sport-icon
+                                    class="w-6 h-6"
+                                    :name="sport.name"
+                                  />
+                                </button>
+                              </span>
                               <div
                                 class="col-span-4 sm:col-span-4"
                                 v-if="renderComponent"
@@ -77,6 +112,7 @@
                                   :game="game"
                                   :index="key"
                                   :isEdit="isEdit"
+                                  :sport="activeSport"
                                 >
                                 </Event>
                                 <div class="flex justify-end">
@@ -101,7 +137,10 @@
                                     "
                                     @click.prevent="addGame"
                                   >
-                                   <PlusIcon class="h-4 w-4" aria-hidden="true" />
+                                    <PlusIcon
+                                      class="h-4 w-4"
+                                      aria-hidden="true"
+                                    />
                                   </button>
                                 </div>
                               </div>
@@ -190,30 +229,6 @@
                                   }"
                                 />
                               </div>
-                              <div class="col-span-4 sm:col-span-2">
-                                <text-input
-                                  v-model="betData.sport"
-                                  :error="errors.sport"
-                                  label="Sport"
-                                  type="text"
-                                  id="time"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                />
-                              </div>
-
                               <div class="col-span-4 sm:col-span-2">
                                 <text-input
                                   v-model="betData.tipster"
@@ -331,6 +346,7 @@ import {
 } from "@headlessui/vue";
 import { XIcon, PlusIcon } from "@heroicons/vue/outline";
 import { ref } from "vue";
+import SportIcon from "@/Components/SportIcon.vue";
 
 export default {
   components: {
@@ -350,6 +366,7 @@ export default {
     LoadingButton,
     AutocompleteInput,
     Multiselect,
+    SportIcon,
   },
   setup() {
     const open = ref(false);
@@ -373,6 +390,7 @@ export default {
       games: {},
       renderComponent: true,
       isEdit: false,
+      activeSport: "football",
     };
   },
 
@@ -391,17 +409,6 @@ export default {
     this.emitter.on("game:delete", (index) => {
       delete this.addedGames[index];
       delete this.games[index];
-
-      // this.betData.games = this.games;
-
-      if (this.bet) {
-        // Looks not needed
-        // this.renderComponent = false;
-        // this.$nextTick(() => {
-        //   // Add the component back in
-        //   this.renderComponent = true;
-        // });
-      }
     });
 
     this.moment = moment;
@@ -411,6 +418,7 @@ export default {
 
     this.emitter.on("event:edit", (event) => {
       this.bet = event;
+      this.activeSport = this.bet.sport;
       this.currentGameId = this.bet.bet_fixture.length - 1;
       this.addedGames = Object.assign({}, this.bet.bet_fixture);
       this.emitter.emit("betForm:show");
@@ -437,6 +445,10 @@ export default {
         var setting = userSettings[key];
         this.betData[key] = setting.value;
       }
+    },
+    setSportType(type) {
+      this.activeSport = type;
+      this.betData.sport = type;
     },
 
     addGame() {
@@ -479,7 +491,7 @@ export default {
         this.betData = this.$inertia.form({
           bookie: null,
           tipster: null,
-          sport: null,
+          sport: this.activeSport,
           odds: null,
           stake: null,
           type: null,
@@ -493,6 +505,12 @@ export default {
         this.title = "Edit " + this.bet.event;
       }
     },
+  },
+
+  computed: {
+    sports() {
+      return this.$page.props.sports;
+    }
   },
 
   watch: {

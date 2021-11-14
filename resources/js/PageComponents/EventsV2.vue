@@ -20,7 +20,7 @@
         :clearOnSearch="false"
         :options="
           async function (query) {
-            return await fetchMatches(query, searchType);
+            return await fetchMatches(query, searchType, sport);
           }
         "
         class="rounded-r-0"
@@ -94,12 +94,13 @@ export default {
     errors: Object,
     bet: Object,
     index: String,
+    sport: Object
   },
 
   setup() {
-    const fetchMatches = async (query, searchType) => {
+    const fetchMatches = async (query, searchType, sport) => {
       const response = await fetch(
-        "/api/search/" + query + "/" + searchType,
+        "/api/search/" + query + "/" + searchType + '/' + sport,
         {}
       );
       const data = await response.json();
