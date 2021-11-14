@@ -20,7 +20,7 @@ class CreateLeaguesTable extends Migration
             $table->string('logo');
             $table->string('flag')->nullable();
             $table->string('season');
-            $table->string('round');
+            $table->string('round')->nullable();
             $table->timestamps();
             $table->primary('id');
         });

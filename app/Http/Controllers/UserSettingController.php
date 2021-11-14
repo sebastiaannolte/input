@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Lib\StatsHelper;
 use App\Models\Bookmaker;
 use App\Models\Setting;
 use App\Models\UserSetting;

@@ -196,7 +196,7 @@ class Bet extends Model
 
         foreach ($filtersWithValue as $key => $filter) {
             if ($filter['type'] == 'match') {
-                $query->where($filter['col'], $filter['value']);
+                $query->where('bets.'.$filter['col'], $filter['value']);
             } elseif ($filter['type'] == 'like') {
                 $query->where($filter['col'], 'LIKE', "%{$filter['value']}%");
             } elseif ($filter['type'] == 'max') {

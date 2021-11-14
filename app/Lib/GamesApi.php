@@ -17,109 +17,121 @@ use Illuminate\Support\Facades\Request;
 
 class GamesApi
 {
-    public static function api($date)
-    {
-        $response = Http::withHeaders([
-            'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
-            'x-rapidapi-key' => '***REMOVED***'
-        ])->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'date' => $date,
-            "timezone" => "Europe/Amsterdam"
-        ]);
-
-
-        return $response->body();
-    }
-
-    public static function get($date)
+    public static function get($date, $sport)
     {
         // $json = file_get_contents(storage_path() . '/games.json');
-        $json = self::api($date);
-        $games = json_decode($json, true)['response'];
+        $responses = [
+            'football' => Http::withHeaders([
+                'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
+                'x-rapidapi-key' => '***REMOVED***'
+            ])->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
+                'date' => $date,
+                "timezone" => "Europe/Amsterdam"
+            ]),
 
-        foreach ($games as $key => $game) {
-            $venue = $game['fixture']['venue'];
-            $league = $game['league'];
-            $teams = $game['teams'];
-            $fixture = $game['fixture'];
-            if ($venue['id']) {
-                Venue::updateOrCreate(
+            'basketball' => Http::withHeaders([
+                'x-rapidapi-host' => 'api-basketball.p.rapidapi.com',
+                'x-rapidapi-key' => '***REMOVED***'
+            ])->get('https://api-basketball.p.rapidapi.com/games', [
+                'date' => $date,
+                "timezone" => "Europe/Amsterdam"
+            ])
+        ];
+
+        foreach ($responses as $responseSport => $response) {
+            if($sport != $responseSport){
+                continue;
+            }
+
+            $json = $response->body();
+            $games = json_decode($json, true)['response'];
+
+            foreach ($games as $key => $game) {
+                $fixture = array_key_exists('fixture', $game) ? $game['fixture']: $game;
+                $venue = array_key_exists('venue', $fixture)  ? $fixture['venue'] : NULL;
+                $league = $game['league'];
+                $teams = $game['teams'];
+               
+                if ($venue && $venue['id']) {
+                    Venue::updateOrCreate(
+                        [
+                            'id' => $venue['id'],
+                        ],
+                        [
+                            'name' => $venue['name'],
+                            'city' => $venue['city'],
+                        ]
+                    );
+                }
+
+
+                League::updateOrCreate(
                     [
-                        'id' => $venue['id'],
+                        'id' => $league['id'],
                     ],
                     [
-                        'name' => $venue['name'],
-                        'city' => $venue['city'],
+                        'name' => $league['name'],
+                        'country' => array_key_exists('country', $league) ? $league['country'] :  $game['country']['name'],
+                        'logo' => $league['logo'],
+                        'flag' => array_key_exists('flag', $league) ? $league['flag'] :  $game['country']['flag'],
+                        'season' => $league['season'],
+                        'round' => array_key_exists('round', $league) ? $league['round'] : NULL,
+                    ]
+                );
+                // Home team
+                Team::updateOrCreate(
+                    [
+                        'id' => $teams['home']['id'],
+                    ],
+                    [
+                        'name' => $teams['home']['name'],
+                        'logo' => $teams['home']['logo'],
+                    ]
+                );
+
+                TeamLeague::updateOrCreate(
+                    [
+                        'team_id' => $teams['home']['id'],
+                        'league_id' => $league['id'],
+                    ]
+                );
+
+                // Away team
+                Team::updateOrCreate(
+                    [
+                        'id' => $teams['away']['id'],
+                    ],
+                    [
+                        'name' => $teams['away']['name'],
+                        'logo' => $teams['away']['logo'],
+                    ]
+                );
+
+                TeamLeague::updateOrCreate(
+                    [
+                        'team_id' => $teams['away']['id'],
+                        'league_id' => $league['id'],
+                    ]
+                );
+
+
+                Fixture::updateOrCreate(
+                    [
+                        'id' => $fixture['id'],
+                    ],
+                    [
+                        'home_team' => $teams['home']['id'],
+                        'away_team' => $teams['away']['id'],
+                        'referee' => array_key_exists('referee', $fixture) ? $fixture['referee'] ?: null : NULL,
+                        'league_id' => $league['id'],
+                        'venue_id' => array_key_exists('referee', $fixture) ? $venue['id']  ?: null : NULL,
+                        'timezone' => $fixture['timezone'],
+                        'date' => Carbon::parse($fixture['date']),
+                        'sport' => $sport,
+
                     ]
                 );
             }
-
-
-            League::updateOrCreate(
-                [
-                    'id' => $league['id'],
-                ],
-                [
-                    'name' => $league['name'],
-                    'country' => $league['country'],
-                    'logo' => $league['logo'],
-                    'flag' => $league['flag'],
-                    'season' => $league['season'],
-                    'round' => $league['round'],
-                ]
-            );
-            // Home team
-            Team::updateOrCreate(
-                [
-                    'id' => $teams['home']['id'],
-                ],
-                [
-                    'name' => $teams['home']['name'],
-                    'logo' => $teams['home']['logo'],
-                ]
-            );
-
-            TeamLeague::updateOrCreate(
-                [
-                    'team_id' => $teams['home']['id'],
-                    'league_id' => $league['id'],
-                ]
-            );
-
-            // Away team
-            Team::updateOrCreate(
-                [
-                    'id' => $teams['away']['id'],
-                ],
-                [
-                    'name' => $teams['away']['name'],
-                    'logo' => $teams['away']['logo'],
-                ]
-            );
-
-            TeamLeague::updateOrCreate(
-                [
-                    'team_id' => $teams['away']['id'],
-                    'league_id' => $league['id'],
-                ]
-            );
-
-
-            Fixture::updateOrCreate(
-                [
-                    'id' => $fixture['id'],
-                ],
-                [
-                    'home_team' => $teams['home']['id'],
-                    'away_team' => $teams['away']['id'],
-                    'referee' => $fixture['referee'],
-                    'league_id' => $league['id'],
-                    'venue_id' => $venue['id'] ?: NULL,
-                    'timezone' => $fixture['timezone'],
-                    'date' => Carbon::parse($fixture['date']),
-
-                ]
-            );
         }
         return response()
             ->json(['message' => count($games) . ' games found']);
@@ -152,31 +164,43 @@ class GamesApi
 
     public static function getBetTypes()
     {
-        $response = Http::withHeaders([
-            'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
-            'x-rapidapi-key' => '***REMOVED***'
-        ])->get('https://api-football-v1.p.rapidapi.com/v3/odds/bets');
+        $responses = [
+            'football' => Http::withHeaders([
+                'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
+                'x-rapidapi-key' => '***REMOVED***'
+            ])->get('https://api-football-v1.p.rapidapi.com/v3/odds/bets'),
 
+            'basketball' => Http::withHeaders([
+                'x-rapidapi-host' => 'api-basketball.p.rapidapi.com',
+                'x-rapidapi-key' => '***REMOVED***'
+            ])->get('https://api-basketball.p.rapidapi.com/bets')
+        ];
 
-        $json =  $response->body();
+        foreach ($responses as $sport => $response) {
+            $json =  $response->body();
+            $betTypes = json_decode($json, true)['response'];
+            foreach ($betTypes as $key => $betType) {
+                if (!$betType['name']) {
+                    continue;
+                }
 
-        $betTypes = json_decode($json, true)['response'];
-        foreach ($betTypes as $key => $betType) {
-            if (!$betType['name']) {
-                continue;
+                BetType::updateOrCreate(
+                    [
+                        'type_id' => $betType['id'],
+                        'name' => $betType['name'],
+                        'sport' => $sport,
+                    ],
+                    [
+                        'type_id' => $betType['id'],
+                        'name' => $betType['name'],
+                        'sport' => $sport,
+                    ]
+                );
             }
-            BetType::updateOrCreate(
-                [
-                    'id' => $betType['id'],
-                ],
-                [
-                    'name' => $betType['name'],
-                ]
-            );
         }
     }
 
-    public static function search($keyword, $type)
+    public static function search($keyword, $type, $sport)
     {
         $daysBefore = 1;
         if ($type == "full") {
@@ -184,6 +208,7 @@ class GamesApi
         }
         $fixtures = Fixture::with(['homeTeam', 'awayTeam'])
             ->where('date', '>', now()->subDays($daysBefore)->startOfDay()->format('Y-m-d H:i:s'))
+            ->where('sport', $sport)
             ->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
@@ -250,7 +275,7 @@ class GamesApi
                 'selection' => $bet->selection,
                 'category' => $bet->category,
                 'status' => $bet->status,
-                'date' =>$bet->date,
+                'date' => $bet->date,
                 'created_at' => $bet->created_at,
                 'updated_at' => $bet->updated_at,
             ]);

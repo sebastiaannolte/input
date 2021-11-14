@@ -10,8 +10,7 @@
       bg-white
       mb-4
       shadow
-      sm:rounded-md
-      sm:overflow-hidden
+      sm:rounded-md sm:overflow-hidden
       z-0
     "
   >
@@ -115,11 +114,44 @@
                 />
               </div>
               <div class="col-span-4 sm:col-span-2">
-                <text-input
+                <label
+                  class="
+                    block
+                    text-sm
+                    font-medium
+                    text-gray-700
+                    dark:text-gray-400
+                  "
+                  >Sport:</label
+                >
+                <select
+                  class="
+                    pl-3
+                    pr-10
+                    py-2
+                    block
+                    pl-3
+                    py-2
+                    text-base
+                    border-gray-300
+                    focus:outline-none
+                    focus:ring-indigo-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                    rounded-md
+                    w-full
+                  "
                   v-model="filters.sport.value"
-                  :error="errors"
-                  label="Sport"
-                />
+                >
+                  <option
+                    class="capitalize"
+                    v-for="(sport, key) in $page.props.sports"
+                    :key="key"
+                    :value="sport.name"
+                  >
+                    {{ sport.name }}
+                  </option>
+                </select>
               </div>
               <div class="col-span-4 sm:col-span-2">
                 <text-input

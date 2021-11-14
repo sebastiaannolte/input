@@ -9,7 +9,7 @@ class BetType extends Model
 {
     use HasFactory;
 
-    public $fillable = ['id', 'name'];
+    public $fillable = ['id', 'name', 'type_id', 'sport'];
 
     public function scopeBets()
     {

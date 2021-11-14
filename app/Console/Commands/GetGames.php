@@ -41,10 +41,10 @@ class GetGames extends Command
     {
         $stats = new GamesApi;
 
-        $period = CarbonPeriod::create('2021-08-09', '2021-08-14');
-        foreach ($period as $date) {
-            dump($date->format('Y-m-d'));
-            $stats->get($date->format('Y-m-d'));
-        }
+        // $period = CarbonPeriod::create('2021-08-09', '2021-08-14');
+        // foreach ($period as $date) {
+            // dump($date->format('Y-m-d'));
+            $stats->get('2021-11-10');
+        // }
     }
 }

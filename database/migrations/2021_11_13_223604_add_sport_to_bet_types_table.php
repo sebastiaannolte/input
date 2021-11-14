@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBetTypesTable extends Migration
+class AddSportToBetTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateBetTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('bet_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
-            $table->primary('id');
+        Schema::table('bet_types', function (Blueprint $table) {
+            $table->integer('type_id')->after('id');
+            $table->string('sport')->after('type_id');
         });
     }
 
@@ -28,6 +26,8 @@ class CreateBetTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bet_types');
+        Schema::table('bet_types', function (Blueprint $table) {
+            //
+        });
     }
 }

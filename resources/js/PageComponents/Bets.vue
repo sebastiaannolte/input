@@ -11,9 +11,24 @@
               <tr
                 class="rounded-lg text-sm font-medium text-gray-700 text-left"
               >
+                          <th
+                  class="
+                  w-4
+
+                    hidden
+                    sm:table-cell
+                    text-left text-xs
+                    font-medium
+                    text-gray-500
+                    uppercase
+                    tracking-wider
+                  "
+                >
+
+                </th>
                 <th
                   class="
-                    px-6
+                    px-2
                     py-3
                     hidden
                     sm:table-cell
@@ -109,11 +124,25 @@
                   ]"
                   class="cursor-pointer border-r-8"
                 >
+                             <td
+                    class="
+                      hidden
+                      sm:table-cell
+                      px-2
+                      py-2
+                      whitespace-nowrap
+                      text-sm
+                      font-medium
+                      text-gray-900
+                    "
+                  >
+                  <sport-icon class="w-6 h-6" :name="bet.sport"/>
+                  </td>
                   <td
                     class="
                       hidden
                       sm:table-cell
-                      px-6
+                      px-2
                       py-4
                       whitespace-nowrap
                       text-sm
@@ -420,6 +449,7 @@ import ShowFilterButton from "@/Components/ShowFilterButton";
 import moment from "moment";
 import Button from "@/Components/Button.vue";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/outline";
+import SportIcon from '@/Components/SportIcon.vue';
 
 export default {
   layout: Layout,
@@ -433,6 +463,7 @@ export default {
     Button,
     ChevronUpIcon,
     ChevronDownIcon,
+    SportIcon
   },
 
   props: {

@@ -8,6 +8,7 @@
         :bet="betData"
         :errors="errors"
         :index="index"
+        :sport="sport"
         class="w-full mr-2 z-50"
       />
 
@@ -62,7 +63,7 @@
           <Multiselect
             v-model="betData.category"
             :searchable="true"
-            :options="this.betTypes"
+            :options="this.betTypes[sport]"
             :addTagOn="['enter', 'tab', ';', ',']"
             label="name"
             valueProp="id"
@@ -188,6 +189,7 @@ export default {
     game: Object,
     index: Number,
     isEdit: Boolean,
+    sport: Object,
   },
   data() {
     return {

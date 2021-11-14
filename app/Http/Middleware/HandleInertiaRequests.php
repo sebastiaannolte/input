@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\BetType;
 use App\Models\Setting;
+use App\Models\Sport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -49,7 +50,8 @@ class HandleInertiaRequests extends Middleware
                 'myPage' => $request->user() ? $request->user()->username == explode("/", $request->path())[0] : false,
                 'user' => $user,
             ],
-            'betTypes' => BetType::get(),
+            'betTypes' => BetType::get()->groupBy('sport'),
+            'sports' => Sport::get(),
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),
