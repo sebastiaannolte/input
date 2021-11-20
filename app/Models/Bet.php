@@ -76,13 +76,13 @@ class Bet extends Model
 
     public function scopeJoinBets($query)
     {
-        return $query->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+        return $query->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
             ->leftJoin('bet_fixtures AS bet_fixtures2', function ($join) {
                 $join->on(\DB::raw('(bets.id = bet_fixtures2.bet_id AND 
-            (bet_fixtures.date < bet_fixtures2.date OR (bet_fixtures.date = bet_fixtures2.date AND bet_fixtures.fixture_id < bet_fixtures2.id))) and 1'), '=', \DB::raw('1'));
+            (bet_fixtures.date < bet_fixtures2.date OR (bet_fixtures.date = bet_fixtures2.date AND bet_fixtures.id < bet_fixtures2.id))) and 1'), '=', \DB::raw('1'));
             })
             ->whereNull('bet_fixtures2.id')
-            ->whereNotNull('result');
+            ->whereNotNull('bets.result');
     }
 
     public function scopejoinFixtures($query)
