@@ -94,9 +94,8 @@ class Stats
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
 
-        $bets = Bet::user($this->userId)
-            ->filters($this->filters)
-            ->joinBets();
+        $bets = Bet::
+            joinBets();
 
         $columnsTable = $bets
             ->clone()
