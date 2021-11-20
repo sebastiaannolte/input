@@ -9,7 +9,7 @@ class TeamLeague extends Model
 {
     use HasFactory;
 
-    public $fillable = ['team_id', 'league_id'];
+    public $fillable = ['team_id', 'league_id', 'sport'];
 
     public $table = 'teams_leagues';
 }

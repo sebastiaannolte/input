@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTeamsTable extends Migration
+class AddColumnsToLeaguesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateTeamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('logo');
-            $table->timestamps();
-            $table->primary('id');
+        Schema::table('leagues', function (Blueprint $table) {
+            $table->integer('league_id')->after('id');
+            $table->string('sport')->after('round');
         });
     }
 
@@ -29,6 +26,8 @@ class CreateTeamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::table('leagues', function (Blueprint $table) {
+            //
+        });
     }
 }
