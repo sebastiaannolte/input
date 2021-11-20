@@ -14,7 +14,8 @@ class CreateLeaguesTable extends Migration
     public function up()
     {
         Schema::create('leagues', function (Blueprint $table) {
-            $table->integer('id');
+            $table->id();
+            $table->integer('league_id');
             $table->string('name');
             $table->string('country');
             $table->string('logo');

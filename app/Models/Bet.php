@@ -60,7 +60,7 @@ class Bet extends Model
     public function scopeBet($query, $id)
     {
         return $query->find($id)
-            ->joinBets()
+            ->joinAllBets()
             ->with('betFixture.fixture')
             ->where('bets.id', $id)
             ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'user_id', 'bookie', 'tipster', 'sport', 'bets.created_at', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event, REPLACE(GROUP_CONCAT(category SEPARATOR "%SEP_ARRAY%"), "]%SEP_ARRAY%[",",") as category'))
@@ -68,10 +68,21 @@ class Bet extends Model
             ->orderByDesc('date')->orderByDesc('bets.id');
     }
 
-    public function scopeJoinBets($query)
+    public function scopeJoinAllBets($query)
     {
         return $query
             ->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id');
+    }
+
+    public function scopeJoinBets($query)
+    {
+        return $query->leftJoin('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->leftJoin('bet_fixtures AS bet_fixtures2', function ($join) {
+                $join->on(\DB::raw('(bets.id = bet_fixtures2.bet_id AND 
+            (bet_fixtures.date < bet_fixtures2.date OR (bet_fixtures.date = bet_fixtures2.date AND bet_fixtures.fixture_id < bet_fixtures2.id))) and 1'), '=', \DB::raw('1'));
+            })
+            ->whereNull('bet_fixtures2.id')
+            ->whereNotNull('result');
     }
 
     public function scopejoinFixtures($query)
@@ -196,20 +207,20 @@ class Bet extends Model
 
         foreach ($filtersWithValue as $key => $filter) {
             if ($filter['type'] == 'match') {
-                $query->where('bets.'.$filter['col'], $filter['value']);
+                $query->where('bets.' . $filter['col'], $filter['value']);
             } elseif ($filter['type'] == 'like') {
                 $query->where($filter['col'], 'LIKE', "%{$filter['value']}%");
             } elseif ($filter['type'] == 'max') {
                 if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
-                    $query->where($filter['col'], '<=', Carbon::parse($filter['value'])->endOfDay());
+                    $query->where('bet_fixtures.' . $filter['col'], '<=', Carbon::parse($filter['value'])->endOfDay());
                 } else {
-                    $query->where($filter['col'], '<=', $filter['value']);
+                    $query->where('bet_fixtures.' . $filter['col'], '<=', $filter['value']);
                 }
             } elseif ($filter['type'] == 'min') {
                 if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
-                    $query->where($filter['col'], '>=', Carbon::parse($filter['value'])->startOfDay());
+                    $query->where('bet_fixtures.' . $filter['col'], '>=', Carbon::parse($filter['value'])->startOfDay());
                 } else {
-                    $query->where($filter['col'], '>=', $filter['value']);
+                    $query->where('bet_fixtures.' . $filter['col'], '>=', $filter['value']);
                 }
             }
         }

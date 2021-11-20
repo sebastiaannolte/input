@@ -9,7 +9,7 @@ class Venue extends Model
 {
     use HasFactory;
 
-    public $fillable = ['id', 'name', 'city'];
+    public $fillable = ['id', 'venue_id', 'name', 'city', 'sport'];
 
     public function fixtures()
     {

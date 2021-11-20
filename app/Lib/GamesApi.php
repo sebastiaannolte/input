@@ -53,9 +53,10 @@ class GamesApi
                 $teams = $game['teams'];
                
                 if ($venue && $venue['id']) {
-                    Venue::updateOrCreate(
+                    $addedVenue = Venue::updateOrCreate(
                         [
-                            'id' => $venue['id'],
+                            'venue_id' => $venue['id'],
+                            'sport' => $sport,
                         ],
                         [
                             'name' => $venue['name'],
@@ -65,9 +66,10 @@ class GamesApi
                 }
 
 
-                League::updateOrCreate(
+                $addedLeague = League::updateOrCreate(
                     [
-                        'id' => $league['id'],
+                        'league_id' => $league['id'],
+                        'sport' => $sport
                     ],
                     [
                         'name' => $league['name'],
@@ -79,9 +81,10 @@ class GamesApi
                     ]
                 );
                 // Home team
-                Team::updateOrCreate(
+                $addedHomeTeam = Team::updateOrCreate(
                     [
-                        'id' => $teams['home']['id'],
+                        'team_id' => $teams['home']['id'],
+                        'sport' => $sport
                     ],
                     [
                         'name' => $teams['home']['name'],
@@ -91,15 +94,17 @@ class GamesApi
 
                 TeamLeague::updateOrCreate(
                     [
-                        'team_id' => $teams['home']['id'],
-                        'league_id' => $league['id'],
+                        'team_id' => $addedHomeTeam->id,
+                        'league_id' => $addedLeague->id,
+                        'sport' => $sport,
                     ]
                 );
 
                 // Away team
-                Team::updateOrCreate(
+                $addedAwayTeam = Team::updateOrCreate(
                     [
-                        'id' => $teams['away']['id'],
+                        'team_id' => $teams['away']['id'],
+                        'sport' => $sport
                     ],
                     [
                         'name' => $teams['away']['name'],
@@ -109,25 +114,26 @@ class GamesApi
 
                 TeamLeague::updateOrCreate(
                     [
-                        'team_id' => $teams['away']['id'],
-                        'league_id' => $league['id'],
+                        'team_id' => $addedAwayTeam->id,
+                        'league_id' => $addedLeague->id,
+                        'sport' => $sport,
                     ]
                 );
 
 
                 Fixture::updateOrCreate(
                     [
-                        'id' => $fixture['id'],
+                        'fixture_id' => $fixture['id'],
+                        'sport' => $sport,
                     ],
                     [
-                        'home_team' => $teams['home']['id'],
-                        'away_team' => $teams['away']['id'],
+                        'home_team' => $addedHomeTeam->id,
+                        'away_team' => $addedAwayTeam->id,
                         'referee' => array_key_exists('referee', $fixture) ? $fixture['referee'] ?: null : NULL,
-                        'league_id' => $league['id'],
-                        'venue_id' => array_key_exists('referee', $fixture) ? $venue['id']  ?: null : NULL,
+                        'league_id' => $addedLeague->id,
+                        'venue_id' => array_key_exists('venue_id', $fixture) ? $addedVenue->id  ?: null : NULL,
                         'timezone' => $fixture['timezone'],
                         'date' => Carbon::parse($fixture['date']),
-                        'sport' => $sport,
 
                     ]
                 );
@@ -204,7 +210,7 @@ class GamesApi
     {
         $daysBefore = 1;
         if ($type == "full") {
-            $daysBefore = 30;
+            $daysBefore = 10;
         }
         $fixtures = Fixture::with(['homeTeam', 'awayTeam'])
             ->where('date', '>', now()->subDays($daysBefore)->startOfDay()->format('Y-m-d H:i:s'))

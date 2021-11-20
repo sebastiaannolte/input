@@ -14,7 +14,7 @@ class CreateFixturesTable extends Migration
     public function up()
     {
         Schema::create('fixtures', function (Blueprint $table) {
-            $table->integer('id');
+            $table->integer();
             $table->string('home_team');
             $table->string('away_team');
             $table->string('referee')->nullable();

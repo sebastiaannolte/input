@@ -34,8 +34,8 @@ class BetController extends Controller
             ->paginate()
             ->withQueryString();
 
-        $upcommintBets = Bet::joinBets()
-            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'bookie', 'sport', 'tipster', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event'))
+        $upcommintBets = Bet::joinAllBets()
+            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'bookie', 'sport', 'tipster', DB::raw('max(bet_fixtures.date) as date, GROUP_CONCAT(bet_fixtures.selection SEPARATOR ", ") as selection, GROUP_CONCAT(bet_fixtures.event SEPARATOR ", ") as event'))
             ->whereNull('result')
             ->orderBy('date')
             ->orderBy('bets.id')

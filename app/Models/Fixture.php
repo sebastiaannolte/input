@@ -9,7 +9,7 @@ class Fixture extends Model
 {
     use HasFactory;
 
-    public $fillable = ['id', 'home_team', 'away_team', 'referee', 'timezone', 'date', 'league_id', 'venue_id', 'sport'];
+    public $fillable = ['id', 'fixture_id', 'home_team', 'away_team', 'referee', 'timezone', 'date', 'league_id', 'venue_id', 'sport'];
 
     public function homeTeam()
     {

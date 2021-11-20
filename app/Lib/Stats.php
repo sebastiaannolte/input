@@ -155,13 +155,10 @@ class Stats
 
         $bets = Bet::user($this->userId)
             ->filters($this->filters)
-            ->join('bet_fixtures', function ($join) {
-                $join->on('bet_fixtures.bet_id', '=', 'bets.id')
-                    ->on('bet_fixtures.id', '=', DB::raw("(select id from bet_fixtures WHERE bet_fixtures.bet_id = bets.id order by date desc limit 1)"));
-            })
+            ->joinBets()
             ->groupBy('formatted_date')
             ->select([
-                DB::raw("DATE_FORMAT(`date`, '%Y-%m-%d') as formatted_date"),
+                DB::raw("DATE_FORMAT(bet_fixtures.date, '%Y-%m-%d') as formatted_date"),
                 $this->statsHelper->statsSelect()
 
             ])
@@ -220,7 +217,7 @@ class Stats
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
 
-        $bets = Bet::joinBets()->leftJoin('bet_types', function ($join) {
+        $bets = Bet::joinAllBets()->leftJoin('bet_types', function ($join) {
             $join->whereRaw('JSON_CONTAINS(category, CAST(bet_types.id as JSON), "$")');
         })
             ->whereRaw('category <> ""')
@@ -492,15 +489,17 @@ class Stats
         $types = $bets->clone()
             ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
             ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
-            ->join('leagues', 'league_id', '=', 'leagues.id')
+            ->join('leagues', 'fixtures.league_id', '=', 'leagues.league_id')
             ->groupBy('fixtures.league_id')
             ->whereNotNull('fixtures.league_id')
+            ->where('leagues.sport', 'football')
             ->select([
-                'league_id',
+                'leagues.league_id',
                 'leagues.country as country/competition',
                 'leagues.name as competition',
                 $this->statsHelper->statsSelect()
             ])
+            ->groupBy('leagues.country', 'leagues.name')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
@@ -528,11 +527,12 @@ class Stats
                 $join->on('bet_fixtures.fixture_id', '=', 'fixtures.id')->where('league_id', $id);
             })
             ->leftjoin('teams', function ($join) {
-                $join->on('teams.id', '=', 'fixtures.home_team');
-                $join->orOn('teams.id', '=', 'fixtures.away_team');
+                $join->on('teams.team_id', '=', 'fixtures.home_team');
+                $join->orOn('teams.team_id', '=', 'fixtures.away_team');
             })
-            ->groupBy('teams.id', 'league_id')
-            ->select(['teams.id as team_id', 'teams.name as team', 'league_id', $this->statsHelper->statsSelect()])
+            ->where('fixtures.sport', 'football')
+            ->groupBy('teams.team_id', 'league_id', 'teams.name')
+            ->select(['teams.team_id as team_id', 'teams.name as team', 'league_id', $this->statsHelper->statsSelect()])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
 
@@ -556,7 +556,7 @@ class Stats
             }
         });
 
-        $bets = Bet::joinBets()
+        $bets = Bet::joinAllBets()
             ->whereIn('fixture_id', $bets->pluck('fixture_id'))
             ->filters($this->filters)
             ->user($this->userId)
@@ -608,7 +608,7 @@ class Stats
         $types = $bets->clone()
             ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
             ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
-            ->join('venues', 'venue_id', '=', 'venues.id')
+            ->join('venues', 'venue_id', '=', 'venues.venue_id')
             ->groupBy('fixtures.venue_id')
             ->whereNotNull('fixtures.venue_id')
             ->select(['venue_id', 'venues.name as venue', $this->statsHelper->statsSelect()])
@@ -645,7 +645,7 @@ class Stats
             $q->where('referee', $referee);
         })->get();
 
-        $bets = Bet::joinBets()->whereIn('fixture_id', $bets->pluck('fixture_id'))->filters($this->filters)->user($this->userId)->paginate(15);
+        $bets = Bet::joinAllBets()->whereIn('fixture_id', $bets->pluck('fixture_id'))->filters($this->filters)->user($this->userId)->paginate(15);
         $betsByCompetition['bets'] = $bets;
 
         return $betsByCompetition;
@@ -657,10 +657,10 @@ class Stats
             ->filters($this->filters);
 
         $bets = $bets
-            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->joinAllBets()
             ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
-            ->join('venues', 'venue_id', '=', 'venues.id')
-            ->groupBy('bets.id', 'bet_fixtures.id')
+            ->join('venues', 'venue_id', '=', 'venues.venue_id')
+            ->groupBy('bets.id', 'bet_fixtures.fixture_id')
             ->whereNotNull('fixtures.venue_id')
             ->where('fixtures.venue_id', $venueId)
             ->paginate(15);
@@ -677,10 +677,10 @@ class Stats
             ->filters($this->filters);
 
         $bets = $bets
-            ->join('bet_fixtures', 'bets.id', '=', 'bet_fixtures.bet_id')
+            ->joinAllBets()
             ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->join('leagues', 'league_id', '=', 'leagues.id')
-            ->groupBy('bets.id', 'bet_fixtures.id')
+            ->groupBy('bets.id', 'bet_fixtures.fixture_id')
             ->whereNotNull('fixtures.league_id')
             ->where('fixtures.league_id', $league_id)
             ->paginate(15);
@@ -702,16 +702,16 @@ class Stats
         $home = $bets->clone()
             ->joinFixtures()
             ->leftjoin('teams', function ($join) {
-                $join->on('teams.id', '=', 'fixtures.home_team');
+                $join->on('teams.team_id', '=', 'fixtures.home_team');
             })
-            ->select(['teams.id as id', 'teams.name as team', 'bet_fixtures.status', 'stake', 'odds']);
+            ->select(['teams.team_id as id', 'teams.name as team', 'bet_fixtures.status', 'stake', 'odds']);
 
         $homeAndAway = $bets->clone()
             ->joinFixtures()
             ->leftjoin('teams', function ($join) {
-                $join->on('teams.id', '=', 'fixtures.away_team');
+                $join->on('teams.team_id', '=', 'fixtures.away_team');
             })
-            ->select(['teams.id as id', 'teams.name as team', 'bet_fixtures.status', 'stake', 'odds'])
+            ->select(['teams.team_id as id', 'teams.name as team', 'bet_fixtures.status', 'stake', 'odds'])
             ->unionAll($home);
 
         $types = DB::table(DB::raw("({$homeAndAway->toSql()}) as bets"))

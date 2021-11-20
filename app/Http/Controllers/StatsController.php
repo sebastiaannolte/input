@@ -26,8 +26,6 @@ class StatsController extends Controller
         
         $bets = Bet::user($userId)->filters($filters);
         $betStats = $bets->clone();
-        $statsSelect = 'statsSelect';
-        $advancedStats = 'advancedStats';
 
         $tabs = $statsHelper->getStatsTabs();
         $betStats = $betStats->clone()->select((new StatsHelper)->statsSelect(), (new StatsHelper)->advancedStats())->whereNotNull('result')->first();
@@ -71,7 +69,7 @@ class StatsController extends Controller
                 'value' => '365',
                 'formatting' => [
                     'format' => 'Y-m',
-                    'select' => 'DATE_FORMAT(`date`, "%Y-%m") as formatted_date'
+                    'select' => 'DATE_FORMAT(bet_fixtures.date, "%Y-%m") as formatted_date'
                 ],
             ],
             '1 year' => [

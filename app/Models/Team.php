@@ -9,5 +9,5 @@ class Team extends Model
 {
     use HasFactory;
 
-    public $fillable = ['id', 'name', 'logo'];
+    public $fillable = ['id', 'team_id', 'name', 'logo', 'sport'];
 }
