@@ -16,6 +16,10 @@ class BetController extends Controller
 {
     public function index($username)
     {
+        $import = null;
+        if(Request::get('import')){
+            $import = Request::get('import');
+        }
         $user = User::where('username', $username)->first();
 
         if ($user === null) {
@@ -44,6 +48,7 @@ class BetController extends Controller
             ->take(3);
 
         return Inertia::render('Home', [
+            'import' => $import,
             'stats' => [
                 'totalBets' => $betStats->bets,
                 'wonbets' => $betStats->won,
