@@ -29,6 +29,7 @@ export default {
     stats: Object,
     filters: Array,
     upcommingBets: Object,
+    import: Object,
   },
   data() {
     return {
@@ -39,6 +40,9 @@ export default {
 
   created() {
     this.setPageTitle();
+    if (this.import) {
+      this.emitter.emit("event:import", this.import);
+    }
   },
 
   methods: {

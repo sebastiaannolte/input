@@ -397,7 +397,7 @@ export default {
   created() {
     this.emitter.on("betForm:show", () => {
       this.open = true;
-      this.isEdit = this.bet && Object.keys(this.bet).length > 0;
+      this.isEdit = this.bet && Object.keys(this.bet).length > 0 && this.bet.id;
       if (!this.bet) {
         // Reset games if slide over is opened
         this.games = {};
@@ -421,6 +421,13 @@ export default {
       this.activeSport = this.bet.sport;
       this.currentGameId = this.bet.bet_fixture.length - 1;
       this.addedGames = Object.assign({}, this.bet.bet_fixture);
+      this.emitter.emit("betForm:show");
+    });
+
+    this.emitter.on("event:import", (event) => {
+      this.bet = event;
+      this.currentGameId = this.bet.games.length - 1;
+      this.addedGames = Object.assign({}, this.bet.games);
       this.emitter.emit("betForm:show");
     });
 
@@ -457,7 +464,7 @@ export default {
     },
     save() {
       var route = "";
-      if (this.bet) {
+      if (this.bet.id) {
         route = this.route("bet.update");
         this.betData.games = this.games;
 
@@ -499,10 +506,28 @@ export default {
           clearInputs: true,
         });
         this.setUserSettings();
-      } else {
+      } else if (this.bet.id) {
         this.bet.games = {};
         this.betData = this.$inertia.form(this.bet);
         this.title = "Edit " + this.bet.event;
+      } else {
+        this.bet.games = {};
+        this.betData = this.$inertia.form(
+          Object.assign(
+            {
+              bookie: null,
+              tipster: null,
+              sport: this.activeSport,
+              odds: null,
+              stake: null,
+              type: null,
+              games: null,
+              clearInputs: true,
+            },
+            this.bet
+          )
+        );
+        this.title = "New bet";
       }
     },
   },
@@ -510,7 +535,7 @@ export default {
   computed: {
     sports() {
       return this.$page.props.sports;
-    }
+    },
   },
 
   watch: {
