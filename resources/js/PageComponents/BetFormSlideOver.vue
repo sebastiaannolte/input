@@ -464,7 +464,7 @@ export default {
     },
     save() {
       var route = "";
-      if (this.bet.id) {
+      if (this.bet && this.bet.id) {
         route = this.route("bet.update");
         this.betData.games = this.games;
 
