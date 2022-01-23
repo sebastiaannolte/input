@@ -622,15 +622,14 @@ export default {
       setTimeout(() => {
         this.highlighted = null;
       }, 3000);
-      el.scrollIntoView({ behavior: "smooth" });
+      el[0].scrollIntoView({ behavior: "smooth" });
     },
 
     scrollAndHighlight(id) {
       const el = this.$refs["bet-" + id];
-      if (!el) {
+      if (!el || el.length == 0) {
         this.findPage(id);
-      }
-      if (el) {
+      }else{
         this.scroll(id, el);
       }
     },
