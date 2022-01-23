@@ -3,6 +3,8 @@
 use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\StatsController;
 use App\Lib\GamesApi;
+use App\Models\Import;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware(['authKey'])->group(function () {
+    Route::post('/import', function () {
+        Import::create([
+            'data' => json_encode(Request::all()),
+        ]);
+    })->name('import');
+});
 
 Route::middleware(['auth', 'isHost'])->group(function () {
     Route::get('/match/{id}', function ($id) {
