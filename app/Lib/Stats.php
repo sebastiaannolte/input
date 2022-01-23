@@ -153,7 +153,7 @@ class Stats
         ];
 
         $bets = Bet::user($this->userId)
-            ->filters($this->filters)
+            // ->filters($this->filters)
             ->joinBets()
             ->groupBy('formatted_date')
             ->select([
