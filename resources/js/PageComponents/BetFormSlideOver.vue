@@ -477,6 +477,7 @@ export default {
           },
         });
       } else {
+        var importId = this.betData.importId;
         route = this.route("bet.store");
         this.betData.games = this.games;
         this.betData.post(route, {
@@ -486,6 +487,21 @@ export default {
               this.setBetData();
               this.open = false;
               this.emitter.emit("event:clear");
+            }
+
+            if (importId > 0) {
+              this.$http
+                .put(
+                  this.route(
+                    "import.update"
+                  ),
+                  {
+                    id: importId
+                  }
+                )
+                .then((response) => {
+                   this.$inertia.visit(this.route('import.index'));
+                });
             }
           },
         });

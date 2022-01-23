@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BetController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatsController;
@@ -36,6 +37,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/bet/{bet}', [BetController::class, 'show'])->name('bet.show');
     Route::delete('/bet/{bet}', [BetController::class, 'delete'])->name('bet.delete');
     Route::get('/bet/{id}/edit', [BetController::class, 'edit'])->name('bet.edit');
+
+    Route::get('import', [ImportController::class, 'index'])->name('import.index');
+    Route::put('import', [ImportController::class, 'update'])->name('import.update');
 
     Route::get('{username}/stats', [StatsController::class, 'index'])->name('stats.index');
     Route::get('{username}/settings', [UserSettingController::class, 'index'])->name('userSettings.index');
