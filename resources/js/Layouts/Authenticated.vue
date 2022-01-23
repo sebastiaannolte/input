@@ -1,6 +1,31 @@
 <template>
   <flash-messages />
-
+  <inertia-link
+    :href="this.route('import.index')"
+    class="
+      hidden
+      md:block
+      fixed
+      bottom-4
+      right-4
+      sm:bottom-24
+      sm:right-10
+      inline-flex
+      items-center
+      p-2
+      border border-transparent
+      rounded-full
+      shadow-sm
+      text-white
+      bg-green-600
+      hover:bg-green-700
+      focus:outline-none
+      z-10
+      focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+    "
+  >
+   <div class="w-6 h-6 flex justify-center">{{$page.props.importCounter}}</div>
+  </inertia-link>
   <button
     type="button"
     @click="openBet"
