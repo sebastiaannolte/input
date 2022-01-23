@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\BetType;
+use App\Models\Import;
 use App\Models\Setting;
 use App\Models\Sport;
 use App\Models\User;
@@ -52,6 +53,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'betTypes' => BetType::get()->groupBy('sport'),
             'sports' => Sport::get(),
+            'importCounter' => Import::where('is_completed', 0)->count(),
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),
