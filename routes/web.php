@@ -38,8 +38,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/bet/{bet}', [BetController::class, 'delete'])->name('bet.delete');
     Route::get('/bet/{id}/edit', [BetController::class, 'edit'])->name('bet.edit');
 
-    Route::get('import', [ImportController::class, 'index'])->name('import.index');
-    Route::put('import', [ImportController::class, 'update'])->name('import.update');
+    Route::get('/import', [ImportController::class, 'index'])->name('import.index');
+    Route::put('/import', [ImportController::class, 'update'])->name('import.update');
+    Route::delete('/import/{import}', [ImportController::class, 'delete'])->name('import.delete');
 
     Route::get('{username}/stats', [StatsController::class, 'index'])->name('stats.index');
     Route::get('{username}/settings', [UserSettingController::class, 'index'])->name('userSettings.index');
