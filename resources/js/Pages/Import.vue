@@ -113,6 +113,7 @@
                     class="text-indigo-600 hover:text-indigo-900"
                     >Import</inertia-link
                   >
+                  <button @click="destroy(item.id)">Delete</button>
                 </td>
               </tr>
             </tbody>
@@ -145,6 +146,11 @@ export default {
   },
 
   methods: {
+    destroy(id) {
+      if (confirm("Are you sure you want to delete this import?")) {
+        this.$inertia.delete(this.route("import.delete", id));
+      }
+    },
     eventsToString(games) {
       return games
         .map(function (test) {
