@@ -1,7 +1,5 @@
 <template>
   <Head :title="title" />
-
-  <!-- <filters-slide-over :prop-filters="filters" /> -->
   <table-filter-header :title="competition.name">
     <template v-slot:button>
       <inertia-link
