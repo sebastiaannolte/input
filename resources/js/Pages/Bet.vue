@@ -151,7 +151,7 @@
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Category</div>
         <div class="p-2 mb-2 font-bold">
-          {{ categoriesAsString() }}
+          {{ categoryName }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -250,27 +250,18 @@ export default {
         this.$inertia.delete(this.route("bet.delete", this.bet.id));
       }
     },
-
-    categoriesAsString() {
-      if (!this.bet.category) {
-        return;
-      }
-      var categories = JSON.parse(this.bet.category);
-      var categoryNames = [];
-      for (var key in categories) {
-        var value = categories[key];
-        categoryNames.push(
-          this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == value).name
-        );
-      }
-      return categoryNames.join(", ");
-    },
   },
 
   computed: {
     betResult() {
       return this.bet.result ? this.bet.result : 'No result';
-    }
+    },
+    categoryName() {
+      if (!this.bet.category) {
+        return;
+      }
+      return this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == this.bet.category).name
+    },
   }
 };
 </script>
