@@ -11,7 +11,7 @@
       bg-white
       p-4
       shadow
-      sm:rounded-md
+      rounded-md
       sm:overflow-hidden
     "
   >

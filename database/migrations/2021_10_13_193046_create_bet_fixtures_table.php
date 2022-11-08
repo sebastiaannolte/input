@@ -15,14 +15,18 @@ class CreateBetFixturesTable extends Migration
     {
         Schema::create('bet_fixtures', function (Blueprint $table) {
             $table->id();
-            $table->integer('bet_id');
-            $table->integer('fixture_id')->nullable();
+            $table->bigInteger('bet_id')->unsigned();
+            $table->bigInteger('fixture_id')->nullable()->unsigned();
             $table->string('event');
             $table->string('selection');
-            $table->string('category');
+            $table->bigInteger('category')->unsigned();
             $table->string('status');
             $table->timestamp('date');
             $table->timestamps();
+
+            $table->foreign('bet_id')->references('id')->on('bets')->onDelete('cascade');
+            $table->foreign('fixture_id')->references('id')->on('fixtures')->onDelete('cascade');
+            $table->foreign('category')->references('id')->on('bet_types')->onDelete('cascade');
         });
     }
 

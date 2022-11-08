@@ -15,14 +15,16 @@ class CreateTeamsTable extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
+            $table->integer('team_id');
             $table->string('name');
             $table->string('logo');
+            $table->string('sport');
+            
             $table->timestamps();
-            $table->primary('id');
         });
     }
 
-    /**
+/**
      * Reverse the migrations.
      *
      * @return void

@@ -34,6 +34,13 @@ class Bet extends Model
             ->orderByDesc('date')->orderByDesc('bets.id');
     }
 
+    public function scopeCompletedBets($query)
+    {
+        return $query
+            ->bets()
+            ->whereNotNull('bets.result');
+    }
+
     public function scopeBetCount($query)
     {
         return $query->count();
@@ -214,13 +221,13 @@ class Bet extends Model
                 if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
                     $query->where('bet_fixtures.' . $filter['col'], '<=', Carbon::parse($filter['value'])->endOfDay());
                 } else {
-                    $query->where('bet_fixtures.' . $filter['col'], '<=', $filter['value']);
+                    $query->where('bets.' . $filter['col'], '<=', $filter['value']);
                 }
             } elseif ($filter['type'] == 'min') {
                 if (array_key_exists('specialType', $filter) && $filter['specialType'] == 'date') {
                     $query->where('bet_fixtures.' . $filter['col'], '>=', Carbon::parse($filter['value'])->startOfDay());
                 } else {
-                    $query->where('bet_fixtures.' . $filter['col'], '>=', $filter['value']);
+                    $query->where('bets.' . $filter['col'], '>=', $filter['value']);
                 }
             }
         }

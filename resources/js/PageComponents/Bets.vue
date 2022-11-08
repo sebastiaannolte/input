@@ -4,12 +4,12 @@
     <div class="-my-2">
       <div class="py-2 align-middle min-w-full">
         <div
-          class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+          class="shadow overflow-hidden border-b border-gray-200 rounded-md"
         >
           <table class="table-auto border-collapse w-full">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 border-gray-50 border-r-8">
               <tr
-                class="rounded-lg text-sm font-medium text-gray-700 text-left"
+                class="rounded-md text-sm font-medium text-gray-700 text-left"
               >
                           <th
                   class="
@@ -273,7 +273,7 @@
                       </template>
                     </button>
                   </td>
-                  <td></td>
+                  <td v-else></td>
                 </tr>
                 <template v-if="bet.bet_fixture && bet.bet_fixture.length > 1">
                   <tr
@@ -283,11 +283,24 @@
                     class="cursor-pointer border-r-8 bg-gray-100"
                     v-show="openedBets.includes(bet_fixture.bet_id)"
                   >
+                  <td
+                    class="
+                      hidden
+                      sm:table-cell
+                      px-2
+                      py-2
+                      whitespace-nowrap
+                      text-sm
+                      font-medium
+                      text-gray-900
+                    "
+                  >
+                  </td>
                     <td
                       class="
                         hidden
                         sm:table-cell
-                        px-6
+                        px-2
                         py-4
                         whitespace-nowrap
                         text-sm

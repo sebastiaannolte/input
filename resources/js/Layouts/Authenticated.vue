@@ -55,8 +55,8 @@
   </button>
   <bet-form-slide-over :errors="errors" />
   <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-center sm:justify-between h-16">
         <div class="flex">
           <div class="flex-shrink-0 flex items-center">
             <inertia-link v-if="user" :href="route('userhome', user.username)">

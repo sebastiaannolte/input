@@ -15,9 +15,10 @@ class CreateBetTypesTable extends Migration
     {
         Schema::create('bet_types', function (Blueprint $table) {
             $table->id();
+            $table->integer('type_id');
+            $table->string('sport');
             $table->string('name');
             $table->timestamps();
-            $table->primary('id');
         });
     }
 

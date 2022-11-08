@@ -104,11 +104,13 @@ class StatsController extends Controller
                 'value' => $start,
                 'type' => 'min',
                 'col' => 'date',
+                'specialType' => 'date',
             ],
             'to' => [
                 'value' => $end,
                 'type' => 'max',
                 'col' => 'date',
+                'specialType' => 'date',
             ],
         ];
 
@@ -122,6 +124,6 @@ class StatsController extends Controller
         $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);
         
         $stats = new Stats($userId, $filters, $sort);
-        return $stats->renderStats($key, $sort);
+        return $stats->renderStats($key);
     }
 }
