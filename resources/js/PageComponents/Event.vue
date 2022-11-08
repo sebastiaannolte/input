@@ -64,11 +64,9 @@
             v-model="betData.category"
             :searchable="true"
             :options="this.betTypes[sport]"
-            :addTagOn="['enter', 'tab', ';', ',']"
             label="name"
             valueProp="id"
             trackBy="name"
-            mode="tags"
           />
           <div
             v-if="errors['games.' + index + '.category']"

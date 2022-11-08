@@ -10,7 +10,7 @@
       bg-white
       mb-4
       shadow
-      sm:rounded-md sm:overflow-hidden
+      rounded-md sm:overflow-hidden
       z-0
     "
   >
@@ -63,7 +63,7 @@
         <div class="ssm:overflow-hidden">
           <div class="py-6 px-4 sm:p-6">
             <div class="mt-6 grid grid-cols-8 gap-4">
-              <div class="col-span-6 sm:col-span-2">
+              <div class="col-span-4 sm:col-span-2">
                 <text-input
                   v-model="filters.from.value"
                   :error="errors"
@@ -86,7 +86,7 @@
                   label="Min odds"
                 />
               </div>
-              <div class="col-span-6 sm:col-span-2">
+              <div class="col-span-4 sm:col-span-2">
                 <text-input
                   v-model="filters.maxOdds.value"
                   :error="errors"

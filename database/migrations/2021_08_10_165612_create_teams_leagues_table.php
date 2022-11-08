@@ -15,9 +15,13 @@ class CreateTeamsLeaguesTable extends Migration
     {
         Schema::create('teams_leagues', function (Blueprint $table) {
             $table->id();
-            $table->integer('team_id');
-            $table->integer('league_id');
+            $table->bigInteger('team_id')->unsigned();
+            $table->bigInteger('league_id')->unsigned();
+            $table->string('sport');
             $table->timestamps();
+
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
+            $table->foreign('league_id')->references('id')->on('leagues')->onDelete('cascade');
         });
     }
 

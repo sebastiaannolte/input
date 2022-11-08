@@ -22,8 +22,8 @@ class CreateLeaguesTable extends Migration
             $table->string('flag')->nullable();
             $table->string('season');
             $table->string('round')->nullable();
+            $table->string('sport');
             $table->timestamps();
-            $table->primary('id');
         });
     }
 

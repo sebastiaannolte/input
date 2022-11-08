@@ -14,16 +14,22 @@ class CreateFixturesTable extends Migration
     public function up()
     {
         Schema::create('fixtures', function (Blueprint $table) {
-            $table->integer();
-            $table->string('home_team');
-            $table->string('away_team');
+            $table->id();
+            $table->integer('fixture_id');
+            $table->bigInteger('home_team')->unsigned();
+            $table->bigInteger('away_team')->unsigned();
             $table->string('referee')->nullable();
-            $table->integer('league_id');
-            $table->integer('venue_id')->nullable();
+            $table->string('sport');
+            $table->bigInteger('league_id')->unsigned();
+            $table->bigInteger('venue_id')->nullable()->unsigned();
             $table->string('timezone');
             $table->string('date');
             $table->timestamps();
-            $table->primary('id');
+
+            $table->foreign('league_id')->references('id')->on('leagues')->onDelete('cascade');
+            $table->foreign('venue_id')->references('id')->on('venues')->onDelete('cascade');
+            $table->foreign('home_team')->references('id')->on('teams')->onDelete('cascade');
+            $table->foreign('away_team')->references('id')->on('teams')->onDelete('cascade');
         });
     }
 
