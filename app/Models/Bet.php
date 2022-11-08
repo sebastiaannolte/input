@@ -70,7 +70,7 @@ class Bet extends Model
             ->joinAllBets()
             ->with('betFixture.fixture')
             ->where('bets.id', $id)
-            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'user_id', 'bookie', 'tipster', 'sport', 'bets.created_at', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event, REPLACE(GROUP_CONCAT(category SEPARATOR "%SEP_ARRAY%"), "]%SEP_ARRAY%[",",") as category'))
+            ->select('bets.stake', 'bets.odds', 'bets.type', 'result', 'bets.status', 'bets.id', 'user_id', 'bookie', 'tipster', 'sport', 'bets.created_at', DB::raw('max(date) as date, GROUP_CONCAT(selection SEPARATOR ", ") as selection, GROUP_CONCAT(event SEPARATOR ", ") as event, GROUP_CONCAT(category SEPARATOR ", ")  as category'))
             ->groupBy('bet_fixtures.bet_id', 'bets.stake',  'bets.odds', 'bets.type', 'result', 'status', 'bets.id')
             ->orderByDesc('date')->orderByDesc('bets.id');
     }

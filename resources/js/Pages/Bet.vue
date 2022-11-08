@@ -256,11 +256,20 @@ export default {
     betResult() {
       return this.bet.result ? this.bet.result : 'No result';
     },
+  
     categoryName() {
       if (!this.bet.category) {
         return;
       }
-      return this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == this.bet.category).name
+      var categories = this.bet.category.split(', ');
+      var categoryNames = [];
+      for (var key in categories) {
+        var value = categories[key];
+        categoryNames.push(
+          this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == value).name
+        );
+      }
+      return categoryNames.join(", ");
     },
   }
 };
