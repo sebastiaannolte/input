@@ -51,6 +51,7 @@ class GamesApi
                 $venue = array_key_exists('venue', $fixture)  ? $fixture['venue'] : NULL;
                 $league = $game['league'];
                 $teams = $game['teams'];
+                $addedVenue = null;
                 if ($venue && $venue['id']) {
                     $addedVenue = Venue::updateOrCreate(
                         [
@@ -119,7 +120,6 @@ class GamesApi
                     ]
                 );
 
-
                 Fixture::updateOrCreate(
                     [
                         'fixture_id' => $fixture['id'],
@@ -130,7 +130,7 @@ class GamesApi
                         'away_team' => $addedAwayTeam->id,
                         'referee' => array_key_exists('referee', $fixture) ? $fixture['referee'] ?: null : NULL,
                         'league_id' => $addedLeague->id,
-                        'venue_id' => array_key_exists('venue', $fixture) ? $addedVenue->id  ?: null : NULL,
+                        'venue_id' => array_key_exists('venue', $fixture) && $venue['id'] ? $addedVenue->id  ?: null : NULL,
                         'timezone' => $fixture['timezone'],
                         'date' => Carbon::parse($fixture['date']),
 
