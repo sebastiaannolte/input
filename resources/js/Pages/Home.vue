@@ -1,20 +1,20 @@
 <template>
   <Head :title="title" />
-  <stats :stats="stats" :upcommingBets="upcommingBets" />
+  <stats :stats="stats" :upcomming-bets="upcommingBets" />
   <bets
     :bets="bets"
     :filters="filters"
-    :filterButton="true"
+    :filter-button="true"
     :filter-route="
-      this.route('userhome', this.$page.props.userInfo.user.username)
+      route('userhome', $page.props.userInfo.user.username)
     "
   />
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import Bets from "@/PageComponents/Bets.vue";
-import Stats from "@/PageComponents/Stats.vue";
+import Layout from '@/Layouts/Authenticated'
+import Bets from '@/PageComponents/Bets.vue'
+import Stats from '@/PageComponents/Stats.vue'
 
 export default {
   components: {
@@ -35,32 +35,32 @@ export default {
     return {
       betForm: this.$inertia.form(this.bet),
       title: null,
-    };
+    }
   },
 
   created() {
-    this.setPageTitle();
+    this.setPageTitle()
     if (this.import) {
-      this.emitter.emit("event:import", this.import);
+      this.emitter.emit('event:import', this.import)
     }
   },
 
   methods: {
     handleSubmit(bet) {
-      this.betForm = this.$inertia.form(bet);
-      this.betForm.post(this.route("bet.store"), {
+      this.betForm = this.$inertia.form(bet)
+      this.betForm.post(this.route('bet.store'), {
         preserveScroll: true,
         onSuccess: () =>
-          this.betForm.clearInputs ? this.emitter.emit("event:clear") : "",
-      });
+          this.betForm.clearInputs ? this.emitter.emit('event:clear') : '',
+      })
     },
 
     setPageTitle() {
-      this.title = "Your bets";
+      this.title = 'Your bets'
       if (!this.$page.props.userInfo.myPage) {
-        this.title = "Bets by " + this.$page.props.userInfo.user.name;
+        this.title = 'Bets by ' + this.$page.props.userInfo.user.name
       }
     },
   },
-};
+}
 </script>

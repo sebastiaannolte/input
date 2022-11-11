@@ -65,7 +65,7 @@
       >
         Logout
       </inertia-link>
-      <loading-button @click.prevent="save" :loading="userData.processing">
+      <loading-button :loading="userData.processing" @click.prevent="save">
         Save
       </loading-button>
     </div>
@@ -73,37 +73,39 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import Button from "@/Components/Button.vue";
-import TextInput from "@/Components/TextInput.vue";
-import LoadingButton from "@/Components/LoadingButton";
-import Settings from "@/Pages/Settings";
-
 export default {
-  components: { Button, TextInput, LoadingButton },
   layout: [Layout, Settings],
-
-  props: {
-    errors: Object,
-  },
-  data() {
-    return {};
-  },
-
   created() {
-    this.userData = this.$inertia.form(this.$page.props.auth.user);
-  },
+    // this.userData = this.$inertia.form(this.$page.props.auth.user)
 
-  methods: {
-    save() {
-      this.userData.put(
-        this.route("profile.update", this.$page.props.auth.user.username),
-        this.userData,
-        {
-          preserveScroll: true, // bets are not added to frontend
-        }
-      );
-    },
+    
   },
-};
+  methods: {
+
+  },
+}
+</script>
+
+<script setup>
+import Layout from '@/Layouts/Authenticated'
+import TextInput from '@/Components/TextInput.vue'
+import LoadingButton from '@/Components/LoadingButton'
+import Settings from '@/Pages/Settings'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
+
+defineProps({
+  errors: Object,
+})
+
+const userData =  useForm(usePage().props.value.auth.user)
+
+const save = () => {
+  userData.put(
+    route('profile.update', usePage().props.value.auth.user.username),
+    userData,
+    {
+      preserveScroll: true,
+    },
+  )
+}
 </script>
