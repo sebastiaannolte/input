@@ -57,19 +57,23 @@ class SpecialStatsController extends Controller
     {
         $statsHelper = new StatsHelper;
         $filters = Request::get('filters');
-        $type = Request::get('type');
+        $tabs = $statsHelper->getSpecialStatsTabs();
+        $type = Request::get('type') ?? $tabs[0]['name'];
         $sort = Request::get('sort') ?: [
             'sortType' => "Bets",
             'sortOrder' => "DESC"
         ];
 
-        $tabs = $statsHelper->getSpecialStatsTabs();
+        $userId = User::where('username', $username)->first()->id;
+        $stats = new Stats($userId, $filters, $sort);
+        $stats =  $stats->getSpecialStats($type);
 
         return Inertia::render('SpecialStats', [
             'tabs' => $tabs,
             'type' => $type,
             'filters' => $filters,
             'sort' => $sort,
+            'stats' => $stats
         ]);
     }
 
@@ -80,7 +84,7 @@ class SpecialStatsController extends Controller
         $key = Request::get('key');
         $sort = Request::get('sort');
         $stats = new Stats($userId, $filters, $sort);
-        return $stats->getSpecialStats($key, $sort);
+        return $stats->getSpecialStats($key);
     }
 
     public function referee($username, $referee)

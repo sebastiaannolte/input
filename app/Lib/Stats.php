@@ -492,6 +492,7 @@ class Stats
             ->join('leagues', 'fixtures.league_id', '=', 'leagues.id')
             ->groupBy('fixtures.league_id')
             ->whereNotNull('fixtures.league_id')
+            ->whereNotNull('result')
             ->where('leagues.sport', 'football')
             ->select([
                 'leagues.id as league_id',
@@ -583,6 +584,7 @@ class Stats
             ->join('fixtures', 'bet_fixtures.fixture_id', '=', 'fixtures.id')
             ->groupBy('fixtures.referee')
             ->whereNotNull('fixtures.referee')
+            ->whereNotNull('result')
             ->select(['referee', $this->statsHelper->statsSelect()])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
@@ -611,6 +613,7 @@ class Stats
             ->join('venues', 'fixtures.venue_id', '=', 'venues.id')
             ->groupBy('fixtures.venue_id', 'venues.name')
             ->whereNotNull('fixtures.venue_id')
+            ->whereNotNull('result')
             ->select(['venues.id as venue_id', 'venues.name as venue', $this->statsHelper->statsSelect()])
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->paginate(15);
@@ -697,6 +700,7 @@ class Stats
         $head = $this->tableHeader($type);
 
         $bets = Bet::user($this->userId)
+            ->whereNotNull('result')
             ->filters($this->filters);
 
         $home = $bets->clone()
@@ -731,7 +735,6 @@ class Stats
 
         return $this->customPaginationOutput($head, $output, $types);
     }
-
     public function dateSelect()
     {
         $interval = reset($this->filters['interval']);

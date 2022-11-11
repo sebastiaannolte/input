@@ -74,7 +74,6 @@
               class="
                 border-transparent
                 text-gray-500
-                hover:border-gray-300
                 hover:text-gray-700
                 inline-flex
                 items-center
@@ -84,9 +83,9 @@
                 text-sm
                 font-medium
               "
-              :class="{
-                'border-indigo-500 text-white': url() == item.url,
-              }"
+              :class="[
+                 url() == item.url ? 'border-indigo-500' : 'hover:border-gray-300',
+              ]"
             >
               {{ item.name }}
             </inertia-link>
