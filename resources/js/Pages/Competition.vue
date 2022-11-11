@@ -10,23 +10,7 @@
           ])
         "
         type="button"
-        class="
-          ml-3
-          inline-flex
-          items-center
-          px-4
-          py-2
-          border border-transparent
-          rounded-md
-          shadow-sm
-          text-sm
-          font-medium
-          text-white
-          bg-indigo-600
-          hover:bg-indigo-700
-          focus:outline-none
-          focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-        "
+        class="ml-3 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         <span class="flex items-center">All {{ competition.name }} bets</span>
       </inertia-link>
@@ -35,36 +19,18 @@
   <active-filters :prop-filters="filters" :filter-route="filterRoute" />
   <div class="flex flex-col items-center">
     <div
-      class="
-        mb-4
-        leading-4
-        text-center
-        bg-white
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      "
+      class="mb-4 w-full rounded-md bg-white text-center leading-4 shadow sm:overflow-hidden"
     >
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div
-            class="shadow overflow-hidden border-b border-gray-200 rounded-md"
+            class="overflow-hidden rounded-md border-b border-gray-200 shadow"
           >
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <th
                   scope="col"
-                  class="
-                    t-header
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="t-header px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                   :key="keys"
                   v-for="(values, keys) in currentTable.head"
                   :class="{
@@ -85,15 +51,7 @@
                   :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
                 >
                   <td
-                    class="
-                      first:font-bold
-                      px-6
-                      py-2
-                      whitespace-nowrap
-                      text-sm
-                      font-medium
-                      text-gray-900 text-left
-                    "
+                    class="whitespace-nowrap px-6 py-2 text-left text-sm font-medium text-gray-900 first:font-bold"
                     v-for="(values, key) in values"
                     :key="key"
                   >
@@ -119,16 +77,7 @@
                 currentTable.body &&
                 currentTable.body.length == 0
               "
-              class="
-                bg-white
-                col-span-1
-                px-6
-                py-4
-                whitespace-nowrap
-                text-sm
-                font-medium
-                text-gray-900 text-center
-              "
+              class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900"
             >
               No results
             </div>

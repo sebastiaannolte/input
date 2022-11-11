@@ -3,7 +3,7 @@
   <div>
     <label
       v-if="label"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-400 capitalize"
+      class="block text-sm font-medium capitalize text-gray-700 dark:text-gray-400"
       :for="id"
       >{{ label }}:</label
     >
@@ -12,16 +12,7 @@
       ref="input"
       autocomplete="off"
       v-bind="{ ...$attrs, class: null }"
-      class="
-        shadow-sm
-        focus:ring-indigo-500
-        focus:border-indigo-500
-        block
-        w-full
-        sm:text-sm
-        border-gray-300
-        rounded-md
-      "
+      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
       :class="{ error: error }"
       :type="type"
       :value="modelValue"

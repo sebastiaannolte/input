@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mb-2 p-2 leading-4 bg-white shadow rounded-md border border-gray-10"
+    class="border-gray-10 mb-2 rounded-md border bg-white p-2 leading-4 shadow"
   >
     <div class="flex items-center">
       <EventsV2
@@ -9,7 +9,7 @@
         :errors="errors"
         :index="index"
         :sport="sport"
-        class="w-full mr-2 z-50"
+        class="z-50 mr-2 w-full"
       />
 
       <ChevronUpIcon
@@ -32,32 +32,14 @@
           <text-input
             v-model="betData.selection"
             :error="errors['games.' + index + '.selection']"
-            class="
-              mt-4
-              block
-              w-full
-              border border-gray-300
-              rounded-md
-              shadow-sm
-              py-2
-              px-3
-              focus:outline-none focus:ring-gray-900 focus:border-gray-900
-              sm:text-sm
-            "
+            class="mt-4 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
             label="Selection"
           />
         </div>
 
         <div class="col-span-4 sm:col-span-4">
           <label
-            class="
-              block
-              text-sm
-              font-medium
-              text-gray-700
-              dark:text-gray-400
-              capitalize
-            "
+            class="block text-sm font-medium capitalize text-gray-700 dark:text-gray-400"
             >Category:</label
           >
           <Multiselect
@@ -82,41 +64,13 @@
             label="Date"
             type="datetime-local"
             id="date"
-            class="
-              mt-1
-              block
-              w-full
-              border border-gray-300
-              rounded-md
-              shadow-sm
-              py-2
-              px-3
-              focus:outline-none focus:ring-gray-900 focus:border-gray-900
-              sm:text-sm
-            "
+            class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
           />
         </div>
       </div>
-      <div class="flex justify-end mt-2">
+      <div class="mt-2 flex justify-end">
         <button
-          class="
-            inline-flex
-            items-center
-            px-2.5
-            py-1.5
-            border border-transparent
-            text-xs
-            font-medium
-            rounded
-            shadow-sm
-            text-white
-            bg-indigo-600
-            hover:bg-indigo-700
-            focus:outline-none
-            focus:ring-2
-            focus:ring-offset-2
-            focus:ring-indigo-500
-          "
+          class="inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           @click.prevent="deleteGame(index)"
         >
           Remove

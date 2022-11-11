@@ -26,7 +26,7 @@
         class="rounded-r-0"
       >
         <template v-slot:option="{ option }">
-          <img class="h-4 mr-2" :src="option.icon" /> {{ option.label }}
+          <img class="mr-2 h-4" :src="option.icon" /> {{ option.label }}
         </template>
       </Multiselect>
       <button
@@ -35,18 +35,7 @@
         :class="{
           'bg-gray-200 text-white inner-shadow': searchType == 'simple',
         }"
-        class="
-          inline-flex
-          items-center
-          px-2.5
-          py-1.5
-          border border-gray-300
-          shadow-sm
-          text-xs
-          font-medium
-          text-gray-700
-          bg-white
-        "
+        class="inline-flex items-center border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm"
       >
         <LockClosedIcon class="h-4 w-4" aria-hidden="true" />
       </button>
@@ -54,21 +43,7 @@
         type="button"
         @click="setSearchType('full')"
         :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'full' }"
-        class="
-          inline-flex
-          items-center
-          px-2.5
-          py-1.5
-          border border-gray-300
-          shadow-sm
-          text-xs
-          font-medium
-          rounded-r
-          text-gray-700
-          bg-white
-          hover:bg-gray-50
-          focus:outline-none focus:bg-gray-300
-        "
+        class="inline-flex items-center rounded-r border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:bg-gray-300 focus:outline-none"
       >
         <LockOpenIcon class="h-4 w-4" aria-hidden="true" />
       </button>

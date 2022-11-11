@@ -1,18 +1,7 @@
 <template>
   <div class="flex justify-center">
     <div
-      class="
-        px-4
-        mb-4
-        leading-4
-        bg-white
-        p-4
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-        sm:w-2/3
-      "
+      class="mb-4 w-full rounded-md bg-white p-4 px-4 leading-4 shadow sm:w-2/3 sm:overflow-hidden"
     >
       <div class="mb-4 text-sm text-gray-600">
         Thanks for signing up! Before getting started, could you verify your
@@ -21,7 +10,7 @@
       </div>
 
       <div
-        class="mb-4 font-medium text-sm text-green-600"
+        class="mb-4 text-sm font-medium text-green-600"
         v-if="verificationLinkSent"
       >
         A new verification link has been sent to the email address you provided
@@ -41,7 +30,7 @@
             :href="route('logout')"
             method="post"
             as="button"
-            class="underline text-sm text-gray-600 hover:text-gray-900"
+            class="text-sm text-gray-600 underline hover:text-gray-900"
             >Log Out</inertia-link
           >
         </div>

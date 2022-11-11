@@ -1,74 +1,21 @@
 <template>
-  <div class="py-3 flex items-center justify-between border-t border-gray-200" v-if="from">
-    <div class="flex-1 flex justify-between sm:hidden">
-      <div v-if="currentPage == 1" class="
-          relative
-          inline-flex
-          items-center
-          px-4
-          py-2
-          border border-gray-300
-          text-sm
-          font-medium
-          rounded-md
-          text-gray-700
-          bg-gray-100
-          hover:bg-gray-50
-        ">
+  <div class="flex items-center justify-between border-t border-gray-200 py-3" v-if="from">
+    <div class="flex flex-1 justify-between sm:hidden">
+      <div v-if="currentPage == 1" class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
         Previous
       </div>
-      <inertia-link v-else preserve-scroll :href="url(currentPage - 1)" class="
-          relative
-          inline-flex
-          items-center
-          px-4
-          py-2
-          border border-gray-300
-          text-sm
-          font-medium
-          rounded-md
-          text-gray-700
-          bg-white
-          hover:bg-gray-50
-        ">
+      <inertia-link v-else preserve-scroll :href="url(currentPage - 1)" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
         Previous
       </inertia-link>
 
-      <div v-if="currentPage == lastPage" class="
-          relative
-          inline-flex
-          items-center
-          px-4
-          py-2
-          border border-gray-300
-          text-sm
-          font-medium
-          rounded-md
-          text-gray-700
-          bg-gray-100
-          hover:bg-gray-50
-        ">
+      <div v-if="currentPage == lastPage" class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
         Next
       </div>
-      <inertia-link v-else preserve-scroll :href="url(currentPage + 1)" class="
-          ml-3
-          relative
-          inline-flex
-          items-center
-          px-4
-          py-2
-          border border-gray-300
-          text-sm
-          font-medium
-          rounded-md
-          text-gray-700
-          bg-white
-          hover:bg-gray-50
-        ">
+      <inertia-link v-else preserve-scroll :href="url(currentPage + 1)" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
         Next
       </inertia-link>
     </div>
-    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <div>
         <p class="text-sm text-gray-700">
           Showing
@@ -87,82 +34,28 @@
         </p>
       </div>
       <div>
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-          <div v-if="currentPage == 1" class="
-              relative
-              inline-flex
-              items-center
-              px-2
-              py-2
-              rounded-l-md
-              border border-gray-300
-              bg-white
-              text-sm
-              font-medium
-              text-gray-400
-              bg-gray-100
-            ">
+        <nav class="relative z-0 inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+          <div v-if="currentPage == 1" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white bg-gray-100 px-2 py-2 text-sm font-medium text-gray-400">
             <span class="sr-only">Previous</span>
             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
           </div>
-          <inertia-link v-else :href="url(currentPage - 1)" class="
-              relative
-              inline-flex
-              items-center
-              px-2
-              py-2
-              rounded-l-md
-              border border-gray-300
-              bg-white
-              text-sm
-              font-medium
-              text-gray-500
-              hover:bg-gray-50
-            ">
+          <inertia-link v-else :href="url(currentPage - 1)" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50">
             <span class="sr-only">Previous</span>
             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
           </inertia-link>
           <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
           <inertia-link preserve-scroll v-for="index in pages" :key="index" :href="url(index)" aria-current="page"
-            class="
-            relative inline-flex items-center border  px-4 py-2 text-sm font-medium
-            " :class="[currentPage == index ?
+            class="relative inline-flex items-center border px-4 py-2 text-sm font-medium" :class="[currentPage == index ?
               'z-10 border-indigo-500 bg-indigo-50 text-indigo-600 focus:z-20' :
               'border-gray-300 bg-white text-gray-500 hover:bg-gray-50 focus:z-20'
             ]">
             {{ index }}
           </inertia-link>
-          <div v-if="currentPage == lastPage" class="
-              relative
-              inline-flex
-              items-center
-              px-2
-              py-2
-              rounded-r-md
-              border border-gray-300
-              bg-white
-              text-sm
-              font-medium
-              text-gray-400
-              bg-gray-100
-            ">
+          <div v-if="currentPage == lastPage" class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white bg-gray-100 px-2 py-2 text-sm font-medium text-gray-400">
             <span class="sr-only">Next</span>
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </div>
-          <inertia-link v-else preserve-scroll :href="url(currentPage + 1)" class="
-              relative
-              inline-flex
-              items-center
-              px-2
-              py-2
-              rounded-r-md
-              border border-gray-300
-              bg-white
-              text-sm
-              font-medium
-              text-gray-500
-              hover:bg-gray-50
-            ">
+          <inertia-link v-else preserve-scroll :href="url(currentPage + 1)" class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50">
             <span class="sr-only">Next</span>
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </inertia-link>

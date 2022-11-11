@@ -14,35 +14,14 @@
         autocomplete="off"
         v-bind="{ ...$attrs, class: null }"
         name="company-website"
-        class="
-          flex-1
-          min-w-0
-          block
-          w-full
-          px-3
-          py-2
-          rounded-none rounded-l-md
-          focus:ring-indigo-500
-          focus:border-indigo-500
-          sm:text-sm
-          border-gray-300
-        "
+        class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         :class="{ error: error }"
         :type="type"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
       />
       <span
-        class="
-          inline-flex
-          items-center
-          px-3
-          rounded-r-md
-          border border-l-0 border-gray-300
-          bg-gray-50
-          text-gray-500
-          sm:text-sm
-        "
+        class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm"
       >
         {{ addOn }}
       </span>

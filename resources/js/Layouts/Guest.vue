@@ -1,9 +1,9 @@
 
 <template>
-  <div class="sm:mx-auto sm:w-full sm:max-w-md pt-20 pb-5">
-    <logo class="h-8 fill-current mx-auto h-16 w-auto text-blue-600"></logo>
+  <div class="pt-20 pb-5 sm:mx-auto sm:w-full sm:max-w-md">
+    <logo class="mx-auto h-8 h-16 w-auto fill-current text-blue-600"></logo>
   </div>
-  <div class="max-w-md mx-auto pt-4 pb-12 px-4 lg:pb-16">
+  <div class="mx-auto max-w-md px-4 pt-4 pb-12 lg:pb-16">
     <slot></slot>
   </div>
 </template>

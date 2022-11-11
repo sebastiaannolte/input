@@ -1,16 +1,7 @@
 <template>
   <div class="flex justify-center">
     <div
-      class="
-        mb-4
-        leading-4
-        bg-white
-        p-10
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      "
+      class="mb-4 w-full rounded-md bg-white p-10 leading-4 shadow sm:overflow-hidden"
     >
       <breeze-validation-errors class="mb-4" />
 
@@ -52,7 +43,7 @@
           />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="mt-4 flex items-center justify-end">
           <Button
           class="w-full"
             :class="{ 'opacity-25': form.processing }"

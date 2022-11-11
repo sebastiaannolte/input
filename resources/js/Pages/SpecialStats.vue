@@ -3,27 +3,13 @@
   <table-filter-header title="Special stats" />
   <active-filters :prop-filters="filters" :filter-route="filterRoute"  />
   <div class="flex flex-col items-center">
-    <div class="sm:hidden w-full mb-2">
+    <div class="mb-2 w-full sm:hidden">
       <label for="tabs" class="sr-only">Select a tab</label>
       <select
         id="tabs"
         name="tabs"
         @change="onDropdownTabChange"
-        class="
-          capitalize
-          block
-          w-full
-          pl-3
-          pr-10
-          py-2
-          text-base
-          border-gray-300
-          focus:outline-none
-          focus:ring-indigo-500
-          focus:border-indigo-500
-          sm:text-sm
-          rounded-md
-        "
+        class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base capitalize focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
       >
         <option
           v-for="tab in generatedTabs"
@@ -36,19 +22,11 @@
       </select>
     </div>
     <div
-      class="
-        leading-4
-        text-center
-        bg-white
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      "
+      class="w-full rounded-md bg-white text-center leading-4 shadow sm:overflow-hidden"
     >
       <div class="hidden sm:block">
         <div class="border-b border-gray-200">
-          <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
+          <nav class="-mb-px flex justify-center space-x-8" aria-label="Tabs">
             <span
               v-for="tab in generatedTabs"
               :key="tab.option"
@@ -71,24 +49,15 @@
         <loading z-index="10" v-model:active="loading" :is-full-page="false" />
       </div>
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div
-            class="shadow overflow-hidden border-b border-gray-200 rounded-md"
+            class="overflow-hidden rounded-md border-b border-gray-200 shadow"
           >
             <table class="min-w-full divide-y divide-gray-200" v-if="!loading">
               <thead class="bg-gray-50">
                 <th
                   scope="col"
-                  class="
-                    t-header
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="t-header px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                   :key="keys"
                   v-for="(values, keys) in currentTable.head"
                   :class="{
@@ -111,15 +80,7 @@
                   :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
                 >
                   <td
-                    class="
-                      first:font-bold
-                      px-6
-                      py-2
-                      whitespace-nowrap
-                      text-sm
-                      font-medium
-                      text-gray-900 text-left
-                    "
+                    class="whitespace-nowrap px-6 py-2 text-left text-sm font-medium text-gray-900 first:font-bold"
                     v-for="(values, key) in values"
                     :key="key"
                   >
@@ -140,16 +101,7 @@
                 currentTable.body &&
                 currentTable.body.length == 0
               "
-              class="
-                bg-white
-                col-span-1
-                px-6
-                py-4
-                whitespace-nowrap
-                text-sm
-                font-medium
-                text-gray-900 text-center
-              "
+              class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900"
             >
               No results
             </div>

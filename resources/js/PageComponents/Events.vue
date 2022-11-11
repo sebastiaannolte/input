@@ -11,36 +11,12 @@
     @keydown.enter.prevent="onEnter"
     @focus="onChange(betData.event)"
     ref="input"
-    class="
-      mt-1
-      block
-      w-full
-      border border-gray-300
-      rounded-md
-      shadow-sm
-      py-2
-      px-3
-      focus:outline-none
-      focus:ring-gray-900
-      focus:border-gray-900
-      sm:text-sm
-    "
+    class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
   />
   <div
     v-show="isOpen"
     ref="scrollContainer"
-    class="
-      absolute
-      z-10
-      mt-2
-      w-80
-      rounded-md
-      shadow-lg
-      bg-white
-      ring-1 ring-black ring-opacity-5
-      focus:outline-none
-      overflow-auto
-    "
+    class="absolute z-10 mt-2 w-80 overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
     style="max-height: 300px"
   >
     <div
@@ -48,15 +24,7 @@
       :key="i"
       @click="setResult(result, i)"
       :ref="`card-${i}`"
-      class="
-        block
-        px-4
-        py-2
-        text-sm
-        hover:bg-indigo-500
-        cursor-pointer
-        hover:text-white
-      "
+      class="block cursor-pointer px-4 py-2 text-sm hover:bg-indigo-500 hover:text-white"
       :class="{
         'bg-indigo-500 text-white': i === arrowCounter,
         'text-gray-700': i != arrowCounter,

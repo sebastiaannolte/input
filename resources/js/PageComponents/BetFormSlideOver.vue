@@ -2,13 +2,13 @@
   <TransitionRoot as="template" :show="open">
     <Dialog
       as="div"
-      class="fixed inset-0 overflow-hidden z-20"
+      class="fixed inset-0 z-20 overflow-hidden"
       @close="open = false"
     >
       <div class="absolute inset-0 overflow-hidden">
         <DialogOverlay class="absolute inset-0" />
 
-        <div class="fixed inset-y-0 pl-16 max-w-full right-0 flex">
+        <div class="fixed inset-y-0 right-0 flex max-w-full pl-16">
           <TransitionChild
             as="template"
             enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -20,30 +20,18 @@
           >
             <div class="w-screen max-w-md">
               <form
-                class="
-                  h-full
-                  divide-y divide-gray-200
-                  flex flex-col
-                  bg-white
-                  shadow-xl
-                "
+                class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
               >
-                <div class="flex-1 h-0 overflow-y-auto">
-                  <div class="py-6 px-4 bg-indigo-700 sm:px-6">
+                <div class="h-0 flex-1 overflow-y-auto">
+                  <div class="bg-indigo-700 py-6 px-4 sm:px-6">
                     <div class="flex items-center justify-between">
                       <DialogTitle class="text-lg font-medium text-white">
                         {{ title }}
                       </DialogTitle>
-                      <div class="ml-3 h-7 flex items-center">
+                      <div class="ml-3 flex h-7 items-center">
                         <button
                           type="button"
-                          class="
-                            bg-indigo-700
-                            rounded-md
-                            text-indigo-200
-                            hover:text-white
-                            focus:outline-none focus:ring-2 focus:ring-white
-                          "
+                          class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                           @click="open = false"
                         >
                           <span class="sr-only">Close panel</span>
@@ -74,27 +62,10 @@
                                     'bg-gray-200 text-white inner-shadow':
                                       activeSport == sport.name,
                                   }"
-                                  class="
-                                    mr-2
-                                    w-10
-                                    h-10
-                                    inline-flex
-                                    items-center
-                                    px-1.5
-                                    py-1.5
-                                    border border-gray-300
-                                    shadow-sm
-                                    text-xs
-                                    font-medium
-                                    rounded
-                                    text-gray-700
-                                    bg-white
-                                    hover:bg-gray-50
-                                    focus:outline-none focus:bg-gray-300
-                                  "
+                                  class="mr-2 inline-flex h-10 w-10 items-center rounded border border-gray-300 bg-white px-1.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:bg-gray-300 focus:outline-none"
                                 >
                                   <sport-icon
-                                    class="w-6 h-6"
+                                    class="h-6 w-6"
                                     :name="sport.name"
                                   />
                                 </button>
@@ -117,24 +88,7 @@
                                 </Event>
                                 <div class="flex justify-end">
                                   <button
-                                    class="
-                                      inline-flex
-                                      items-center
-                                      px-1.5
-                                      py-1.5
-                                      border border-transparent
-                                      text-xs
-                                      font-medium
-                                      rounded
-                                      shadow-sm
-                                      text-white
-                                      bg-indigo-600
-                                      hover:bg-indigo-700
-                                      focus:outline-none
-                                      focus:ring-2
-                                      focus:ring-offset-2
-                                      focus:ring-indigo-500
-                                    "
+                                    class="inline-flex items-center rounded border border-transparent bg-indigo-600 px-1.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                     @click.prevent="addGame"
                                   >
                                     <PlusIcon
@@ -152,20 +106,7 @@
                                   label="Stake"
                                   type="text"
                                   id="stake"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
+                                  class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                                 />
                               </div>
 
@@ -176,20 +117,7 @@
                                   label="Odds"
                                   type="text"
                                   id="odds"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
+                                  class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                                 />
                               </div>
                               <div class="col-span-4 sm:col-span-2">
@@ -202,20 +130,7 @@
                                   label="Bookie"
                                   type="text"
                                   id="bookie"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
+                                  class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                                 />
                               </div>
                               <div class="col-span-4 sm:col-span-2">
@@ -236,20 +151,7 @@
                                   label="Tipster"
                                   type="text"
                                   id="tipster"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
+                                  class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                                 />
                               </div>
                             </div>
@@ -259,51 +161,29 @@
                     </section>
                   </div>
                 </div>
-                <div class="flex-shrink-0 px-4 py-4 flex justify-end">
-                  <div class="flex items-center mr-5" v-if="!bet">
+                <div class="flex flex-shrink-0 justify-end px-4 py-4">
+                  <div class="mr-5 flex items-center" v-if="!bet">
                     <div class="text-sm">
                       <label
                         for="comments"
-                        class="font-medium text-gray-700 mr-2"
+                        class="mr-2 font-medium text-gray-700"
                         >Clear inputs</label
                       >
                     </div>
-                    <div class="flex items-center h-5">
+                    <div class="flex h-5 items-center">
                       <input
                         v-model="betData.clearInputs"
                         id="comments"
                         aria-describedby="comments-description"
                         name="comments"
                         type="checkbox"
-                        class="
-                          focus:ring-indigo-500
-                          h-4
-                          w-4
-                          text-indigo-600
-                          border-gray-300
-                          rounded
-                        "
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                       />
                     </div>
                   </div>
                   <button
                     type="button"
-                    class="
-                      bg-white
-                      py-2
-                      px-4
-                      border border-gray-300
-                      rounded-md
-                      shadow-sm
-                      text-sm
-                      font-medium
-                      text-gray-700
-                      hover:bg-gray-50
-                      focus:outline-none
-                      focus:ring-2
-                      focus:ring-offset-2
-                      focus:ring-indigo-500
-                    "
+                    class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     @click="open = false"
                   >
                     Cancel

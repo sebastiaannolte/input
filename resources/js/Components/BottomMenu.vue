@@ -1,21 +1,21 @@
 <template>
   <section
     id="bottom-navigation"
-    class="sm:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
+    class="fixed inset-x-0 bottom-0 z-10 block bg-white shadow sm:hidden"
   >
     <section
       id="bottom-navigation"
-      class="block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
+      class="fixed inset-x-0 bottom-0 z-10 block bg-white shadow"
     >
       <div id="tabs" class="flex justify-between">
         <span
           @click="clickAction(item)"
           v-for="item in menu"
           :key="item.name"
-          class="w-full justify-center inline-block text-center pt-2 pb-1"
+          class="inline-block w-full justify-center pt-2 pb-1 text-center"
 
         >
-          <component class="w-6 h-6 inline-block mb-1" :is=" activeItem == item.name ? item.icon+'Solid' : item.icon" />
+          <component class="mb-1 inline-block h-6 w-6" :is=" activeItem == item.name ? item.icon+'Solid' : item.icon" />
           <span class="tab tab-home block text-xs">{{ item.name }}</span>
         </span>
       </div>

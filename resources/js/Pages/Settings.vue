@@ -1,23 +1,12 @@
 <template>
   <!-- <Head title="Settings" /> -->
-  <div class="sm:hidden mb-2">
+  <div class="mb-2 sm:hidden">
     <label for="tabs" class="sr-only">Select a tab</label>
     <select
       @change="onDropdownTabChange"
       id="tabs"
       name="tabs"
-      class="
-        block
-        w-full
-        pl-3
-        pr-10
-        py-2
-        text-base
-        border-gray-300
-        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-        sm:text-sm
-        rounded-md
-      "
+      class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
     >
       <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
         {{ tab.name }}
@@ -26,19 +15,11 @@
   </div>
   <div class="flex flex-col items-center">
     <div
-      class="
-        mb-4
-        leading-4
-        bg-white
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      "
+      class="mb-4 w-full rounded-md bg-white leading-4 shadow sm:overflow-hidden"
     >
       <div class="hidden sm:block">
         <div class="border-b border-gray-200">
-          <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
+          <nav class="-mb-px flex justify-center space-x-8" aria-label="Tabs">
             <span
               v-for="tab in tabs"
               :key="tab.name"

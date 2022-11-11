@@ -2,111 +2,47 @@
   <active-filters :prop-filters="filters" :filter-route="filterRoute" />
   <div class="flex flex-col">
     <div class="-my-2">
-      <div class="py-2 align-middle min-w-full">
+      <div class="min-w-full py-2 align-middle">
         <div
-          class="shadow overflow-hidden border-b border-gray-200 rounded-md"
+          class="overflow-hidden rounded-md border-b border-gray-200 shadow"
         >
-          <table class="table-auto border-collapse w-full">
-            <thead class="bg-gray-50 border-gray-50 border-r-8">
+          <table class="w-full table-auto border-collapse">
+            <thead class="border-r-8 border-gray-50 bg-gray-50">
               <tr
-                class="rounded-md text-sm font-medium text-gray-700 text-left"
+                class="rounded-md text-left text-sm font-medium text-gray-700"
               >
                           <th
-                  class="
-                  w-4
-
-                    hidden
-                    sm:table-cell
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="hidden w-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell"
                 >
 
                 </th>
                 <th
-                  class="
-                    px-2
-                    py-3
-                    hidden
-                    sm:table-cell
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="hidden px-2 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell"
                 >
                   Time
                 </th>
                 <th
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
                   Event
                 </th>
                 <th
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
                   selection
                 </th>
                 <th
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                    hidden
-                    sm:table-cell
-                  "
+                  class="hidden px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell"
                 >
                   stake
                 </th>
                 <th
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                    hidden
-                    sm:table-cell
-                  "
+                  class="hidden px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell"
                 >
                   odds
                 </th>
                 <th
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
                   result
                 </th>
@@ -125,30 +61,12 @@
                   class="cursor-pointer border-r-8"
                 >
                              <td
-                    class="
-                      hidden
-                      sm:table-cell
-                      px-2
-                      py-2
-                      whitespace-nowrap
-                      text-sm
-                      font-medium
-                      text-gray-900
-                    "
+                    class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell"
                   >
-                  <sport-icon class="w-6 h-6" :name="bet.sport"/>
+                  <sport-icon class="h-6 w-6" :name="bet.sport"/>
                   </td>
                   <td
-                    class="
-                      hidden
-                      sm:table-cell
-                      px-2
-                      py-4
-                      whitespace-nowrap
-                      text-sm
-                      font-medium
-                      text-gray-900
-                    "
+                    class="hidden whitespace-nowrap px-2 py-4 text-sm font-medium text-gray-900 sm:table-cell"
                   >
                     {{ moment(bet.date).format("DD MMM HH:mm") }}
                   </td>
@@ -162,31 +80,17 @@
                     {{ bet.selection }}
                   </td>
                   <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-nowrap
-                      text-sm text-gray-500
-                      hidden
-                      sm:table-cell
-                    "
+                    class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 sm:table-cell"
                   >
                     {{ bet.stake }}
                   </td>
                   <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-nowrap
-                      text-sm text-gray-500
-                      hidden
-                      sm:table-cell
-                    "
+                    class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 sm:table-cell"
                   >
                     {{ bet.odds }}
                   </td>
                   <td
-                    class="px-6 py-3 whitespace-nowrap text-sm text-gray-500"
+                    class="whitespace-nowrap px-6 py-3 text-sm text-gray-500"
                     @click.prevent="showDropdown(betKey)"
                   >
                     <span>
@@ -197,16 +101,10 @@
                       >
                         <span
                           v-if="bet.result"
-                          class="flex justify-between items-center"
+                          class="flex items-center justify-between"
                         >
                           <span
-                            class="
-                              px-2
-                              inline-flex
-                              text-xs
-                              leading-5
-                              rounded-full
-                            "
+                            class="inline-flex rounded-full px-2 text-xs leading-5"
                             :class="[statusColor(bet.status, 'label')]"
                           >
                             {{ bet.result }}
@@ -214,15 +112,7 @@
                         </span>
                         <span
                           v-else
-                          class="
-                            px-2
-                            inline-flex
-                            text-xs
-                            leading-5
-                            rounded-full
-                            bg-yellow-100
-                            text-yellow-800
-                          "
+                          class="inline-flex rounded-full bg-yellow-100 px-2 text-xs leading-5 text-yellow-800"
                         >
                           {{ bet.status }}
                         </span>
@@ -230,18 +120,7 @@
                     </span>
                     <select
                       @focusout="handleFocusOut"
-                      class="
-                        block
-                        pl-3
-                        py-0.5
-                        text-base
-                        border-gray-300
-                        focus:outline-none
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        sm:text-sm
-                        rounded-md
-                      "
+                      class="block rounded-md border-gray-300 py-0.5 pl-3 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       :class="{
                         'w-full sm:w-24 sm:-mr-24':
                           activeKeyBet == betKey && activeKeyBetFixture == -1,
@@ -284,29 +163,11 @@
                     v-show="openedBets.includes(bet_fixture.bet_id)"
                   >
                   <td
-                    class="
-                      hidden
-                      sm:table-cell
-                      px-2
-                      py-2
-                      whitespace-nowrap
-                      text-sm
-                      font-medium
-                      text-gray-900
-                    "
+                    class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell"
                   >
                   </td>
                     <td
-                      class="
-                        hidden
-                        sm:table-cell
-                        px-2
-                        py-4
-                        whitespace-nowrap
-                        text-sm
-                        font-medium
-                        text-gray-900
-                      "
+                      class="hidden whitespace-nowrap px-2 py-4 text-sm font-medium text-gray-900 sm:table-cell"
                     >
                       {{ moment(bet_fixture.date).format("DD MMM HH:mm") }}
                     </td>
@@ -317,31 +178,17 @@
                       {{ bet_fixture.selection }}
                     </td>
                     <td
-                      class="
-                        px-6
-                        py-4
-                        whitespace-nowrap
-                        text-sm text-gray-500
-                        hidden
-                        sm:table-cell
-                      "
+                      class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 sm:table-cell"
                     >
                       {{ bet_fixture.stake }}
                     </td>
                     <td
-                      class="
-                        px-6
-                        py-4
-                        whitespace-nowrap
-                        text-sm text-gray-500
-                        hidden
-                        sm:table-cell
-                      "
+                      class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 sm:table-cell"
                     >
                       {{ bet_fixture.odds }}
                     </td>
                     <td
-                      class="px-6 py-3 whitespace-nowrap text-sm text-gray-500"
+                      class="whitespace-nowrap px-6 py-3 text-sm text-gray-500"
                       @click.prevent="showDropdown(betKey, betFixtureKey)"
                     >
                       <span>
@@ -353,16 +200,10 @@
                         >
                           <span
                             v-if="bet_fixture.result"
-                            class="flex justify-between items-center"
+                            class="flex items-center justify-between"
                           >
                             <span
-                              class="
-                                px-2
-                                inline-flex
-                                text-xs
-                                leading-5
-                                rounded-full
-                              "
+                              class="inline-flex rounded-full px-2 text-xs leading-5"
                               :class="[
                                 statusColor(bet_fixture.status, 'label'),
                               ]"
@@ -372,13 +213,7 @@
                           </span>
                           <span
                             v-else
-                            class="
-                              px-2
-                              inline-flex
-                              text-xs
-                              leading-5
-                              rounded-full
-                            "
+                            class="inline-flex rounded-full px-2 text-xs leading-5"
                             :class="[statusColor(bet_fixture.status, 'label')]"
                           >
                             {{ bet_fixture.status }}
@@ -387,18 +222,7 @@
                       </span>
                       <select
                         @focusout="handleFocusOut"
-                        class="
-                          block
-                          pl-3
-                          py-0.5
-                          text-base
-                          border-gray-300
-                          focus:outline-none
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          sm:text-sm
-                          rounded-md
-                        "
+                        class="block rounded-md border-gray-300 py-0.5 pl-3 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         :class="{
                           'w-full sm:w-24 sm:-mr-24':
                             activeKeyBet == betKey &&
@@ -430,16 +254,7 @@
           </table>
           <div
             v-if="bets.data.length == 0"
-            class="
-              bg-white
-              col-span-1
-              px-6
-              py-4
-              whitespace-nowrap
-              text-sm
-              font-medium
-              text-gray-900 text-center
-            "
+            class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900"
           >
             No results
           </div>

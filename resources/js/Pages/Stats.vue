@@ -1,69 +1,49 @@
 <template>
 
   <Head :title="title" />
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-    <div class="
-        px-4
-        leading-4
-        text-center
-        bg-white
-        p-4
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      ">
+  <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="w-full rounded-md bg-white p-4 px-4 text-center leading-4 shadow sm:overflow-hidden">
       <div>
-        <div class="flex flex-col mb-4">
+        <div class="mb-4 flex flex-col">
           <span>ROI</span>
           <span class="text-xl font-bold">{{ generalStats.roi }}%</span>
         </div>
       </div>
       <div>
         <div class="flex flex-row">
-          <div class="flex-1 flex flex-col justify-between">
+          <div class="flex flex-1 flex-col justify-between">
             <span class="mb-2">Bets</span>
             <span class="font-bold">{{ generalStats.bets }}</span>
           </div>
-          <div class="flex-1 flex flex-col justify-between">
+          <div class="flex flex-1 flex-col justify-between">
             <span class="mb-2">Total stake</span>
             <span class="font-bold">{{ generalStats.totalStake }}</span>
           </div>
-          <div class="flex-1 flex flex-col justify-between">
+          <div class="flex flex-1 flex-col justify-between">
             <span class="mb-2">Win rate</span>
             <span class="font-bold">{{ generalStats.winRate }}%</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="
-        px-4
-        leading-4
-        text-center
-        bg-white
-        p-4
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      ">
+    <div class="w-full rounded-md bg-white p-4 px-4 text-center leading-4 shadow sm:overflow-hidden">
       <div>
-        <div class="flex flex-col mb-4">
+        <div class="mb-4 flex flex-col">
           <span>Profit</span>
           <span class="text-xl font-bold">{{ generalStats.profit }} units</span>
         </div>
       </div>
       <div>
         <div class="flex flex-row">
-          <div class="flex-1 flex flex-col justify-between">
+          <div class="flex flex-1 flex-col justify-between">
             <span class="mb-2">Avg stake</span>
             <span class="font-bold">{{ generalStats.avgStake }}</span>
           </div>
-          <div class="flex-1 flex flex-col justify-between">
+          <div class="flex flex-1 flex-col justify-between">
             <span class="mb-2">Avg odds</span>
             <span class="font-bold">{{ generalStats.avgOdds }}</span>
           </div>
-          <div class="flex-1 flex flex-col justify-between">
+          <div class="flex flex-1 flex-col justify-between">
             <span class="mb-2">Avg odds/stake</span>
             <span class="font-bold">{{ generalStats.avgOddsStake }}</span>
           </div>
@@ -75,42 +55,19 @@
   <active-filters :prop-filters="filters" :filter-route="filterRoute" />
 
   <div class="flex flex-col items-center">
-    <div class="sm:hidden w-full mb-2">
+    <div class="mb-2 w-full sm:hidden">
       <label for="tabs" class="sr-only">Select a tab</label>
-      <select id="tabs" name="tabs" @change="onDropdownTabChange" class="
-          capitalize
-          block
-          w-full
-          pl-3
-          pr-10
-          py-2
-          text-base
-          border-gray-300
-          focus:outline-none
-          focus:ring-indigo-500
-          focus:border-indigo-500
-          sm:text-sm
-          rounded-md
-        ">
+      <select id="tabs" name="tabs" @change="onDropdownTabChange" class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base capitalize focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
         <option v-for="tab in generatedTabs" :key="tab.option" class="capitalize" :selected="tab.current">
           {{ tab.option }}
         </option>
       </select>
     </div>
-    <div class="
-        mb-4
-        leading-4
-        text-center
-        bg-white
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-      ">
+    <div class="mb-4 w-full rounded-md bg-white text-center leading-4 shadow sm:overflow-hidden">
       <!-- md:w-2/3 -->
       <div class="hidden sm:block">
         <div class="border-b border-gray-200">
-          <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
+          <nav class="-mb-px flex justify-center space-x-8" aria-label="Tabs">
             <span v-for="tab in generatedTabs" :key="tab.option" class="cursor-pointer capitalize" :class="[
               tab.current
                 ? 'border-indigo-500 text-indigo-600'
@@ -129,28 +86,19 @@
         'grid-cols-1': !currentTable.head,
         'grid-cols-1 sm:grid-cols-2': currentTable.head,
       }">
-        <div class="w-full h-full flex-col">
+        <div class="h-full w-full flex-col">
 
 
           <Line :chart-data="currentGraph.data"
             :chart-options='{ "maintainAspectRatio": false, "interaction": { "mode": "index", "intersect": "true" }, "animation": { "duration": "0" } }'
             :height="400" />
         </div>
-        <div class="overflow-x-auto w-full" v-if="currentTable.head">
-          <div class="py-2 align-middle inline-block min-w-full">
-            <div class="shadow overflow-hidden border-b border-gray-200 rounded-md">
+        <div class="w-full overflow-x-auto" v-if="currentTable.head">
+          <div class="inline-block min-w-full py-2 align-middle">
+            <div class="overflow-hidden rounded-md border-b border-gray-200 shadow">
               <table class="min-w-full divide-y divide-gray-200" v-if="!loading">
                 <thead class="bg-gray-50">
-                  <th scope="col" class="
-                      t-header
-                      px-6
-                      py-3
-                      text-left text-xs
-                      font-medium
-                      text-gray-500
-                      uppercase
-                      tracking-wider
-                    " :key="keys" v-for="(values, keys) in currentTable.head" :class="{
+                  <th scope="col" class="t-header px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500" :key="keys" v-for="(values, keys) in currentTable.head" :class="{
                       'arrow-down':
                         sort.sortType == values && sort.sortOrder == 'DESC',
                       'arrow-up':
@@ -162,15 +110,7 @@
                 <tbody>
                   <tr v-for="(values, key) in currentTable.body" :key="key"
                     :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                    <td class="
-                        first:font-bold
-                        px-6
-                        py-2
-                        whitespace-nowrap
-                        text-sm
-                        font-medium
-                        text-gray-900 text-left
-                      " v-for="(values, key) in values" :key="key">
+                    <td class="whitespace-nowrap px-6 py-2 text-left text-sm font-medium text-gray-900 first:font-bold" v-for="(values, key) in values" :key="key">
                       {{ values.value }}{{ values.type }}
                     </td>
                   </tr>
@@ -180,16 +120,7 @@
   currentTable &&
   currentTable.body &&
   currentTable.body.length == 0
-              " class="
-                  bg-white
-                  col-span-1
-                  px-6
-                  py-4
-                  whitespace-nowrap
-                  text-sm
-                  font-medium
-                  text-gray-900 text-center
-                ">
+              " class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900">
                 No results
               </div>
             </div>

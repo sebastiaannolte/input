@@ -1,18 +1,7 @@
 <template>
   <div class="flex justify-center">
     <div
-      class="
-        px-4
-        mb-4
-        leading-4
-        bg-white
-        p-4
-        shadow
-        rounded-md
-        sm:overflow-hidden
-        w-full
-        sm:w-2/3
-      "
+      class="mb-4 w-full rounded-md bg-white p-4 px-4 leading-4 shadow sm:w-2/3 sm:overflow-hidden"
     >
       <breeze-validation-errors class="mb-4" />
 
@@ -78,10 +67,10 @@
           />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="mt-4 flex items-center justify-end">
           <inertia-link
             :href="route('login')"
-            class="underline text-sm text-gray-600 hover:text-gray-900"
+            class="text-sm text-gray-600 underline hover:text-gray-900"
           >
             Already registered?
           </inertia-link>

@@ -5,7 +5,7 @@
       <div>
         <h2
           id="payment-details-heading"
-          class="text-xl leading-6 font-medium text-gray-900 font-bold"
+          class="text-xl font-medium font-bold leading-6 text-gray-900"
         >
           Profile
         </h2>
@@ -38,30 +38,12 @@
         </div>
       </div>
     </div>
-    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 flex justify-between">
+    <div class="flex justify-between bg-gray-50 px-4 py-3 text-right sm:px-6">
       <inertia-link
         href="/logout"
         method="post"
         as="button"
-        class="
-          mr-2
-          bg-white
-          border border-gray-300
-          rounded-md
-          shadow-sm
-          py-2
-          px-4
-          inline-flex
-          justify-center
-          text-sm
-          font-medium
-          text-black
-          hover:bg-gray-100
-          focus:outline-none
-          focus:ring-2
-          focus:ring-offset-2
-          focus:ring-gray-300
-        "
+        class="mr-2 inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
       >
         Logout
       </inertia-link>

@@ -5,7 +5,7 @@
       class="mb-4 leading-4 bg-white p-10 shadow rounded-md sm:overflow-hidden"
     >
       <breeze-validation-errors class="mb-4" />
-      <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+      <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
         {{ status }}
       </div>
       <h2 class="mb-6 text-lg leading-9 text-gray-900">
@@ -30,7 +30,7 @@
             <inertia-link
               v-if="canResetPassword"
               :href="route('password.request')"
-              class="underline text-sm text-gray-600 hover:text-gray-900"
+              class="text-sm text-gray-600 underline hover:text-gray-900"
             >
               Forgot your password?
             </inertia-link>
@@ -45,14 +45,14 @@
           />
         </div>
 
-        <div class="block mt-4">
+        <div class="mt-4 block">
           <label class="flex items-center">
             <breeze-checkbox name="remember" v-model:checked="form.remember" />
             <span class="ml-2 text-sm text-gray-600">Remember me</span>
           </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="mt-4 flex items-center justify-end">
           <Button
             class="w-full"
             :class="{ 'opacity-25': form.processing }"

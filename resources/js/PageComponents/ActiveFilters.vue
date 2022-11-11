@@ -2,46 +2,19 @@
   <Disclosure
     as="section"
     aria-labelledby="filter-heading"
-    class="
-      relative
-      border-t border-b border-gray-200
-      grid
-      items-center
-      bg-white
-      mb-4
-      shadow
-      rounded-md sm:overflow-hidden
-      z-0
-    "
+    class="relative z-0 mb-4 grid items-center rounded-md border-t border-b border-gray-200 bg-white shadow sm:overflow-hidden"
   >
     <h2 id="filter-heading" class="sr-only">Filters</h2>
     <div class="relative col-start-1 row-start-1 py-4">
       <div
-        class="
-          max-w-7xl
-          mx-auto
-          flex
-          space-x-6
-          divide-x divide-gray-200
-          text-sm
-          px-4
-          sm:px-6
-          lg:px-8
-        "
+        class="mx-auto flex max-w-7xl space-x-6 divide-x divide-gray-200 px-4 text-sm sm:px-6 lg:px-8"
       >
         <div>
           <DisclosureButton
-            class="group text-gray-700 font-medium flex items-center"
+            class="group flex items-center font-medium text-gray-700"
           >
             <FilterIcon
-              class="
-                flex-none
-                w-5
-                h-5
-                mr-2
-                text-gray-400
-                group-hover:text-gray-500
-              "
+              class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500"
               aria-hidden="true"
             />
             {{ Object.values(activeFilters).length }} Filters
@@ -115,32 +88,11 @@
               </div>
               <div class="col-span-4 sm:col-span-2">
                 <label
-                  class="
-                    block
-                    text-sm
-                    font-medium
-                    text-gray-700
-                    dark:text-gray-400
-                  "
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-400"
                   >Sport:</label
                 >
                 <select
-                  class="
-                    pl-3
-                    pr-10
-                    py-2
-                    block
-                    pl-3
-                    py-2
-                    text-base
-                    border-gray-300
-                    focus:outline-none
-                    focus:ring-indigo-500
-                    focus:border-indigo-500
-                    sm:text-sm
-                    rounded-md
-                    w-full
-                  "
+                  class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   v-model="filters.sport.value"
                 >
                   <option
@@ -162,32 +114,11 @@
               </div>
               <div class="col-span-4 sm:col-span-2">
                 <label
-                  class="
-                    block
-                    text-sm
-                    font-medium
-                    text-gray-700
-                    dark:text-gray-400
-                  "
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-400"
                   >Status:</label
                 >
                 <select
-                  class="
-                    pl-3
-                    pr-10
-                    py-2
-                    block
-                    pl-3
-                    py-2
-                    text-base
-                    border-gray-300
-                    focus:outline-none
-                    focus:ring-indigo-500
-                    focus:border-indigo-500
-                    sm:text-sm
-                    rounded-md
-                    w-full
-                  "
+                  class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   v-model="filters.status.value"
                 >
                   <option
@@ -216,46 +147,27 @@
       </form>
     </DisclosurePanel>
     <div class="col-start-1 row-start-1 py-4">
-      <div class="flex justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
         <Menu as="div" class="relative inline-block">
           <div class="flex">
             <MenuButton
               @click.prevent="filter()"
-              class="
-                group
-                inline-flex
-                justify-center
-                text-sm
-                font-medium
-                text-gray-700
-                hover:text-gray-900
-              "
+              class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
             >
               Filter
             </MenuButton>
           </div>
 
           <transition
-            enter-active-class="transition ease-out duration-100"
-            enter-from-class="transform opacity-0 scale-95"
-            enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-75"
-            leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95"
+            enter-active-class="transition duration-100 ease-out"
+            enter-from-class="scale-95 transform opacity-0"
+            enter-to-class="scale-100 transform opacity-100"
+            leave-active-class="transition duration-75 ease-in"
+            leave-from-class="scale-100 transform opacity-100"
+            leave-to-class="scale-95 transform opacity-0"
           >
             <MenuItems
-              class="
-                origin-top-right
-                absolute
-                right-0
-                mt-2
-                w-40
-                rounded-md
-                shadow-2xl
-                bg-white
-                ring-1 ring-black ring-opacity-5
-                focus:outline-none
-              "
+              class="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
               <div class="py-1">
                 <MenuItem

@@ -1,60 +1,22 @@
 <template>
   <Head :title="bet.event" />
   <div
-    class="
-      px-4
-      mb-4
-      w-full
-      leading-4
-      text-right
-      sm:text-center
-      bg-white
-      p-4
-      shadow
-      rounded-md
-      sm:overflow-hidden
-    "
+    class="mb-4 w-full rounded-md bg-white p-4 px-4 text-right leading-4 shadow sm:overflow-hidden sm:text-center"
   >
-    <div class="sm:flex pb-5">
+    <div class="pb-5 sm:flex">
       <div class="hidden sm:block">
         <inertia-link
           :href="backUrl"
-          class="
-            bg-white
-            border border-gray-300
-            rounded-md
-            shadow-sm
-            py-2
-            px-4
-            inline-flex
-            justify-center
-            text-sm
-            font-medium
-            text-black
-            hover:bg-gray-100
-            focus:outline-none
-            focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
-            flex
-            items-center
-          "
+          class="flex inline-flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
         >
-          <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" /> All
+          <ArrowNarrowLeftIcon class="mr-1.5 h-4 w-4" aria-hidden="true" /> All
           bets
         </inertia-link>
       </div>
-      <div class="flex sm:flex-row flex-grow flex-col-reverse">
+      <div class="flex flex-grow flex-col-reverse sm:flex-row">
         <h2
           id="payment-details-heading"
-          class="
-            text-2xl
-            leading-6
-            font-medium
-            text-gray-900
-            font-bold
-            text-left
-            p-2
-            flex-1
-          "
+          class="flex-1 p-2 text-left text-2xl font-medium font-bold leading-6 text-gray-900"
         >
           {{bet.event}}
         </h2>
@@ -62,72 +24,22 @@
           <div>
             <inertia-link
               :href="backUrl"
-              class="
-                block
-                sm:hidden
-                bg-white
-                border border-gray-300
-                rounded-md
-                shadow-sm
-                py-2
-                px-4
-                inline-flex
-                justify-center
-                text-sm
-                font-medium
-                text-black
-                hover:bg-gray-100
-                focus:outline-none
-                focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
-                flex
-                items-center
-              "
+              class="block flex inline-flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 sm:hidden"
             >
-              <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" />
+              <ArrowNarrowLeftIcon class="mr-1.5 h-4 w-4" aria-hidden="true" />
               All bets
             </inertia-link>
           </div>
           <div>
             <button
               @click="destroy"
-              class="
-                mr-2
-                bg-white
-                border border-gray-300
-                rounded-md
-                shadow-sm
-                py-2
-                px-4
-                inline-flex
-                justify-center
-                text-sm
-                font-medium
-                text-black
-                hover:bg-gray-100
-                focus:outline-none
-                focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
-              "
+              class="mr-2 inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
             >
               Delete
             </button>
             <button
               @click="editBet"
-              class="
-                bg-red-500
-                border border-transparent
-                rounded-md
-                shadow-sm
-                py-2
-                px-4
-                inline-flex
-                justify-center
-                text-sm
-                font-medium
-                text-white
-                hover:bg-red-600
-                focus:outline-none
-                focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
-              "
+              class="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
             >
               Edit
             </button>
@@ -138,73 +50,73 @@
     <div class="grid grid-cols-8 gap-4 text-left">
       <div class="col-span-8 sm:col-span-4">
         <div class="p-2">Event</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{bet.event}}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Selection</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ bet.selection }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Category</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ categoryName }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Bookie</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ bet.bookie }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Stake</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ bet.stake }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Odds</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ bet.odds }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Result</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ betResult }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Date</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ moment(bet.date).format("YYYY-MM-DD HH:mm") }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Tipster</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ bet.tipster }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Status</div>
-        <div class="p-2 mb-2 font-bold">
+        <div class="mb-2 p-2 font-bold">
           {{ bet.status }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Type</div>
-        <div class="p-2 mb-2 font-bold capitalize">
+        <div class="mb-2 p-2 font-bold capitalize">
           {{ bet.type }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
         <div class="p-2">Placed on</div>
-        <div class="p-2 mb-2 font-bold capitalize">
+        <div class="mb-2 p-2 font-bold capitalize">
           {{ moment(bet.created_at).format("YYYY-MM-DD HH:mm") }}
         </div>
       </div>

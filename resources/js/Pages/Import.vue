@@ -2,52 +2,28 @@
   <Head title="Import" />
   <div class="flex flex-col">
     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
         <div
-          class="shadow overflow-hidden border-b border-gray-200 rounded-md"
+          class="overflow-hidden rounded-md border-b border-gray-200 shadow"
         >
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
                 <th
                   scope="col"
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
                   Event
                 </th>
                 <th
                   scope="col"
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
                   Odds
                 </th>
                 <th
                   scope="col"
-                  class="
-                    px-6
-                    py-3
-                    text-left text-xs
-                    font-medium
-                    text-gray-500
-                    uppercase
-                    tracking-wider
-                  "
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
                   Stake
                 </th>
@@ -63,50 +39,23 @@
                 :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
               >
                 <td
-                  class="
-                    px-6
-                    py-4
-                    whitespace-nowrap
-                    text-sm
-                    font-medium
-                    text-gray-900
-                  "
+                  class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900"
                 >
                   {{ eventsToString(item.data.games) }}
                 </td>
 
                 <td
-                  class="
-                    px-6
-                    py-4
-                    whitespace-nowrap
-                    text-sm
-                    font-medium
-                    text-gray-900
-                  "
+                  class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900"
                 >
                   {{ item.data.odds }}
                 </td>
                 <td
-                  class="
-                    px-6
-                    py-4
-                    whitespace-nowrap
-                    text-sm
-                    font-medium
-                    text-gray-900
-                  "
+                  class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900"
                 >
                   {{ item.data.stake }}
                 </td>
                 <td
-                  class="
-                    px-6
-                    py-4
-                    whitespace-nowrap
-                    text-right text-sm
-                    font-medium
-                  "
+                  class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium"
                 >
                   <inertia-link
                     :href="toUrl(item)"
