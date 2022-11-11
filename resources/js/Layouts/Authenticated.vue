@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:items-center">
-          <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <div class="hidden sm:ml-6 sm:flex sm:space-x-5">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
             <inertia-link
               v-for="(item, key) in menu" :key="key" :href="'/' + item.url"
@@ -39,7 +39,7 @@
           </div>
 
           <!-- Profile dropdown -->
-          <Menu v-if="user" as="div" class="ml-8 relative mr-4">
+          <Menu v-if="user" as="div" class="ml-5 relative mr-4">
             <div>
               <MenuButton
                 class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
@@ -93,7 +93,7 @@
 
             <inertia-link
               type="button" :href="route('import.index')"
-              class="relative -mr-px inline-flex items-center rounded--md border border-gray-300 bg-white justify-center py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-10"
+              class="relative -mr-px inline-flex items-center rounded-l-md border border-gray-300 bg-white justify-center py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-10"
             >
               {{ $page.props.importCounter }}</inertia-link>
             <button
