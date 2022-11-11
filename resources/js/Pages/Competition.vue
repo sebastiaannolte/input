@@ -148,11 +148,11 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import pickBy from "lodash/pickBy";
-import TableFilterHeader from "@/PageComponents/TableFilterHeader";
+import TableFilterHeader from "@/PageComponents/TableFilterHeader.vue";
 import { Inertia } from "@inertiajs/inertia";
-import Pagination from "@/PageComponents/Pagination";
+import Pagination from "@/PageComponents/Pagination.vue";
 
 export default {
   layout: Layout,

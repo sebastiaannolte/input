@@ -213,7 +213,7 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import { ArrowNarrowLeftIcon } from "@heroicons/vue/outline";
 import moment from "moment";
 

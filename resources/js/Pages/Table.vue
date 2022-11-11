@@ -18,10 +18,10 @@
 
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import Bets from "@/PageComponents/Bets";
-import ShowFilterButton from "@/Components/ShowFilterButton";
-import TableFilterHeader from "@/PageComponents/TableFilterHeader";
+import Layout from "@/Layouts/Authenticated.vue";
+import Bets from "@/PageComponents/Bets.vue";
+import ShowFilterButton from "@/Components/ShowFilterButton.vue";
+import TableFilterHeader from "@/PageComponents/TableFilterHeader.vue";
 
 export default {
   layout: Layout,

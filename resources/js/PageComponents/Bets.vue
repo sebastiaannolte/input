@@ -451,13 +451,13 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import { Inertia } from "@inertiajs/inertia";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-import Pagination from "@/PageComponents/Pagination";
-import ActiveFilters from "@/PageComponents/ActiveFilters";
-import ShowFilterButton from "@/Components/ShowFilterButton";
+import Pagination from "@/PageComponents/Pagination.vue";
+import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
+import ShowFilterButton from "@/Components/ShowFilterButton.vue";
 import moment from "moment";
 import Button from "@/Components/Button.vue";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/outline";

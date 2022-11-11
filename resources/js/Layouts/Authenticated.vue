@@ -183,9 +183,9 @@ import {
 } from '@heroicons/vue/outline'
 import { usePage } from '@inertiajs/inertia-vue3'
 import BottomMenu from '@/Components/BottomMenu.vue'
-import Logo from '@/Components/Logo'
-import FlashMessages from '@/Components/FlashMessages'
-import BetFormSlideOver from '@/PageComponents/BetFormSlideOver'
+import Logo from '@/Components/Logo.vue'
+import FlashMessages from '@/Components/FlashMessages.vue'
+import BetFormSlideOver from '@/PageComponents/BetFormSlideOver.vue'
 
 defineProps({
   errors: Object,

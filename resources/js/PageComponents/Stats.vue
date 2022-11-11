@@ -58,9 +58,7 @@
         </div>
         <div class="flex flex-col flex-1">
           <span>Won bets</span>
-          <span class="pt-3 font-bold"
-            >{{ stats.wonbets }} ({{ stats.winprecentage }}%)</span
-          >
+          <span class="pt-3 font-bold">{{ stats.wonbets }} ({{ stats.winprecentage }}%)</span>
         </div>
       </div>
     </div>
@@ -70,8 +68,8 @@
 
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import moment from "moment";
+import Layout from '@/Layouts/Authenticated.vue'
+import moment from 'moment'
 
 export default {
   layout: Layout,
@@ -81,17 +79,17 @@ export default {
     upcommingBets: Object,
   },
   data() {
-    return {};
+    return {}
   },
 
   created() {
-    this.moment = moment;
+    this.moment = moment
   },
 
   methods: {
     scrollToElement(id) {
-      this.emitter.emit("event:scroll", id);
+      this.emitter.emit('event:scroll', id)
     },
   },
-};
+}
 </script>
