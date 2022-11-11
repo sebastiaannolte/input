@@ -20,7 +20,7 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
-import Logo from "@/Components/Logo";
+import Logo from "@/Components/Logo.vue";
 
 export default {
   components: {

@@ -152,11 +152,11 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import TextInput from "@/Components/TextInput.vue";
-import LoadingButton from "@/Components/LoadingButton";
-import Settings from "@/Pages/Settings";
+import LoadingButton from "@/Components/LoadingButton.vue";
+import Settings from "@/Pages/Settings.vue";
 import moment from "moment";
 import Multiselect from "@vueform/multiselect";
 import SportIcon from "@/Components/SportIcon.vue";

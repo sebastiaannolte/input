@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button";
-import Layout from "@/Layouts/Guest";
+import BreezeButton from "@/Components/Button.vue";
+import Layout from "@/Layouts/Guest.vue";
 
 export default {
   layout: Layout,

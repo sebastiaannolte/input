@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 
 export default {
   layout: [Layout],

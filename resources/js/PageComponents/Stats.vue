@@ -70,7 +70,7 @@
 
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import moment from "moment";
 
 export default {

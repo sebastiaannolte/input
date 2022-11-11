@@ -87,10 +87,10 @@ export default {
 </script>
 
 <script setup>
-import Layout from '@/Layouts/Authenticated'
+import Layout from '@/Layouts/Authenticated.vue'
 import TextInput from '@/Components/TextInput.vue'
-import LoadingButton from '@/Components/LoadingButton'
-import Settings from '@/Pages/Settings'
+import LoadingButton from '@/Components/LoadingButton.vue'
+import Settings from '@/Pages/Settings.vue'
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 
 defineProps({
