@@ -152,14 +152,12 @@ import Layout from "@/Layouts/Authenticated";
 import pickBy from "lodash/pickBy";
 import TableFilterHeader from "@/PageComponents/TableFilterHeader";
 import { Inertia } from "@inertiajs/inertia";
-import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import Pagination from "@/PageComponents/Pagination";
 
 export default {
   layout: Layout,
   components: {
     TableFilterHeader,
-    FiltersSlideOver,
     Pagination,
   },
   props: {

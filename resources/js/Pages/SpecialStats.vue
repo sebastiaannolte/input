@@ -2,7 +2,6 @@
   <Head :title="title" />
   <table-filter-header title="Special stats" />
   <active-filters :prop-filters="filters" :filter-route="filterRoute"  />
-  <!-- <filters-slide-over :prop-filters="filters" :filter-route="filterRoute" /> -->
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
       <label for="tabs" class="sr-only">Select a tab</label>
@@ -172,7 +171,6 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import ActiveFilters from "@/PageComponents/ActiveFilters";
-import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import pickBy from "lodash/pickBy";
 import TableFilterHeader from "@/PageComponents/TableFilterHeader";
 import Loading from "vue-loading-overlay";
@@ -186,7 +184,6 @@ export default {
     TableFilterHeader,
     Loading,
     Pagination,
-    FiltersSlideOver,
     ActiveFilters,
   },
   props: {
@@ -194,6 +191,7 @@ export default {
     tabs: Array,
     type: String,
     sort: Object,
+    stats: Object,
   },
 
   data() {
@@ -221,35 +219,28 @@ export default {
 
     this.createTabs();
     this.emitter.on("filter:submit", () => {
-      this.getStats();
+      // this.getStats();
     });
-    this.getStats();
+
+    this.currentTable = this.stats.table;
+    this.pagination.totalResults = this.stats.totalResults;
+    this.pagination.perPage = this.stats.perPage;
     this.setPageTitle();
   },
 
   methods: {
     getStats() {
-      var pageNumber = location.search.split("page=")[1];
-      var key = this.generatedTabs[0].option;
-      if (this.type) {
-        key = this.type;
-      }
-      this.loading = true;
-      this.$http
-        .post(this.route("api.special", this.$page.props.userInfo.user.username), {
-          key: key,
-          filters: this.filters,
+      Inertia.get(
+        this.route("special", this.$page.props.userInfo.user.username),
+        pickBy({
+          type: this.currentTab.option,
           sort: this.sort,
-          page: pageNumber,
-        })
-        .then((response) => {
-          if (response.data) {
-            this.currentTable = response.data.table;
-            this.pagination.totalResults = response.data.totalResults;
-            this.pagination.perPage = response.data.perPage;
-            this.loading = false;
-          }
-        });
+          filters: this.filters,
+        }),
+        {
+          only: ["type", "sort", "filters", "stats"],
+        }
+      );
     },
 
     goTo(route, id) {
@@ -283,9 +274,11 @@ export default {
           filters: null, // reset filters if tab changes
         }),
         {
-          only: ["type", "filters"],
+          preserveScroll: true,
+          only: ["type", "filters", "stats"],
         }
       );
+
     },
 
     createTabs() {
@@ -302,15 +295,6 @@ export default {
           this.currentTab = localTab;
         }
         this.generatedTabs.push(localTab);
-      }
-
-      if (!this.type) {
-        this.currentTab = this.generatedTabs[0];
-        this.generatedTabs[0].current = true;
-      } else {
-        this.generatedTabs.find(
-          (tab) => tab.option == this.type
-        ).current = true;
       }
     },
 
@@ -334,17 +318,7 @@ export default {
       }
       this.sort.sortType = tableHeader;
 
-      Inertia.get(
-        this.route("special", this.$page.props.userInfo.user.username),
-        pickBy({
-          type: this.currentTab.option,
-          sort: this.sort,
-          filters: this.filters,
-        }),
-        {
-          only: ["type", "sort", "filters"],
-        }
-      );
+      this.getStats();
     },
   },
 };

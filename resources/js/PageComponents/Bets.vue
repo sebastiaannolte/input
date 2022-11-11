@@ -456,7 +456,6 @@ import { Inertia } from "@inertiajs/inertia";
 import TextInput from "@/Components/TextInput.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import Pagination from "@/PageComponents/Pagination";
-import FiltersSlideOver from "@/PageComponents/FiltersSlideOver";
 import ActiveFilters from "@/PageComponents/ActiveFilters";
 import ShowFilterButton from "@/Components/ShowFilterButton";
 import moment from "moment";
@@ -470,7 +469,6 @@ export default {
     TextInput,
     TextInputWithAddOn,
     Pagination,
-    FiltersSlideOver,
     ActiveFilters,
     ShowFilterButton,
     Button,

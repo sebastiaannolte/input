@@ -13,21 +13,28 @@ use Inertia\Inertia;
 
 class StatsController extends Controller
 {
-    public function index($username)
+    public function index(Request $request, $username)
     {
         $statsHelper = new StatsHelper;
         $userId = User::where('username', $username)->first()->id;
         $filters = FacadesRequest::get('filters');
-        $type = FacadesRequest::get('type');
+        $tabs = $statsHelper->getStatsTabs();
+        $type = FacadesRequest::get('type') ?? $tabs[0];
         $sort = FacadesRequest::get('sort') ?: [
             'sortType' => "Bets",
             'sortOrder' => "DESC"
         ];
+
+        $request->merge([
+            'type' => $type,
+            'userId' => $userId,
+            'sort' => $sort
+        ]);
         
         $bets = Bet::user($userId)->filters($filters);
         $betStats = $bets->clone();
 
-        $tabs = $statsHelper->getStatsTabs();
+
         $betStats = $betStats->clone()->select((new StatsHelper)->statsSelect(), (new StatsHelper)->advancedStats())->whereNotNull('result')->first();
 
         return Inertia::render('Stats', [
@@ -35,7 +42,8 @@ class StatsController extends Controller
             'filters' => $filters,
             'type' => $type,
             'sort' => $sort,
-            'stats' => [
+            'stats' => $this->stats($username, $request),
+            'generalStats' => [
                 'totalBets' => $betStats->bets,
                 'wonbets' => $betStats->won,
                 'units' => round($betStats->profit, 2),
@@ -89,11 +97,10 @@ class StatsController extends Controller
 
     public function stats($username, Request $request)
     {
-        $userId = User::where('username', $username)->first()->id;
-        $key = $request->get('key');
+        $userId = $request->get('userId');
+        $type = $request->get('type');
         $filters = $request->get('filters');
-
-        $sort = FacadesRequest::get('sort');
+        $sort = $request->get('sort');
 
         $start = now()->subMonths(5)->startOfMonth()->format('Y-m-d H:i:s');
         $end = now()->format('Y-m-d H:i:s');
@@ -124,6 +131,6 @@ class StatsController extends Controller
         $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);
         
         $stats = new Stats($userId, $filters, $sort);
-        return $stats->renderStats($key);
+        return $stats->renderStats($type)[$type];
     }
 }
