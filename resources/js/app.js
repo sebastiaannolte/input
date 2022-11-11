@@ -8,6 +8,9 @@ import VueAxios from 'vue-axios'
 import mitt from 'mitt';
 import Toaster from "@meforma/vue-toaster";
 const emitter = mitt();
+import { Chart, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale } from 'chart.js';
+Chart.register(LineController, LineElement, PointElement, LinearScale, Title, CategoryScale);
+
 const regeneratorRuntime = require("regenerator-runtime");
 const el = document.getElementById('app');
 
