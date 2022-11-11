@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import { FilterIcon } from "@heroicons/vue/outline";
 
 export default {

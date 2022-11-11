@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Layout from '@/Layouts/Authenticated'
+import Layout from '@/Layouts/Authenticated.vue'
 import Bets from '@/PageComponents/Bets.vue'
 import Stats from '@/PageComponents/Stats.vue'
 

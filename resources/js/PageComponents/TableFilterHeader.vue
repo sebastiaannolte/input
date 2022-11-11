@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import ShowFilterButton from "@/Components/ShowFilterButton";
+import Layout from "@/Layouts/Authenticated.vue";
+import ShowFilterButton from "@/Components/ShowFilterButton.vue";
 
 export default {
   layout: Layout,

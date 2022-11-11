@@ -67,11 +67,11 @@
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button";
-import Layout from "@/Layouts/Guest";
-import BreezeInput from "@/Components/Input";
-import BreezeLabel from "@/Components/Label";
-import BreezeValidationErrors from "@/Components/ValidationErrors";
+import BreezeButton from "@/Components/Button.vue";
+import Layout from "@/Layouts/Guest.vue";
+import BreezeInput from "@/Components/Input.vue";
+import BreezeLabel from "@/Components/Label.vue";
+import BreezeValidationErrors from "@/Components/ValidationErrors.vue";
 import Button from "@/Components/Button.vue";
 
 export default {
