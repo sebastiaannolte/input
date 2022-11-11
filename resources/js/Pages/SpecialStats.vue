@@ -169,13 +169,13 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import ActiveFilters from "@/PageComponents/ActiveFilters";
+import Layout from "@/Layouts/Authenticated.vue";
+import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
 import pickBy from "lodash/pickBy";
-import TableFilterHeader from "@/PageComponents/TableFilterHeader";
+import TableFilterHeader from "@/PageComponents/TableFilterHeader.vue";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
-import Pagination from "@/PageComponents/Pagination";
+import Pagination from "@/PageComponents/Pagination.vue";
 import { Inertia } from "@inertiajs/inertia";
 
 export default {

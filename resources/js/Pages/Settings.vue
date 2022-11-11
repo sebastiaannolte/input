@@ -64,10 +64,10 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import TextInput from "@/Components/TextInput.vue";
-import LoadingButton from "@/Components/LoadingButton";
+import LoadingButton from "@/Components/LoadingButton.vue";
 import Multiselect from "@vueform/multiselect";
 import { Inertia } from "@inertiajs/inertia";
 import pickBy from "lodash/pickBy";

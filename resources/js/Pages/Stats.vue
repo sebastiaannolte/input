@@ -201,11 +201,11 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
+import Layout from "@/Layouts/Authenticated.vue";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import pickBy from "lodash/pickBy";
-import ShowFilterButton from "@/Components/ShowFilterButton";
+import ShowFilterButton from "@/Components/ShowFilterButton.vue";
 import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { Line } from 'vue-chartjs'

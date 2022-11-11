@@ -133,7 +133,7 @@ import EventsV2 from "@/PageComponents/EventsV2.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AutocompleteInput from "@/Components/AutocompleteInput.vue";
 import LoadingButton from "@/Components/LoadingButton.vue";
-import Dropdown from "@/Components/Dropdown";
+import Dropdown from "@/Components/Dropdown.vue";
 import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
 import moment from "moment";
 import Multiselect from "@vueform/multiselect";
