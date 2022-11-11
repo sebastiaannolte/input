@@ -15,7 +15,7 @@ const regeneratorRuntime = require('regenerator-runtime')
 const el = document.getElementById('app')
 
 createInertiaApp({
-  title: title => `${title} | ${process.env.MIX_APP_NAME}`,
+  title: title => `${title} | ${import.meta.env.VITE_APP_NAME}`,
   resolve: (name) => require(`./Pages/${name}`),
   setup({ el, app, props, plugin }) {
     const apps = createApp({ render: () => h(app, props) })
