@@ -1,8 +1,6 @@
 <template>
   <flash-messages />
-  <inertia-link
-    :href="this.route('import.index')"
-    class="
+  <inertia-link :href="this.route('import.index')" class="
       hidden
       md:block
       fixed
@@ -22,14 +20,10 @@
       focus:outline-none
       z-10
       focus:ring-2 focus:ring-offset-2 focus:ring-green-500
-    "
-  >
-   <div class="w-6 h-6 flex justify-center">{{$page.props.importCounter}}</div>
+    ">
+    <div class="w-6 h-6 flex justify-center">{{ $page.props.importCounter }}</div>
   </inertia-link>
-  <button
-    type="button"
-    @click="openBet"
-    class="
+  <button type="button" @click="openBet" class="
       hidden
       md:block
       fixed
@@ -49,8 +43,7 @@
       focus:outline-none
       z-10
       focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-    "
-  >
+    ">
     <PlusIconOutline class="h-6 w-6" aria-hidden="true" />
   </button>
   <bet-form-slide-over :errors="errors" />
@@ -67,11 +60,7 @@
         <div class="hidden sm:ml-6 sm:flex sm:items-center">
           <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-            <inertia-link
-              v-for="(item, key) in menu"
-              :key="key"
-              :href="'/' + item.url"
-              class="
+            <inertia-link v-for="(item, key) in menu" :key="key" :href="'/' + item.url" class="
                 border-transparent
                 text-gray-500
                 hover:text-gray-700
@@ -82,20 +71,17 @@
                 border-b-2
                 text-sm
                 font-medium
-              "
-              :class="[
-                 url() == item.url ? 'border-indigo-500' : 'hover:border-gray-300',
-              ]"
-            >
+              " :class="[
+                url() == item.url ? 'border-indigo-500' : 'hover:border-gray-300',
+              ]">
               {{ item.name }}
             </inertia-link>
           </div>
 
           <!-- Profile dropdown -->
-          <Menu as="div" class="ml-8 relative" v-if="user">
+          <Menu as="div" class="ml-8 relative mr-4" v-if="user">
             <div>
-              <MenuButton
-                class="
+              <MenuButton class="
                   border-transparent
                   text-gray-500
                   hover:border-gray-300
@@ -107,22 +93,16 @@
                   border-b-2
                   text-sm
                   font-medium
-                "
-              >
+                ">
                 <span class="sr-only">Open user menu</span>
                 {{ user.name }}
               </MenuButton>
             </div>
-            <transition
-              enter-active-class="transition ease-out duration-200"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform opacity-100 scale-100"
-              leave-to-class="transform opacity-0 scale-95"
-            >
-              <MenuItems
-                class="
+            <transition enter-active-class="transition ease-out duration-200"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems class="
                   origin-top-right
                   absolute
                   right-0
@@ -135,45 +115,43 @@
                   ring-1 ring-black ring-opacity-5
                   focus:outline-none
                   z-10
-                "
-              >
+                ">
                 <MenuItem v-slot="{ active }">
-                  <inertia-link
-                    :href="route('profile.index', user.username)"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                    >Your Profile</inertia-link
-                  >
+                <inertia-link :href="route('profile.index', user.username)" :class="[
+                  active ? 'bg-gray-100' : '',
+                  'block px-4 py-2 text-sm text-gray-700',
+                ]">Your Profile</inertia-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <inertia-link
-                    :href="route('userSettings.index', user.username)"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                  >
-                    Settings
-                  </inertia-link>
+                <inertia-link :href="route('userSettings.index', user.username)" :class="[
+                  active ? 'bg-gray-100' : '',
+                  'block px-4 py-2 text-sm text-gray-700',
+                ]">
+                  Settings
+                </inertia-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <inertia-link
-                    href="/logout"
-                    method="post"
-                    as="button"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700 w-full flex justify-start',
-                    ]"
-                  >
-                    Sign out
-                  </inertia-link>
+                <inertia-link href="/logout" method="post" as="button" :class="[
+                  active ? 'bg-gray-100' : '',
+                  'block px-4 py-2 text-sm text-gray-700 w-full flex justify-start',
+                ]">
+                  Sign out
+                </inertia-link>
                 </MenuItem>
               </MenuItems>
             </transition>
           </Menu>
+
+          <span class="isolate inline-flex rounded-md shadow-sm">
+            <button type="button" @click="openBet"
+              class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <BookmarkIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
+              New
+            </button>
+            <inertia-link type="button" :href="this.route('import.index')"
+              class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white justify-center py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-10">
+              {{ $page.props.importCounter }}</inertia-link>
+          </span>
         </div>
       </div>
     </div>
@@ -181,16 +159,9 @@
     <DisclosurePanel class="sm:hidden">
       <div class="pt-2 pb-3 space-y-1">
         <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
-        <inertia-link
-          v-for="(item, key) in menu"
-          :key="key"
-          :href="'/' + item.url"
-          :class="{
-            'bg-indigo-50 border-indigo-500 text-indigo-700': url() == item.url,
-          }"
-          class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >{{ item.name }}</inertia-link
-        >
+        <inertia-link v-for="(item, key) in menu" :key="key" :href="'/' + item.url" :class="{
+          'bg-indigo-50 border-indigo-500 text-indigo-700': url() == item.url,
+        }" class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium">{{ item.name }}</inertia-link>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-200">
         <div class="flex items-center px-4">
@@ -199,31 +170,21 @@
           </div>
         </div>
         <div class="mt-3 space-y-1">
-          <inertia-link
-            :href="route('profile.index', user.username)"
-            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-            :class="{
+          <inertia-link :href="route('profile.index', user.username)"
+            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium" :class="{
               'bg-indigo-50 border-indigo-500 text-indigo-700':
                 url() == user.username + '/profile',
-            }"
-          >
+            }">
             Your profile
           </inertia-link>
-          <inertia-link
-            :href="route('userSettings.index', user.username)"
-            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-            :class="{
+          <inertia-link :href="route('userSettings.index', user.username)"
+            class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium" :class="{
               'bg-indigo-50 border-indigo-500 text-indigo-700':
                 url() == user.username + '/settings',
-            }"
-          >
+            }">
             Settings
           </inertia-link>
-          <inertia-link
-            href="/logout"
-            method="post"
-            as="button"
-            class="
+          <inertia-link href="/logout" method="post" as="button" class="
               block
               px-4
               py-2
@@ -232,21 +193,20 @@
               text-gray-500
               hover:text-gray-800
               hover:bg-gray-100
-            "
-            >Sign out</inertia-link
-          >
+            ">Sign out</inertia-link>
         </div>
       </div>
     </DisclosurePanel>
   </Disclosure>
   <div class="max-w-7xl mx-auto pt-4 pb-12 px-4 lg:pb-16">
     <slot></slot>
-    <bottom-menu/>
+    <bottom-menu />
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
+import { BookmarkIcon } from '@heroicons/vue/solid'
 import {
   Disclosure,
   DisclosureButton,
@@ -290,6 +250,7 @@ export default {
     BetFormSlideOver,
     PlusIconOutline,
     BottomMenu,
+    BookmarkIcon
   },
 
   data() {
