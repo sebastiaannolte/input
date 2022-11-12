@@ -69,7 +69,6 @@
                                   v-for="sport in sports"
                                   :key="sport.name"
                                   type="button"
-                                  @click="setSportType(sport.name)"
                                   :class="{
                                     'bg-gray-200 text-white inner-shadow':
                                       activeSport == sport.name,
@@ -92,6 +91,7 @@
                                     hover:bg-gray-50
                                     focus:outline-none focus:bg-gray-300
                                   "
+                                  @click="setSportType(sport.name)"
                                 >
                                   <sport-icon
                                     class="w-6 h-6"
@@ -100,8 +100,8 @@
                                 </button>
                               </span>
                               <div
-                                class="col-span-4 sm:col-span-4"
                                 v-if="renderComponent"
+                                class="col-span-4 sm:col-span-4"
                               >
                                 <Event
                                   v-for="(game, key) in addedGames"
@@ -111,10 +111,9 @@
                                   :name="index"
                                   :game="game"
                                   :index="key"
-                                  :isEdit="isEdit"
+                                  :is-edit="isEdit"
                                   :sport="activeSport"
-                                >
-                                </Event>
+                                />
                                 <div class="flex justify-end">
                                   <button
                                     class="
@@ -146,12 +145,12 @@
                               </div>
                               <div class="col-span-4 sm:col-span-2">
                                 <text-input-with-add-on
+                                  id="stake"
                                   v-model="betData.stake"
                                   :error="errors.stake"
                                   add-on="units"
                                   label="Stake"
                                   type="text"
-                                  id="stake"
                                   class="
                                     mt-1
                                     block
@@ -171,11 +170,11 @@
 
                               <div class="col-span-4 sm:col-span-2">
                                 <text-input
+                                  id="odds"
                                   v-model="betData.odds"
                                   :error="errors.odds"
                                   label="Odds"
                                   type="text"
-                                  id="odds"
                                   class="
                                     mt-1
                                     block
@@ -194,14 +193,14 @@
                               </div>
                               <div class="col-span-4 sm:col-span-2">
                                 <autocomplete-input
+                                  id="bookie"
+                                  v-model="betData.bookie"
                                   :options="
                                     $page.props.auth.settings.bookmakers.value
                                   "
-                                  v-model="betData.bookie"
                                   :error="errors.bookie"
                                   label="Bookie"
                                   type="text"
-                                  id="bookie"
                                   class="
                                     mt-1
                                     block
@@ -231,11 +230,11 @@
                               </div>
                               <div class="col-span-4 sm:col-span-2">
                                 <text-input
+                                  id="tipster"
                                   v-model="betData.tipster"
                                   :error="errors.tipster"
                                   label="Tipster"
                                   type="text"
-                                  id="tipster"
                                   class="
                                     mt-1
                                     block
@@ -260,18 +259,17 @@
                   </div>
                 </div>
                 <div class="flex-shrink-0 px-4 py-4 flex justify-end">
-                  <div class="flex items-center mr-5" v-if="!bet">
+                  <div v-if="!bet" class="flex items-center mr-5">
                     <div class="text-sm">
                       <label
                         for="comments"
                         class="font-medium text-gray-700 mr-2"
-                        >Clear inputs</label
-                      >
+                      >Clear inputs</label>
                     </div>
                     <div class="flex items-center h-5">
                       <input
-                        v-model="betData.clearInputs"
                         id="comments"
+                        v-model="betData.clearInputs"
                         aria-describedby="comments-description"
                         name="comments"
                         type="checkbox"
@@ -311,8 +309,8 @@
 
                   <loading-button
                     class="ml-5"
-                    @click.prevent="save"
                     :loading="betData.processing"
+                    @click.prevent="save"
                   >
                     Save
                   </loading-button>
@@ -327,26 +325,26 @@
 </template>
 
 <script>
-import Button from "@/Components/Button.vue";
-import Events from "@/PageComponents/Events.vue";
-import Event from "@/PageComponents/Event.vue";
-import TextInput from "@/Components/TextInput.vue";
-import AutocompleteInput from "@/Components/AutocompleteInput.vue";
-import LoadingButton from "@/Components/LoadingButton.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-import moment from "moment";
-import Multiselect from "@vueform/multiselect";
+import Button from '@/Components/Button.vue'
+import Events from '@/PageComponents/Events.vue'
+import Event from '@/PageComponents/Event.vue'
+import TextInput from '@/Components/TextInput.vue'
+import AutocompleteInput from '@/Components/AutocompleteInput.vue'
+import LoadingButton from '@/Components/LoadingButton.vue'
+import Dropdown from '@/Components/Dropdown.vue'
+import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
+import moment from 'moment'
+import Multiselect from '@vueform/multiselect'
 import {
   Dialog,
   DialogOverlay,
   DialogTitle,
   TransitionChild,
   TransitionRoot,
-} from "@headlessui/vue";
-import { XIcon, PlusIcon } from "@heroicons/vue/outline";
-import { ref } from "vue";
-import SportIcon from "@/Components/SportIcon.vue";
+} from '@headlessui/vue'
+import { XIcon, PlusIcon } from '@heroicons/vue/outline'
+import { ref } from 'vue'
+import SportIcon from '@/Components/SportIcon.vue'
 
 export default {
   components: {
@@ -368,16 +366,16 @@ export default {
     Multiselect,
     SportIcon,
   },
-  setup() {
-    const open = ref(false);
-
-    return {
-      open,
-    };
-  },
 
   props: {
     errors: Object,
+  },
+  setup() {
+    const open = ref(false)
+
+    return {
+      open,
+    }
   },
   data() {
     return {
@@ -390,48 +388,62 @@ export default {
       games: {},
       renderComponent: true,
       isEdit: false,
-      activeSport: "football",
-    };
+      activeSport: 'football',
+    }
+  },
+
+  computed: {
+    sports() {
+      return this.$page.props.sports
+    },
+  },
+
+  watch: {
+    open: function (newOpen, oldOpen) {
+      if (newOpen == false) {
+        this.bet = null
+      }
+    },
   },
 
   created() {
-    this.emitter.on("betForm:show", () => {
-      this.open = true;
-      this.isEdit = this.bet && Object.keys(this.bet).length > 0 && this.bet.id;
+    this.emitter.on('betForm:show', () => {
+      this.open = true
+      this.isEdit = this.bet && Object.keys(this.bet).length > 0 && this.bet.id
       if (!this.bet) {
         // Reset games if slide over is opened
-        this.games = {};
-        this.addedGames = { 0: 0 };
+        this.games = {}
+        this.addedGames = { 0: 0 }
       }
-      this.setBetData();
-    });
+      this.setBetData()
+    })
 
-    this.emitter.on("game:delete", (index) => {
-      delete this.addedGames[index];
-      delete this.games[index];
-    });
+    this.emitter.on('game:delete', (index) => {
+      delete this.addedGames[index]
+      delete this.games[index]
+    })
 
-    this.moment = moment;
-    this.emitter.on("event:search", (event) => {
-      this.betData.event = event.event;
-    });
+    this.moment = moment
+    this.emitter.on('event:search', (event) => {
+      this.betData.event = event.event
+    })
 
-    this.emitter.on("event:edit", (event) => {
-      this.bet = event;
-      this.activeSport = this.bet.sport;
-      this.currentGameId = this.bet.bet_fixture.length - 1;
-      this.addedGames = Object.assign({}, this.bet.bet_fixture);
-      this.emitter.emit("betForm:show");
-    });
+    this.emitter.on('event:edit', (event) => {
+      this.bet = event
+      this.activeSport = this.bet.sport
+      this.currentGameId = this.bet.bet_fixture.length - 1
+      this.addedGames = Object.assign({}, this.bet.bet_fixture)
+      this.emitter.emit('betForm:show')
+    })
 
-    this.emitter.on("event:import", (event) => {
-      this.bet = event;
-      this.currentGameId = this.bet.games.length - 1;
-      this.addedGames = Object.assign({}, this.bet.games);
-      this.emitter.emit("betForm:show");
-    });
+    this.emitter.on('event:import', (event) => {
+      this.bet = event
+      this.currentGameId = this.bet.games.length - 1
+      this.addedGames = Object.assign({}, this.bet.games)
+      this.emitter.emit('betForm:show')
+    })
 
-    this.emitter.on("event:clear", (event) => {
+    this.emitter.on('event:clear', (event) => {
       this.betData = this.$inertia.form({
         bookie: null,
         tipster: null,
@@ -440,77 +452,77 @@ export default {
         sport: null,
         type: null,
         clearInputs: true,
-      });
-      this.setUserSettings();
-    });
+      })
+      this.setUserSettings()
+    })
   },
 
   methods: {
     setUserSettings() {
-      var userSettings = this.$page.props.auth.settings;
+      var userSettings = this.$page.props.auth.settings
       for (const key in userSettings) {
-        var setting = userSettings[key];
-        this.betData[key] = setting.value;
+        var setting = userSettings[key]
+        this.betData[key] = setting.value
       }
     },
     setSportType(type) {
-      this.activeSport = type;
-      this.betData.sport = type;
+      this.activeSport = type
+      this.betData.sport = type
     },
 
     addGame() {
-      this.currentGameId++;
-      this.addedGames[this.currentGameId] = 0;
+      this.currentGameId++
+      this.addedGames[this.currentGameId] = 0
     },
     save() {
-      var route = "";
+      var route = ''
       if (this.bet && this.bet.id) {
-        route = this.route("bet.update");
-        this.betData.games = this.games;
+        route = this.route('bet.update')
+        this.betData.games = this.games
 
         this.betData.put(route, {
           preserveScroll: true,
           onSuccess: () => {
-            this.setBetData();
-            this.open = false;
-            this.emitter.emit("event:clear");
+            this.setBetData()
+            this.open = false
+            this.emitter.emit('event:clear')
           },
-        });
+        })
       } else {
-        var importId = this.betData.importId;
-        route = this.route("bet.store");
-        this.betData.games = this.games;
+        var importId = this.betData.importId
+        route = this.route('bet.store')
+        this.betData.games = this.games
         this.betData.post(route, {
           preserveScroll: true,
           onSuccess: () => {
             if (this.betData.clearInputs) {
-              this.setBetData();
-              this.open = false;
-              this.emitter.emit("event:clear");
+              this.setBetData()
+              this.open = false
+              this.emitter.emit('event:clear')
             }
 
             if (importId > 0) {
               this.$http
                 .put(
                   this.route(
-                    "import.update"
+                    'import.update',
                   ),
                   {
-                    id: importId
-                  }
+                    id: importId,
+                  },
                 )
                 .then((response) => {
-                   this.$inertia.visit(this.route('import.index'));
-                });
+                  this.$inertia.visit(this.route('import.index'))
+                })
             }
           },
-        });
+        })
       }
     },
 
     setBetData() {
       if (!this.bet) {
-        this.title = "New bet";
+        this.title = 'New bet'
         this.betData = this.$inertia.form({
           bookie: null,
           tipster: null,
@@ -520,14 +532,14 @@ export default {
           type: null,
           games: null,
           clearInputs: true,
-        });
-        this.setUserSettings();
+        })
+        this.setUserSettings()
       } else if (this.bet.id) {
-        this.bet.games = {};
-        this.betData = this.$inertia.form(this.bet);
-        this.title = "Edit " + this.bet.event;
+        this.bet.games = {}
+        this.betData = this.$inertia.form(this.bet)
+        this.title = 'Edit ' + this.bet.event
       } else {
-        this.bet.games = {};
+        this.bet.games = {}
         this.betData = this.$inertia.form(
           Object.assign(
             {
@@ -540,28 +552,14 @@ export default {
               games: null,
               clearInputs: true,
             },
-            this.bet
-          )
-        );
-        this.title = "New bet";
+            this.bet,
+          ),
+        )
+        this.title = 'New bet'
       }
     },
   },
-
-  computed: {
-    sports() {
-      return this.$page.props.sports;
-    },
-  },
-
-  watch: {
-    open: function (newOpen, oldOpen) {
-      if (newOpen == false) {
-        this.bet = null;
-      }
-    },
-  },
-};
+}
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>

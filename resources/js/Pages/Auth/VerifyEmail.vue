@@ -21,8 +21,8 @@
       </div>
 
       <div
-        class="mb-4 font-medium text-sm text-green-600"
         v-if="verificationLinkSent"
+        class="mb-4 font-medium text-sm text-green-600"
       >
         A new verification link has been sent to the email address you provided
         during registration.
@@ -42,8 +42,9 @@
             method="post"
             as="button"
             class="underline text-sm text-gray-600 hover:text-gray-900"
-            >Log Out</inertia-link
           >
+            Log Out
+          </inertia-link>
         </div>
       </form>
     </div>
@@ -51,15 +52,15 @@
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button.vue";
-import Layout from "@/Layouts/Guest.vue";
+import BreezeButton from '@/Components/Button.vue'
+import Layout from '@/Layouts/Guest.vue'
 
 export default {
-  layout: Layout,
 
   components: {
     BreezeButton,
   },
+  layout: Layout,
 
   props: {
     status: String,
@@ -68,19 +69,19 @@ export default {
   data() {
     return {
       form: this.$inertia.form(),
-    };
-  },
-
-  methods: {
-    submit() {
-      this.form.post(this.route("verification.send"));
-    },
+    }
   },
 
   computed: {
     verificationLinkSent() {
-      return this.status === "verification-link-sent";
+      return this.status === 'verification-link-sent'
     },
   },
-};
+
+  methods: {
+    submit() {
+      this.form.post(this.route('verification.send'))
+    },
+  },
+}
 </script>

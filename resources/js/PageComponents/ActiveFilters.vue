@@ -50,8 +50,8 @@
         <div class="pl-6">
           <button
             type="button"
-            @click.prevent="resetFilters"
             class="text-gray-500"
+            @click.prevent="resetFilters"
           >
             Clear all
           </button>
@@ -95,22 +95,22 @@
               </div>
               <div class="col-span-4 sm:col-span-2">
                 <text-input-with-add-on
+                  id="stake"
                   v-model="filters.minStake.value"
                   :error="errors"
                   add-on="units"
                   label="Min stake"
                   type="text"
-                  id="stake"
                 />
               </div>
               <div class="col-span-4 sm:col-span-2">
                 <text-input-with-add-on
+                  id="stake"
                   v-model="filters.maxStake.value"
                   :error="errors"
                   add-on="units"
                   label="Max stake"
                   type="text"
-                  id="stake"
                 />
               </div>
               <div class="col-span-4 sm:col-span-2">
@@ -122,9 +122,9 @@
                     text-gray-700
                     dark:text-gray-400
                   "
-                  >Sport:</label
-                >
+                >Sport:</label>
                 <select
+                  v-model="filters.sport.value"
                   class="
                     pl-3
                     pr-10
@@ -141,12 +141,11 @@
                     rounded-md
                     w-full
                   "
-                  v-model="filters.sport.value"
                 >
                   <option
-                    class="capitalize"
                     v-for="(sport, key) in $page.props.sports"
                     :key="key"
+                    class="capitalize"
                     :value="sport.name"
                   >
                     {{ sport.name }}
@@ -169,9 +168,9 @@
                     text-gray-700
                     dark:text-gray-400
                   "
-                  >Status:</label
-                >
+                >Status:</label>
                 <select
+                  v-model="filters.status.value"
                   class="
                     pl-3
                     pr-10
@@ -188,12 +187,11 @@
                     rounded-md
                     w-full
                   "
-                  v-model="filters.status.value"
                 >
                   <option
-                    class="capitalize"
-                    v-for="(status, key) in this.statuses"
+                    v-for="(status, key) in statuses"
                     :key="key"
+                    class="capitalize"
                     :value="key"
                   >
                     {{ key }}
@@ -203,11 +201,11 @@
 
               <div class="col-span-4 sm:col-span-2">
                 <text-input
+                  id="tipster"
                   v-model="filters.tipster.value"
                   :error="errors"
                   label="Tipster"
                   type="text"
-                  id="tipster"
                 />
               </div>
             </div>
@@ -220,7 +218,6 @@
         <Menu as="div" class="relative inline-block">
           <div class="flex">
             <MenuButton
-              @click.prevent="filter()"
               class="
                 group
                 inline-flex
@@ -230,6 +227,7 @@
                 text-gray-700
                 hover:text-gray-900
               "
+              @click.prevent="filter()"
             >
               Filter
             </MenuButton>
@@ -294,19 +292,14 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
-} from "@headlessui/vue";
-import { ChevronDownIcon, FilterIcon } from "@heroicons/vue/solid";
-import TextInput from "@/Components/TextInput.vue";
-import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-import { Inertia } from "@inertiajs/inertia";
-import pickBy from "lodash/pickBy";
+} from '@headlessui/vue'
+import { ChevronDownIcon, FilterIcon } from '@heroicons/vue/solid'
+import TextInput from '@/Components/TextInput.vue'
+import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
+import { Inertia } from '@inertiajs/inertia'
+import pickBy from 'lodash/pickBy'
 
 export default {
-  props: {
-    propFilters: Object,
-    filterRoute: String,
-    errors: Object,
-  },
 
   components: {
     Disclosure,
@@ -321,75 +314,99 @@ export default {
     TextInputWithAddOn,
     TextInput,
   },
+  props: {
+    propFilters: Object,
+    filterRoute: String,
+    errors: Object,
+  },
 
   data() {
     return {
       statuses: {
-        new: "",
-        won: "border-r-8 border-green-500",
-        lost: "border-r-8 border-red-500",
-        void: "border-r-8 border-gray-200",
+        new: '',
+        won: 'border-r-8 border-green-500',
+        lost: 'border-r-8 border-red-500',
+        void: 'border-r-8 border-gray-200',
       },
       localFilters: {
         from: {
           value: null,
-          type: "min",
-          col: "date",
-          specialType: "date",
+          type: 'min',
+          col: 'date',
+          specialType: 'date',
         },
         to: {
           value: null,
-          type: "max",
-          col: "date",
-          specialType: "date",
+          type: 'max',
+          col: 'date',
+          specialType: 'date',
         },
         minOdds: {
           value: null,
-          type: "min",
-          col: "odds",
+          type: 'min',
+          col: 'odds',
         },
         maxOdds: {
           value: null,
-          type: "max",
-          col: "odds",
+          type: 'max',
+          col: 'odds',
         },
         minStake: {
           value: null,
-          type: "min",
-          col: "stake",
+          type: 'min',
+          col: 'stake',
         },
         maxStake: {
           value: null,
-          type: "max",
-          col: "stake",
+          type: 'max',
+          col: 'stake',
         },
         sport: {
           value: null,
-          type: "match",
-          col: "sport",
+          type: 'match',
+          col: 'sport',
         },
         bookie: {
           value: null,
-          type: "match",
-          col: "bookie",
+          type: 'match',
+          col: 'bookie',
         },
         tipster: {
           value: null,
-          type: "match",
-          col: "tipster",
+          type: 'match',
+          col: 'tipster',
         },
         status: {
           value: null,
-          type: "match",
-          col: "status",
+          type: 'match',
+          col: 'status',
         },
       },
       filters: {},
-    };
+    }
+  },
+
+  computed: {
+    activeFilters() {
+      var filtersWithValue = {}
+      for (const key in this.filters) {
+        var filter = this.filters[key]
+        if (filter.value) {
+          filtersWithValue[key] = filter.value
+        }
+      }
+      return filtersWithValue
+    },
+  },
+
+  watch: {
+    propFilters: function (val) {
+      // this.setFilters();
+    },
   },
 
   created() {
-    this.setFilters();
+    this.setFilters()
   },
 
   methods: {
@@ -397,23 +414,23 @@ export default {
       this.filters = {
         ...this.localFilters,
         ...this.propFilters,
-      };
+      }
     },
     resetFilters() {
       for (var key in this.filters) {
-        this.filters[key].value = null;
+        this.filters[key].value = null
       }
 
-      this.filter();
+      this.filter()
     },
 
     filter() {
-      var localFilters = {};
+      var localFilters = {}
       for (const key in this.filters) {
-        var filter = this.filters[key];
+        var filter = this.filters[key]
 
         if (filter.value) {
-          localFilters[key] = filter;
+          localFilters[key] = filter
         }
       }
 
@@ -423,34 +440,15 @@ export default {
           filters: localFilters,
         }),
         {
-          only: ["filters", "stats", "bets"],
+          only: ['filters', 'stats', 'bets'],
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
-            this.emitter.emit("filter:submit");
+            this.emitter.emit('filter:submit')
           },
-        }
-      );
+        },
+      )
     },
   },
-
-  computed: {
-    activeFilters() {
-      var filtersWithValue = {};
-      for (const key in this.filters) {
-        var filter = this.filters[key];
-        if (filter.value) {
-          filtersWithValue[key] = filter.value;
-        }
-      }
-      return filtersWithValue;
-    },
-  },
-
-  watch: {
-    propFilters: function (val) {
-      // this.setFilters();
-    },
-  },
-};
+}
 </script>

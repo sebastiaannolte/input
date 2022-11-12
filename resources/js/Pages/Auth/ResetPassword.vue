@@ -19,9 +19,9 @@
           <breeze-label for="email" value="Email" />
           <breeze-input
             id="email"
+            v-model="form.email"
             type="email"
             class="mt-1 block w-full"
-            v-model="form.email"
             required
             autofocus
             autocomplete="username"
@@ -32,9 +32,9 @@
           <breeze-label for="password" value="Password" />
           <breeze-input
             id="password"
+            v-model="form.password"
             type="password"
             class="mt-1 block w-full"
-            v-model="form.password"
             required
             autocomplete="new-password"
           />
@@ -44,9 +44,9 @@
           <breeze-label for="password_confirmation" value="Confirm Password" />
           <breeze-input
             id="password_confirmation"
+            v-model="form.password_confirmation"
             type="password"
             class="mt-1 block w-full"
-            v-model="form.password_confirmation"
             required
             autocomplete="new-password"
           />
@@ -54,7 +54,7 @@
 
         <div class="flex items-center justify-end mt-4">
           <Button
-          class="w-full"
+            class="w-full"
             :class="{ 'opacity-25': form.processing }"
             :disabled="form.processing"
           >
@@ -67,15 +67,14 @@
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button.vue";
-import Layout from "@/Layouts/Guest.vue";
-import BreezeInput from "@/Components/Input.vue";
-import BreezeLabel from "@/Components/Label.vue";
-import BreezeValidationErrors from "@/Components/ValidationErrors.vue";
-import Button from "@/Components/Button.vue";
+import BreezeButton from '@/Components/Button.vue'
+import Layout from '@/Layouts/Guest.vue'
+import BreezeInput from '@/Components/Input.vue'
+import BreezeLabel from '@/Components/Label.vue'
+import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
+import Button from '@/Components/Button.vue'
 
 export default {
-  layout: Layout,
 
   components: {
     BreezeButton,
@@ -85,6 +84,7 @@ export default {
     Layout,
     Button,
   },
+  layout: Layout,
 
   props: {
     email: String,
@@ -96,18 +96,18 @@ export default {
       form: this.$inertia.form({
         token: this.token,
         email: this.email,
-        password: "",
-        password_confirmation: "",
+        password: '',
+        password_confirmation: '',
       }),
-    };
+    }
   },
 
   methods: {
     submit() {
-      this.form.post(this.route("password.update"), {
-        onFinish: () => this.form.reset("password", "password_confirmation"),
-      });
+      this.form.post(this.route('password.update'), {
+        onFinish: () => this.form.reset('password', 'password_confirmation'),
+      })
     },
   },
-};
+}
 </script>

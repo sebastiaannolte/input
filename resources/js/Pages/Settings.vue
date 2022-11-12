@@ -3,7 +3,6 @@
   <div class="sm:hidden mb-2">
     <label for="tabs" class="sr-only">Select a tab</label>
     <select
-      @change="onDropdownTabChange"
       id="tabs"
       name="tabs"
       class="
@@ -18,6 +17,7 @@
         sm:text-sm
         rounded-md
       "
+      @change="onDropdownTabChange"
     >
       <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
         {{ tab.name }}
@@ -64,13 +64,13 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import Button from "@/Components/Button.vue";
-import TextInput from "@/Components/TextInput.vue";
-import LoadingButton from "@/Components/LoadingButton.vue";
-import Multiselect from "@vueform/multiselect";
-import { Inertia } from "@inertiajs/inertia";
-import pickBy from "lodash/pickBy";
+import Layout from '@/Layouts/Authenticated.vue'
+import Button from '@/Components/Button.vue'
+import TextInput from '@/Components/TextInput.vue'
+import LoadingButton from '@/Components/LoadingButton.vue'
+import Multiselect from '@vueform/multiselect'
+import { Inertia } from '@inertiajs/inertia'
+import pickBy from 'lodash/pickBy'
 
 export default {
   components: { Button, TextInput, LoadingButton, Multiselect },
@@ -83,58 +83,60 @@ export default {
       currentTab: null,
       tabs: [
         {
-          name: "Settings",
+          name: 'Settings',
           route: this.route(
-            "userSettings.index",
-            this.$page.props.auth.user.username
+            'userSettings.index',
+            this.$page.props.auth.user.username,
           ),
           current: false,
         },
         {
-          name: "Profile",
+          name: 'Profile',
           route: this.route(
-            "profile.index",
-            this.$page.props.auth.user.username
+            'profile.index',
+            this.$page.props.auth.user.username,
           ),
           current: false,
         },
       ],
-    };
+    }
   },
 
+  computed: {},
+
   created() {
-    this.setCurrentTab();
+    this.setCurrentTab()
   },
 
   methods: {
     openTab(value, tab) {
-      this.changeTab(value, tab);
+      this.changeTab(value, tab)
     },
     url() {
-      return location.pathname.substr(1).split("/").pop();
+      return location.pathname.substr(1).split('/').pop()
     },
 
     setCurrentTab() {
       this.tabs.forEach((tab) => {
         if (tab.name.toLowerCase() == this.url().toLowerCase()) {
-          tab.current = true;
+          tab.current = true
         }
-      });
+      })
     },
 
     onDropdownTabChange(event) {
-      var tab = this.tabs.find((tab) => tab.name == event.target.value);
-      this.changeTab(event.target.value, tab);
+      var tab = this.tabs.find((tab) => tab.name == event.target.value)
+      this.changeTab(event.target.value, tab)
     },
 
     changeTab(value, tab) {
-      this.currentTab = this.tabs.find((tab) => tab.name == value);
+      this.currentTab = this.tabs.find((tab) => tab.name == value)
       this.tabs.forEach((tab) => {
         if (tab.name.toLowerCase() == this.url().toLowerCase()) {
-          tab.current = false;
+          tab.current = false
         }
-      });
-      tab.current = true;
+      })
+      tab.current = true
       Inertia.get(
         tab.route,
         pickBy({
@@ -142,13 +144,11 @@ export default {
           filters: null, // reset filters if tab changes
         }),
         {
-          only: ["type", "filters"],
-        }
-      );
+          only: ['type', 'filters'],
+        },
+      )
     },
   },
-
-  computed: {},
-};
+}
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

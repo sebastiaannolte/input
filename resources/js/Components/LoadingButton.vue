@@ -31,5 +31,5 @@ export default {
   props: {
     loading: Boolean,
   },
-};
+}
 </script>

@@ -29,9 +29,9 @@
           <breeze-label for="email" value="Email" />
           <breeze-input
             id="email"
+            v-model="form.email"
             type="email"
             class="mt-1 block w-full"
-            v-model="form.email"
             required
             autofocus
             autocomplete="username"
@@ -53,15 +53,14 @@
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button.vue";
-import Layout from "@/Layouts/Guest.vue";
-import BreezeInput from "@/Components/Input.vue";
-import BreezeLabel from "@/Components/Label.vue";
-import BreezeValidationErrors from "@/Components/ValidationErrors.vue";
-import Button from "@/Components/Button.vue";
+import BreezeButton from '@/Components/Button.vue'
+import Layout from '@/Layouts/Guest.vue'
+import BreezeInput from '@/Components/Input.vue'
+import BreezeLabel from '@/Components/Label.vue'
+import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
+import Button from '@/Components/Button.vue'
 
 export default {
-  layout: Layout,
 
   components: {
     BreezeButton,
@@ -70,6 +69,7 @@ export default {
     BreezeValidationErrors,
     Button,
   },
+  layout: Layout,
 
   props: {
     status: String,
@@ -78,15 +78,15 @@ export default {
   data() {
     return {
       form: this.$inertia.form({
-        email: "",
+        email: '',
       }),
-    };
+    }
   },
 
   methods: {
     submit() {
-      this.form.post(this.route("password.email"));
+      this.form.post(this.route('password.email'))
     },
   },
-};
+}
 </script>

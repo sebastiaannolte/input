@@ -5,33 +5,32 @@
         v-model="event"
         mode="single"
         placeholder="Search a match"
-        noOptionsText="Start typing to find a match"
+        no-options-text="Start typing to find a match"
         :filterResults="false"
-        :minChars="3"
+        ref="multiselect"
+        :min-chars="3"
         :caret="false"
-        :resolveOnLoad="false"
+        :resolve-on-load="false"
         :delay="300"
         :searchable="true"
-        @select="onSelect"
-        :createTag="true"
+        :create-tag="true"
         :object="true"
-        ref="multiselect"
-        :clearOnSelect="false"
-        :clearOnSearch="false"
+        :clear-on-select="false"
+        :clear-on-search="false"
         :options="
           async function (query) {
             return await fetchMatches(query, searchType, sport);
           }
         "
         class="rounded-r-0"
+        @select="onSelect"
       >
-        <template v-slot:option="{ option }">
+        <template #option="{ option }">
           <img class="h-4 mr-2" :src="option.icon" /> {{ option.label }}
         </template>
       </Multiselect>
       <button
         type="button"
-        @click="setSearchType('simple')"
         :class="{
           'bg-gray-200 text-white inner-shadow': searchType == 'simple',
         }"
@@ -47,12 +46,12 @@
           text-gray-700
           bg-white
         "
+        @click="setSearchType('simple')"
       >
         <LockClosedIcon class="h-4 w-4" aria-hidden="true" />
       </button>
       <button
         type="button"
-        @click="setSearchType('full')"
         :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'full' }"
         class="
           inline-flex
@@ -69,6 +68,7 @@
           hover:bg-gray-50
           focus:outline-none focus:bg-gray-300
         "
+        @click="setSearchType('full')"
       >
         <LockOpenIcon class="h-4 w-4" aria-hidden="true" />
       </button>
@@ -83,9 +83,9 @@
 </template>
 
 <script>
-import TextInput from "@/Components/TextInput.vue";
-import Multiselect from "@vueform/multiselect";
-import { LockClosedIcon, LockOpenIcon } from "@heroicons/vue/solid";
+import TextInput from '@/Components/TextInput.vue'
+import Multiselect from '@vueform/multiselect'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/vue/solid'
 
 export default {
   components: { TextInput, Multiselect, LockClosedIcon, LockOpenIcon },
@@ -94,42 +94,42 @@ export default {
     errors: Object,
     bet: Object,
     index: String,
-    sport: Object
+    sport: Object,
   },
 
   setup() {
     const fetchMatches = async (query, searchType, sport) => {
       const response = await fetch(
-        "/api/search/" + query + "/" + searchType + '/' + sport,
-        {}
-      );
-      const data = await response.json();
+        '/api/search/' + query + '/' + searchType + '/' + sport,
+        {},
+      )
+      const data = await response.json()
       return Object.values(data).map((item) => {
-        return { value: item.id, label: item.match, icon: item.icon };
-      });
-    };
+        return { value: item.id, label: item.match, icon: item.icon }
+      })
+    }
 
     return {
       fetchMatches,
-    };
+    }
   },
   data() {
     return {
       betData: {},
-      searchType: "simple",
+      searchType: 'simple',
       event: null,
-    };
+    }
   },
 
   created() {
     if (this.bet.event) {
-      this.betData = this.bet;
+      this.betData = this.bet
     }
 
-    this.emitter.on("event:clear", () => {
-      this.betData.event = null;
-      this.betData.match = null;
-    });
+    this.emitter.on('event:clear', () => {
+      this.betData.event = null
+      this.betData.match = null
+    })
   },
 
   mounted() {
@@ -137,45 +137,45 @@ export default {
       this.event = {
         value: this.bet.fixture_id ? this.bet.fixture_id : 0,
         label: this.bet.event,
-      };
+      }
 
       // this.$refs.multiselects.refreshOptions();
-      this.setBet();
+      this.setBet()
     }
   },
 
   methods: {
     onSelect(option) {
-      this.findGame(option.value);
+      this.findGame(option.value)
     },
 
     findGame(option) {
       if (option) {
-        this.$http.get(this.route("event.match", option)).then((response) => {
+        this.$http.get(this.route('event.match', option)).then((response) => {
           if (response.data) {
-            this.betData.match = response.data;
-            this.setBet();
-            return;
+            this.betData.match = response.data
+            this.setBet()
+            return
           }
-        });
+        })
       }
-      this.betData.match = null;
-      this.setBet();
+      this.betData.match = null
+      this.setBet()
     },
 
     setBet() {
       var newData = {
         event: this.event,
         match: this.betData.match,
-      };
-      this.$emit("update:modelValue", newData);
+      }
+      this.$emit('update:modelValue', newData)
     },
 
     setSearchType(type) {
-      this.searchType = type;
+      this.searchType = type
       // this.$refs.multiselect.open();
     },
   },
-};
+}
 </script>
 

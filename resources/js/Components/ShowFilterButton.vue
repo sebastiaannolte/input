@@ -1,7 +1,6 @@
 <template>
   <button
     type="button"
-    @click.prevent="showFilter"
     class="
       ml-3
       inline-flex
@@ -19,23 +18,22 @@
       focus:outline-none
       focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
     "
+    @click.prevent="showFilter"
   >
-    <span class="flex items-center"
-      ><FilterIcon
-        class="block h-4 w-4 mr-1.5"
-        aria-hidden="true"
-      />Filter</span
-    >
+    <span class="flex items-center"><FilterIcon
+      class="block h-4 w-4 mr-1.5"
+      aria-hidden="true"
+    />Filter</span>
   </button>
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import { FilterIcon } from "@heroicons/vue/outline";
+import Layout from '@/Layouts/Authenticated.vue'
+import { FilterIcon } from '@heroicons/vue/outline'
 
 export default {
-  layout: Layout,
   components: { FilterIcon },
+  layout: Layout,
 
   props: {
     status: Boolean,
@@ -43,18 +41,18 @@ export default {
   data() {
     return {
       filterStatus: false,
-    };
+    }
   },
 
   created() {
-    this.filterStatus = this.status;
+    this.filterStatus = this.status
   },
 
   methods: {
     showFilter() {
-      this.filterStatus = !this.filterStatus;
-      this.emitter.emit("filter:show", this.filterStatus);
+      this.filterStatus = !this.filterStatus
+      this.emitter.emit('filter:show', this.filterStatus)
     },
   },
-};
+}
 </script>

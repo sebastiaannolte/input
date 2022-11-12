@@ -11,7 +11,7 @@
               <tr
                 class="rounded-md text-sm font-medium text-gray-700 text-left"
               >
-                          <th
+                <th
                   class="
                   w-4
 
@@ -23,9 +23,7 @@
                     uppercase
                     tracking-wider
                   "
-                >
-
-                </th>
+                />
                 <th
                   class="
                     px-2
@@ -110,7 +108,7 @@
                 >
                   result
                 </th>
-                <th></th>
+                <th />
               </tr>
             </thead>
             <tbody>
@@ -124,7 +122,7 @@
                   ]"
                   class="cursor-pointer border-r-8"
                 >
-                             <td
+                  <td
                     class="
                       hidden
                       sm:table-cell
@@ -136,7 +134,7 @@
                       text-gray-900
                     "
                   >
-                  <sport-icon class="w-6 h-6" :name="bet.sport"/>
+                    <sport-icon class="w-6 h-6" :name="bet.sport" />
                   </td>
                   <td
                     class="
@@ -229,7 +227,11 @@
                       </span>
                     </span>
                     <select
-                      @focusout="handleFocusOut"
+                      v-show="
+                        activeKeyBet == betKey && activeKeyBetFixture == -1
+                      "
+                      :ref="'bet' + betKey"
+                      v-model="bet.status"
                       class="
                         block
                         pl-3
@@ -246,17 +248,13 @@
                         'w-full sm:w-24 sm:-mr-24':
                           activeKeyBet == betKey && activeKeyBetFixture == -1,
                       }"
+                      @focusout="handleFocusOut"
                       @change.prevent="selectStatus(bet.status)"
-                      v-show="
-                        activeKeyBet == betKey && activeKeyBetFixture == -1
-                      "
-                      v-model="bet.status"
-                      :ref="'bet' + betKey"
                     >
                       <option
-                        class="capitalize"
-                        v-for="(status, key) in this.statuses"
+                        v-for="(status, key) in statuses"
                         :key="key"
+                        class="capitalize"
                         :value="key"
                       >
                         {{ key }}
@@ -273,18 +271,18 @@
                       </template>
                     </button>
                   </td>
-                  <td v-else></td>
+                  <td v-else />
                 </tr>
                 <template v-if="bet.bet_fixture && bet.bet_fixture.length > 1">
                   <tr
                     v-for="(bet_fixture, betFixtureKey) in bet.bet_fixture"
+                    v-show="openedBets.includes(bet_fixture.bet_id)"
                     :key="betFixtureKey"
                     :class="[statusColor(bet_fixture.status, 'border')]"
                     class="cursor-pointer border-r-8 bg-gray-100"
-                    v-show="openedBets.includes(bet_fixture.bet_id)"
                   >
-                  <td
-                    class="
+                    <td
+                      class="
                       hidden
                       sm:table-cell
                       px-2
@@ -294,8 +292,7 @@
                       font-medium
                       text-gray-900
                     "
-                  >
-                  </td>
+                    />
                     <td
                       class="
                         hidden
@@ -348,7 +345,7 @@
                         <span
                           v-if="
                             activeKeyBet != betKey ||
-                            activeKeyBetFixture != betFixtureKey
+                              activeKeyBetFixture != betFixtureKey
                           "
                         >
                           <span
@@ -386,7 +383,12 @@
                         </span>
                       </span>
                       <select
-                        @focusout="handleFocusOut"
+                        v-show="
+                          activeKeyBet == betKey &&
+                            activeKeyBetFixture == betFixtureKey
+                        "
+                        :ref="'bet' + betKey + betFixtureKey"
+                        v-model="bet_fixture.status"
                         class="
                           block
                           pl-3
@@ -404,25 +406,20 @@
                             activeKeyBet == betKey &&
                             activeKeyBetFixture == betFixtureKey,
                         }"
+                        @focusout="handleFocusOut"
                         @change.prevent="selectStatus(bet_fixture.status)"
-                        v-show="
-                          activeKeyBet == betKey &&
-                          activeKeyBetFixture == betFixtureKey
-                        "
-                        v-model="bet_fixture.status"
-                        :ref="'bet' + betKey + betFixtureKey"
                       >
                         <option
-                          class="capitalize"
-                          v-for="(status, key) in this.statuses"
+                          v-for="(status, key) in statuses"
                           :key="key"
+                          class="capitalize"
                           :value="key"
                         >
                           {{ key }}
                         </option>
                       </select>
                     </td>
-                    <td></td>
+                    <td />
                   </tr>
                 </template>
               </template>
@@ -451,20 +448,19 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import { Inertia } from "@inertiajs/inertia";
-import TextInput from "@/Components/TextInput.vue";
-import TextInputWithAddOn from "@/Components/TextInputWithAddOn.vue";
-import Pagination from "@/PageComponents/Pagination.vue";
-import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
-import ShowFilterButton from "@/Components/ShowFilterButton.vue";
-import moment from "moment";
-import Button from "@/Components/Button.vue";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/outline";
-import SportIcon from '@/Components/SportIcon.vue';
+import Layout from '@/Layouts/Authenticated.vue'
+import { Inertia } from '@inertiajs/inertia'
+import TextInput from '@/Components/TextInput.vue'
+import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
+import Pagination from '@/PageComponents/Pagination.vue'
+import ActiveFilters from '@/PageComponents/ActiveFilters.vue'
+import ShowFilterButton from '@/Components/ShowFilterButton.vue'
+import moment from 'moment'
+import Button from '@/Components/Button.vue'
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
+import SportIcon from '@/Components/SportIcon.vue'
 
 export default {
-  layout: Layout,
   components: {
     TextInput,
     TextInputWithAddOn,
@@ -474,8 +470,9 @@ export default {
     Button,
     ChevronUpIcon,
     ChevronDownIcon,
-    SportIcon
+    SportIcon,
   },
+  layout: Layout,
 
   props: {
     bets: Object,
@@ -500,159 +497,159 @@ export default {
       activeKeyBetFixture: -1,
       statuses: {
         new: {
-          border: "",
-          label: "bg-yellow-100 text-yellow-800",
+          border: '',
+          label: 'bg-yellow-100 text-yellow-800',
         },
         won: {
-          border: "border-green-500",
-          label: "bg-green-100 text-green-800",
+          border: 'border-green-500',
+          label: 'bg-green-100 text-green-800',
         },
         lost: {
-          border: "border-red-500",
-          label: "bg-red-100 text-red-800",
+          border: 'border-red-500',
+          label: 'bg-red-100 text-red-800',
         },
         void: {
-          border: "border-gray-300",
-          label: "bg-gray-100 text-gray-800",
+          border: 'border-gray-300',
+          label: 'bg-gray-100 text-gray-800',
         },
         halfwon: {
-          border: "border-green-500",
-          label: "bg-green-100 text-green-800",
+          border: 'border-green-500',
+          label: 'bg-green-100 text-green-800',
         },
         halflost: {
-          border: "border-red-500",
-          label: "bg-red-100 text-red-800",
+          border: 'border-red-500',
+          label: 'bg-red-100 text-red-800',
         },
       },
       localFilters: {},
       highlighted: null,
       openedBets: [],
-    };
+    }
   },
 
   created() {
-    this.moment = moment;
-    this.emitter.on("event:scroll", (id) => {
-      this.scrollAndHighlight(id);
-    });
+    this.moment = moment
+    this.emitter.on('event:scroll', (id) => {
+      this.scrollAndHighlight(id)
+    })
   },
 
   methods: {
     showDropdown(betKey, betFixtureKey = -1) {
       if (!this.$page.props.userInfo.myPage || this.isStats) {
-        return;
+        return
       }
-      this.activeKeyBet = betKey;
-      this.activeKeyBetFixture = betFixtureKey;
-      var extraKey = "";
+      this.activeKeyBet = betKey
+      this.activeKeyBetFixture = betFixtureKey
+      var extraKey = ''
       if (betFixtureKey != '-1') {
-        extraKey = betFixtureKey;
+        extraKey = betFixtureKey
       }
-      this.$nextTick(() => this.$refs["bet" + betKey + extraKey].focus());
+      this.$nextTick(() => this.$refs['bet' + betKey + extraKey].focus())
     },
 
     handleFocusOut() {
-      this.activeKeyBet = -1;
-      this.activeKeyBetFixture = -1;
+      this.activeKeyBet = -1
+      this.activeKeyBetFixture = -1
     },
 
     openBetDetail(id) {
       if (!this.$page.props.userInfo.myPage || this.activeKeyBet != -1) {
-        return;
+        return
       }
 
-      Inertia.visit(this.route("bet.show", id), {
-        method: "get",
+      Inertia.visit(this.route('bet.show', id), {
+        method: 'get',
         data: {
           backUrl: window.location.href,
         },
-      });
+      })
     },
 
     statusColor(status, type) {
-      return this.statuses[status][type];
+      return this.statuses[status][type]
     },
 
     selectStatus(selectedStatus) {
-      var currentBet = this.bets.data[this.activeKeyBet];
-      var status = "";
+      var currentBet = this.bets.data[this.activeKeyBet]
+      var status = ''
       if (this.activeKeyBetFixture == -1) {
-        if (selectedStatus == "won") {
-          status = "+" + (currentBet.stake * currentBet.odds).toFixed(2);
-        } else if (selectedStatus == "lost") {
-          status = -currentBet.stake;
-        } else if (selectedStatus == "new") {
-          status = null;
-        } else if (selectedStatus == "void") {
-          status = 0;
-        } else if (selectedStatus == "halfwon") {
+        if (selectedStatus == 'won') {
+          status = '+' + (currentBet.stake * currentBet.odds).toFixed(2)
+        } else if (selectedStatus == 'lost') {
+          status = -currentBet.stake
+        } else if (selectedStatus == 'new') {
+          status = null
+        } else if (selectedStatus == 'void') {
+          status = 0
+        } else if (selectedStatus == 'halfwon') {
           status =
-            "+" + (currentBet.stake / 2 + currentBet.odds / 2).toFixed(2);
-        } else if (selectedStatus == "halflost") {
-          status = "-" + (currentBet.stake / 2).toFixed(2);
+            '+' + (currentBet.stake / 2 + currentBet.odds / 2).toFixed(2)
+        } else if (selectedStatus == 'halflost') {
+          status = '-' + (currentBet.stake / 2).toFixed(2)
         }
 
         //currentBet?
-        currentBet.result = status;
-        currentBet.status = selectedStatus;
+        currentBet.result = status
+        currentBet.status = selectedStatus
       } else {
-        currentBet = currentBet.bet_fixture[this.activeKeyBetFixture];
-        currentBet.status = selectedStatus;
+        currentBet = currentBet.bet_fixture[this.activeKeyBetFixture]
+        currentBet.status = selectedStatus
       }
 
-      Inertia.put(this.route("bet.updateStatus"), currentBet, {
+      Inertia.put(this.route('bet.updateStatus'), currentBet, {
         preserveScroll: true,
-      });
+      })
 
       setTimeout(() => {
-        this.activeKeyBet = -1;
-        this.activeKeyBetFixture = -1;
-      }, 1);
+        this.activeKeyBet = -1
+        this.activeKeyBetFixture = -1
+      }, 1)
     },
 
     findPage(id) {
-      this.$http.get(this.route("bet.pageNumber", id)).then((response) => {
+      this.$http.get(this.route('bet.pageNumber', id)).then((response) => {
         if (response.data) {
           Inertia.reload({
             data: {
               page: response.data,
             },
             onSuccess: () => {
-              const el = this.$refs["bet-" + id];
+              const el = this.$refs['bet-' + id]
               if (el) {
-                this.scroll(id, el);
+                this.scroll(id, el)
               }
             },
-          });
+          })
         }
-      });
+      })
     },
 
     scroll(id, el) {
-      this.highlighted = id;
+      this.highlighted = id
       setTimeout(() => {
-        this.highlighted = null;
-      }, 3000);
-      el[0].scrollIntoView({ behavior: "smooth" });
+        this.highlighted = null
+      }, 3000)
+      el[0].scrollIntoView({ behavior: 'smooth' })
     },
 
     scrollAndHighlight(id) {
-      const el = this.$refs["bet-" + id];
+      const el = this.$refs['bet-' + id]
       if (!el || el.length == 0) {
-        this.findPage(id);
+        this.findPage(id)
       }else{
-        this.scroll(id, el);
+        this.scroll(id, el)
       }
     },
 
     toggleAllBets(id) {
-      const index = this.openedBets.indexOf(id);
+      const index = this.openedBets.indexOf(id)
       if (index > -1) {
-        this.openedBets.splice(index, 1);
+        this.openedBets.splice(index, 1)
       } else {
-        this.openedBets.push(id);
+        this.openedBets.push(id)
       }
     },
   },
-};
+}
 </script>

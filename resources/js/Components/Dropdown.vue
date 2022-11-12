@@ -12,8 +12,7 @@
         capitalize
       "
       :for="id"
-      >{{ label }}:</label
-    >
+    >{{ label }}:</label>
 
     <select
       :id="id"
@@ -36,7 +35,7 @@
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     >
-      <option v-for="(option, key) in options" :value="key" :key="key">
+      <option v-for="(option, key) in options" :key="key" :value="key">
         {{ option }}
       </option>
     </select>
@@ -54,12 +53,12 @@ export default {
     id: {
       type: String,
       default() {
-        return `select-input-${Math.random() * 1000}`;
+        return `select-input-${Math.random() * 1000}`
       },
     },
     type: {
       type: String,
-      default: "text",
+      default: 'text',
     },
     modelValue: String,
     label: String,
@@ -68,14 +67,14 @@ export default {
   },
   methods: {
     focus() {
-      this.$refs.input.focus();
+      this.$refs.input.focus()
     },
     select() {
-      this.$refs.input.select();
+      this.$refs.input.select()
     },
     setSelectionRange(start, end) {
-      this.$refs.input.setSelectionRange(start, end);
+      this.$refs.input.setSelectionRange(start, end)
     },
   },
-};
+}
 </script>

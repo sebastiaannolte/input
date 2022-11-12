@@ -1,10 +1,10 @@
 <template>
   <Head :title="title" />
   <table-filter-header :title="competition.name">
-    <template v-slot:button>
+    <template #button>
       <inertia-link
         :href="
-          this.route('competition.bets', [
+          route('competition.bets', [
             $page.props.auth.user.username,
             competition.id,
           ])
@@ -54,6 +54,8 @@
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <th
+                  v-for="(values, keys) in currentTable.head"
+                  :key="keys"
                   scope="col"
                   class="
                     t-header
@@ -65,8 +67,6 @@
                     uppercase
                     tracking-wider
                   "
-                  :key="keys"
-                  v-for="(values, keys) in currentTable.head"
                   :class="{
                     'arrow-down':
                       sort.sortType == values && sort.sortOrder == 'DESC',
@@ -85,6 +85,8 @@
                   :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
                 >
                   <td
+                    v-for="(values, key) in values"
+                    :key="key"
                     class="
                       first:font-bold
                       px-6
@@ -94,20 +96,19 @@
                       font-medium
                       text-gray-900 text-left
                     "
-                    v-for="(values, key) in values"
-                    :key="key"
                   >
                     <inertia-link
+                      v-if="values.specialId"
                       :href="
-                        this.route('team', [
-                          this.$page.props.userInfo.user.username,
+                        route('team', [
+                          $page.props.userInfo.user.username,
                           values.specialId[0],
                           values.specialId[1],
                         ])
                       "
-                      v-if="values.specialId"
-                      >{{ values.value }}</inertia-link
                     >
+                      {{ values.value }}
+                    </inertia-link>
                     <span v-else> {{ values.value }}{{ values.type }} </span>
                   </td>
                 </tr>
@@ -116,8 +117,8 @@
             <div
               v-if="
                 currentTable &&
-                currentTable.body &&
-                currentTable.body.length == 0
+                  currentTable.body &&
+                  currentTable.body.length == 0
               "
               class="
                 bg-white
@@ -148,18 +149,18 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import pickBy from "lodash/pickBy";
-import TableFilterHeader from "@/PageComponents/TableFilterHeader.vue";
-import { Inertia } from "@inertiajs/inertia";
-import Pagination from "@/PageComponents/Pagination.vue";
+import Layout from '@/Layouts/Authenticated.vue'
+import pickBy from 'lodash/pickBy'
+import TableFilterHeader from '@/PageComponents/TableFilterHeader.vue'
+import { Inertia } from '@inertiajs/inertia'
+import Pagination from '@/PageComponents/Pagination.vue'
 
 export default {
-  layout: Layout,
   components: {
     TableFilterHeader,
     Pagination,
   },
+  layout: Layout,
   props: {
     filters: Array,
     competition: Number,
@@ -177,69 +178,69 @@ export default {
         totalResults: null,
         perPage: null,
       },
-    };
+    }
   },
 
   created() {
-    this.filterRoute = this.route("competition", {
+    this.filterRoute = this.route('competition', {
       username: this.$page.props.userInfo.user.username,
       id: this.competition.id,
       _query: pickBy({ sort: this.sort }),
-    });
+    })
 
-    this.emitter.on("filter:submit", () => {
-      this.getStats();
-    });
+    this.emitter.on('filter:submit', () => {
+      this.getStats()
+    })
 
-    this.getStats();
-    this.setPageTitle();
+    this.getStats()
+    this.setPageTitle()
   },
 
   methods: {
     getStats() {
-      var pageNumber = location.search.split("page=")[1];
-      this.loading = true;
+      var pageNumber = location.search.split('page=')[1]
+      this.loading = true
       this.$http
         .post(
-          this.route("competition.get", this.$page.props.userInfo.user.username),
+          this.route('competition.get', this.$page.props.userInfo.user.username),
           pickBy({
             competition: this.competition.id,
             filters: this.filters,
             sort: this.sort,
             page: pageNumber,
-          })
+          }),
         )
         .then((response) => {
           if (response.data) {
-            this.currentTable = response.data.table;
-            this.pagination.totalResults = response.data.totalResults;
-            this.pagination.perPage = response.data.perPage;
+            this.currentTable = response.data.table
+            this.pagination.totalResults = response.data.totalResults
+            this.pagination.perPage = response.data.perPage
           }
-        });
+        })
     },
 
     setPageTitle() {
-      this.title = "Your competition stats";
+      this.title = 'Your competition stats'
       if (!this.$page.props.userInfo.myPage) {
         this.title =
-          this.$page.props.userInfo.user.name + "'s competition stats";
+          this.$page.props.userInfo.user.name + '\'s competition stats'
       }
     },
 
     sortHeader(tableHeader) {
       if (this.currentTable.body.length < 2) {
-        return;
+        return
       }
 
       if (this.sort.sortType != tableHeader) {
-        this.sort.sortOrder = "DESC";
+        this.sort.sortOrder = 'DESC'
       } else {
-        this.sort.sortOrder = this.sort.sortOrder == "DESC" ? "ASC" : "DESC";
+        this.sort.sortOrder = this.sort.sortOrder == 'DESC' ? 'ASC' : 'DESC'
       }
-      this.sort.sortType = tableHeader;
+      this.sort.sortType = tableHeader
 
       Inertia.get(
-        this.route("competition", [
+        this.route('competition', [
           this.$page.props.userInfo.user.username,
           this.competition.id,
         ]),
@@ -248,10 +249,10 @@ export default {
           filters: this.filters,
         }),
         {
-          only: ["sort", "filters"],
-        }
-      );
+          only: ['sort', 'filters'],
+        },
+      )
     },
   },
-};
+}
 </script>

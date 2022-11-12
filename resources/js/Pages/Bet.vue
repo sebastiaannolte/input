@@ -56,7 +56,7 @@
             flex-1
           "
         >
-          {{bet.event}}
+          {{ bet.event }}
         </h2>
         <div class="flex justify-between">
           <div>
@@ -89,7 +89,6 @@
           </div>
           <div>
             <button
-              @click="destroy"
               class="
                 mr-2
                 bg-white
@@ -107,11 +106,11 @@
                 focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
               "
+              @click="destroy"
             >
               Delete
             </button>
             <button
-              @click="editBet"
               class="
                 bg-red-500
                 border border-transparent
@@ -128,6 +127,7 @@
                 focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
               "
+              @click="editBet"
             >
               Edit
             </button>
@@ -139,7 +139,7 @@
       <div class="col-span-8 sm:col-span-4">
         <div class="p-2">Event</div>
         <div class="p-2 mb-2 font-bold">
-          {{bet.event}}
+          {{ bet.event }}
         </div>
       </div>
       <div class="col-span-4 sm:col-span-2">
@@ -213,64 +213,64 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import { ArrowNarrowLeftIcon } from "@heroicons/vue/outline";
-import moment from "moment";
+import Layout from '@/Layouts/Authenticated.vue'
+import { ArrowNarrowLeftIcon } from '@heroicons/vue/outline'
+import moment from 'moment'
 
 export default {
-  layout: Layout,
 
   components: {
     ArrowNarrowLeftIcon,
   },
+  layout: Layout,
 
   props: {
     bet: Object,
   },
   data() {
     return {
-      backUrl: this.route("userhome", this.$page.props.userInfo.user.username),
-    };
+      backUrl: this.route('userhome', this.$page.props.userInfo.user.username),
+    }
+  },
+
+  computed: {
+    betResult() {
+      return this.bet.result ? this.bet.result : 'No result'
+    },
+  
+    categoryName() {
+      if (!this.bet.category) {
+        return
+      }
+      var categories = this.bet.category.split(', ')
+      var categoryNames = []
+      for (var key in categories) {
+        var value = categories[key]
+        categoryNames.push(
+          this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == value).name,
+        )
+      }
+      return categoryNames.join(', ')
+    },
   },
 
   created() {
-    this.moment = moment;
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("backUrl")) {
-      this.backUrl = urlParams.get("backUrl");
+    this.moment = moment
+    var urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('backUrl')) {
+      this.backUrl = urlParams.get('backUrl')
     }
   },
 
   methods: {
     editBet() {
-      this.emitter.emit("event:edit", Object.assign({}, this.bet));
+      this.emitter.emit('event:edit', Object.assign({}, this.bet))
     },
     destroy() {
-      if (confirm("Are you sure you want to delete this bet?")) {
-        this.$inertia.delete(this.route("bet.delete", this.bet.id));
+      if (confirm('Are you sure you want to delete this bet?')) {
+        this.$inertia.delete(this.route('bet.delete', this.bet.id))
       }
     },
   },
-
-  computed: {
-    betResult() {
-      return this.bet.result ? this.bet.result : 'No result';
-    },
-  
-    categoryName() {
-      if (!this.bet.category) {
-        return;
-      }
-      var categories = this.bet.category.split(', ');
-      var categoryNames = [];
-      for (var key in categories) {
-        var value = categories[key];
-        categoryNames.push(
-          this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == value).name
-        );
-      }
-      return categoryNames.join(", ");
-    },
-  }
-};
+}
 </script>

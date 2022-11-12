@@ -14,9 +14,9 @@
         </div>
         <div class="mt-6 grid grid-cols-4 gap-4">
           <div
-            class="col-span-4 sm:col-span-2"
             v-for="(value, key) in stringSettings"
             :key="key"
+            class="col-span-4 sm:col-span-2"
           >
             <text-input
               v-model="newSettings[key].value"
@@ -45,8 +45,7 @@
                 dark:text-gray-400
                 capitalize
               "
-              >Games:</label
-            >
+            >Games:</label>
             <div class="mt-1 flex rounded-md shadow-sm">
               <div
                 class="relative flex items-stretch flex-grow focus-within:z-10"
@@ -61,11 +60,11 @@
                     items-center
                     pointer-events-none
                   "
-                ></div>
+                />
                 <input
-                  type="date"
-                  v-model="date"
                   id="email"
+                  v-model="date"
+                  type="date"
                   class="
                     focus:ring-indigo-500 focus:border-indigo-500
                     block
@@ -81,7 +80,6 @@
                 v-for="sport in sports"
                 :key="sport.name"
                 type="button"
-                @click="setSportType(sport.name)"
                 :class="{
                   'bg-gray-200 text-white inner-shadow':
                     activeSport == sport.name,
@@ -103,6 +101,7 @@
                   hover:bg-gray-50
                   focus:outline-none focus:bg-gray-300
                 "
+                @click="setSportType(sport.name)"
               >
                 <sport-icon class="w-6 h-6" :name="sport.name" />
               </button>
@@ -126,14 +125,13 @@
                 dark:text-gray-400
                 capitalize
               "
-              >Bookies:</label
-            >
+            >Bookies:</label>
             <Multiselect
               v-model="newSettings.bookmakers.value"
               mode="tags"
               :searchable="true"
-              :createTag="true"
-              addTagOn="'enter'|'space'|'tab'|';'|','"
+              :create-tag="true"
+              add-tag-on="'enter'|'space'|'tab'|';'|','"
               :options="bookmakerNames"
             />
           </div>
@@ -141,8 +139,8 @@
       </div>
       <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
         <loading-button
-          @click.prevent="saveSettings"
           :loading="newSettings.processing"
+          @click.prevent="saveSettings"
         >
           Save
         </loading-button>
@@ -152,14 +150,14 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import Button from "@/Components/Button.vue";
-import TextInput from "@/Components/TextInput.vue";
-import LoadingButton from "@/Components/LoadingButton.vue";
-import Settings from "@/Pages/Settings.vue";
-import moment from "moment";
-import Multiselect from "@vueform/multiselect";
-import SportIcon from "@/Components/SportIcon.vue";
+import Layout from '@/Layouts/Authenticated.vue'
+import Button from '@/Components/Button.vue'
+import TextInput from '@/Components/TextInput.vue'
+import LoadingButton from '@/Components/LoadingButton.vue'
+import Settings from '@/Pages/Settings.vue'
+import moment from 'moment'
+import Multiselect from '@vueform/multiselect'
+import SportIcon from '@/Components/SportIcon.vue'
 
 export default {
   components: {
@@ -183,61 +181,61 @@ export default {
       gamesResponse: null,
       loadingGames: false,
       speiclaTabsFiltered: null,
-      activeSport: "football",
-    };
+      activeSport: 'football',
+    }
+  },
+
+  computed: {
+    sports() {
+      return this.$page.props.sports
+    },
+    bookmakerNames() {
+      return this.bookmakers
+        .map((el) => el.name)
+        .sort((a, b) => a.localeCompare(b))
+    },
+    stringSettings() {
+      return Object.fromEntries(
+        Object.entries(this.settings).filter(
+          ([key, value]) => value.type == 'string',
+        ),
+      )
+    },
   },
 
   created() {
-    this.moment = moment;
-    this.date = moment().format("YYYY-MM-DD");
-    this.settings = this.$page.props.auth.settings;
-    this.newSettings = this.$inertia.form(this.settings);
+    this.moment = moment
+    this.date = moment().format('YYYY-MM-DD')
+    this.settings = this.$page.props.auth.settings
+    this.newSettings = this.$inertia.form(this.settings)
   },
 
   methods: {
     saveSettings() {
       this.newSettings.post(
-        this.route("userSettings.store", this.$page.props.auth.user.username),
+        this.route('userSettings.store', this.$page.props.auth.user.username),
         {
           preserveScroll: true, // bets are not added to frontend
-        }
-      );
+        },
+      )
     },
 
     setSportType(type) {
-      this.activeSport = type;
+      this.activeSport = type
     },
 
     getGames() {
-      this.loadingGames = true;
+      this.loadingGames = true
       this.$http
-        .get(this.route("games.get", [this.date, this.activeSport]))
+        .get(this.route('games.get', [this.date, this.activeSport]))
         .then((response) => {
-          this.loadingGames = false;
+          this.loadingGames = false
           if (response.data) {
-            this.gamesResponse = response.data.message;
+            this.gamesResponse = response.data.message
           }
-        });
+        })
     },
   },
-
-  computed: {
-    sports() {
-      return this.$page.props.sports;
-    },
-    bookmakerNames() {
-      return this.bookmakers
-        .map((el) => el.name)
-        .sort((a, b) => a.localeCompare(b));
-    },
-    stringSettings() {
-      return Object.fromEntries(
-        Object.entries(this.settings).filter(
-          ([key, value]) => value.type == "string"
-        )
-      );
-    },
-  },
-};
+}
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

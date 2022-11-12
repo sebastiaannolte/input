@@ -11,16 +11,11 @@
       capitalize
     "
     :for="id"
-    >{{ label }}:</label
-  >
+  >{{ label }}:</label>
   <div class="relative" style="height: 38px">
     <input
-      @input="check"
-      @keydown.enter.prevent="onEnter"
-      @keydown.tab="onTab"
-      @blur="outOfFocus"
-      v-model="autocomplete"
       ref="input"
+      v-model="autocomplete"
       autocomplete="off"
       v-bind="{ ...$attrs, class: null }"
       class="
@@ -37,8 +32,13 @@
       "
       :class="{ error: error }"
       :type="type"
+      @input="check"
+      @keydown.enter.prevent="onEnter"
+      @keydown.tab="onTab"
+      @blur="outOfFocus"
     />
     <input
+      v-model="placeholderValue"
       type="text"
       class="
         autocomplete
@@ -54,7 +54,6 @@
         rounded-md
       "
       disabled
-      v-model="placeholderValue"
     />
   </div>
   <div v-if="error" class="form-error text-gray-400">
@@ -64,19 +63,19 @@
 
 
 <script>
-import { computed } from "vue";
+import { computed } from 'vue'
 export default {
   inheritAttrs: false,
   props: {
     id: {
       type: String,
       default() {
-        return `select-input-${Math.random() * 1000}`;
+        return `select-input-${Math.random() * 1000}`
       },
     },
     type: {
       type: String,
-      default: "text",
+      default: 'text',
     },
     modelValue: String,
     label: String,
@@ -87,12 +86,12 @@ export default {
   setup(props, { emit }) {
     const autocomplete = computed({
       get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value),
-    });
+      set: (value) => emit('update:modelValue', value),
+    })
 
     return {
       autocomplete,
-    };
+    }
   },
 
   data() {
@@ -100,31 +99,31 @@ export default {
       placeholderValue: null,
       localOptions: {},
       foundOption: null,
-    };
+    }
   },
 
   created() {
-    this.localOptions = this.options;
+    this.localOptions = this.options
   },
 
   methods: {
     focus() {
-      this.$refs.input.focus();
+      this.$refs.input.focus()
     },
     select() {
-      this.$refs.input.select();
+      this.$refs.input.select()
     },
     setSelectionRange(start, end) {
-      this.$refs.input.setSelectionRange(start, end);
+      this.$refs.input.setSelectionRange(start, end)
     },
     check(e) {
       this.foundOption = this.localOptions.find((option) => {
-        return option.startsWith(e.target.value);
-      }, e.target.value);
+        return option.startsWith(e.target.value)
+      }, e.target.value)
       if (e.target.value) {
-        this.placeholderValue = this.foundOption;
+        this.placeholderValue = this.foundOption
       } else {
-        this.placeholderValue = null;
+        this.placeholderValue = null
       }
 
       // this.$emit("update:modelValue", e.target.value);
@@ -132,21 +131,21 @@ export default {
 
     onEnter() {
       if (this.foundOption) {
-        this.autocomplete = this.foundOption;
+        this.autocomplete = this.foundOption
       }
     },
 
     onTab() {
       if (this.foundOption) {
-        this.autocomplete = this.foundOption;
+        this.autocomplete = this.foundOption
       }
     },
 
     outOfFocus() {
-      this.placeholderValue = null;
+      this.placeholderValue = null
     },
   },
-};
+}
 </script>
 
 <style scoped>

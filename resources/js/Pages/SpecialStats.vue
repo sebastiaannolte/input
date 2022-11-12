@@ -1,14 +1,13 @@
 <template>
   <Head :title="title" />
   <table-filter-header title="Special stats" />
-  <active-filters :prop-filters="filters" :filter-route="filterRoute"  />
+  <active-filters :prop-filters="filters" :filter-route="filterRoute" />
   <div class="flex flex-col items-center">
     <div class="sm:hidden w-full mb-2">
       <label for="tabs" class="sr-only">Select a tab</label>
       <select
         id="tabs"
         name="tabs"
-        @change="onDropdownTabChange"
         class="
           capitalize
           block
@@ -24,6 +23,7 @@
           sm:text-sm
           rounded-md
         "
+        @change="onDropdownTabChange"
       >
         <option
           v-for="tab in generatedTabs"
@@ -68,16 +68,18 @@
         </div>
       </div>
       <div class="relative" :style="loading ? 'height: 500px' : ''">
-        <loading z-index="10" v-model:active="loading" :is-full-page="false" />
+        <loading v-model:active="loading" z-index="10" :is-full-page="false" />
       </div>
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div
             class="shadow overflow-hidden border-b border-gray-200 rounded-md"
           >
-            <table class="min-w-full divide-y divide-gray-200" v-if="!loading">
+            <table v-if="!loading" class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <th
+                  v-for="(values, keys) in currentTable.head"
+                  :key="keys"
                   scope="col"
                   class="
                     t-header
@@ -89,8 +91,6 @@
                     uppercase
                     tracking-wider
                   "
-                  :key="keys"
-                  v-for="(values, keys) in currentTable.head"
                   :class="{
                     'arrow-down':
                       sort.sortType == values &&
@@ -111,6 +111,8 @@
                   :class="key % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
                 >
                   <td
+                    v-for="(values, key) in values"
+                    :key="key"
                     class="
                       first:font-bold
                       px-6
@@ -120,12 +122,10 @@
                       font-medium
                       text-gray-900 text-left
                     "
-                    v-for="(values, key) in values"
-                    :key="key"
                   >
                     <button
-                      @click="goTo(currentTab.route, values.specialId)"
                       v-if="values.specialId"
+                      @click="goTo(currentTab.route, values.specialId)"
                     >
                       {{ values.value }}
                     </button>
@@ -137,8 +137,8 @@
             <div
               v-if="
                 currentTable &&
-                currentTable.body &&
-                currentTable.body.length == 0
+                  currentTable.body &&
+                  currentTable.body.length == 0
               "
               class="
                 bg-white
@@ -169,23 +169,23 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import ActiveFilters from "@/PageComponents/ActiveFilters.vue";
-import pickBy from "lodash/pickBy";
-import TableFilterHeader from "@/PageComponents/TableFilterHeader.vue";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
-import Pagination from "@/PageComponents/Pagination.vue";
-import { Inertia } from "@inertiajs/inertia";
+import Layout from '@/Layouts/Authenticated.vue'
+import ActiveFilters from '@/PageComponents/ActiveFilters.vue'
+import pickBy from 'lodash/pickBy'
+import TableFilterHeader from '@/PageComponents/TableFilterHeader.vue'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+import Pagination from '@/PageComponents/Pagination.vue'
+import { Inertia } from '@inertiajs/inertia'
 
 export default {
-  layout: Layout,
   components: {
     TableFilterHeader,
     Loading,
     Pagination,
     ActiveFilters,
   },
+  layout: Layout,
   props: {
     filters: Array,
     tabs: Array,
@@ -208,39 +208,39 @@ export default {
         perPage: null,
       },
       currentTab: null,
-    };
+    }
   },
 
   created() {
-    this.filterRoute = this.route("special", {
+    this.filterRoute = this.route('special', {
       username: this.$page.props.userInfo.user.username,
       _query: pickBy({ type: this.type, sort: this.sort }),
-    });
+    })
 
-    this.createTabs();
-    this.emitter.on("filter:submit", () => {
+    this.createTabs()
+    this.emitter.on('filter:submit', () => {
       // this.getStats();
-    });
+    })
 
-    this.currentTable = this.stats.table;
-    this.pagination.totalResults = this.stats.totalResults;
-    this.pagination.perPage = this.stats.perPage;
-    this.setPageTitle();
+    this.currentTable = this.stats.table
+    this.pagination.totalResults = this.stats.totalResults
+    this.pagination.perPage = this.stats.perPage
+    this.setPageTitle()
   },
 
   methods: {
     getStats() {
       Inertia.get(
-        this.route("special", this.$page.props.userInfo.user.username),
+        this.route('special', this.$page.props.userInfo.user.username),
         pickBy({
           type: this.currentTab.option,
           sort: this.sort,
           filters: this.filters,
         }),
         {
-          only: ["type", "sort", "filters", "stats"],
-        }
-      );
+          only: ['type', 'sort', 'filters', 'stats'],
+        },
+      )
     },
 
     goTo(route, id) {
@@ -252,74 +252,74 @@ export default {
         {
           preserveScroll: true,
           preserveState: true,
-        }
-      );
+        },
+      )
     },
 
     openTab(value) {
-      this.changeTab(value);
+      this.changeTab(value)
     },
 
     onDropdownTabChange(event) {
-      this.changeTab(event.target.value);
+      this.changeTab(event.target.value)
     },
 
     changeTab(value) {
-      this.sort.sortType = "bets";
-      this.currentTab = this.generatedTabs.find((tab) => tab.option == value);
+      this.sort.sortType = 'bets'
+      this.currentTab = this.generatedTabs.find((tab) => tab.option == value)
       Inertia.get(
-        this.route("special", this.$page.props.userInfo.user.username),
+        this.route('special', this.$page.props.userInfo.user.username),
         pickBy({
           type: this.currentTab.option,
           filters: null, // reset filters if tab changes
         }),
         {
           preserveScroll: true,
-          only: ["type", "filters", "stats"],
-        }
-      );
+          only: ['type', 'filters', 'stats'],
+        },
+      )
 
     },
 
     createTabs() {
       for (const key in this.tabs) {
-        var tab = this.tabs[key];
-        var current = false;
+        var tab = this.tabs[key]
+        var current = false
         var localTab = {
           option: tab.name,
           current: current,
           route: tab.route,
-        };
-        if (tab.name == this.type) {
-          localTab.current = true;
-          this.currentTab = localTab;
         }
-        this.generatedTabs.push(localTab);
+        if (tab.name == this.type) {
+          localTab.current = true
+          this.currentTab = localTab
+        }
+        this.generatedTabs.push(localTab)
       }
     },
 
     setPageTitle() {
-      this.title = "Your special stats";
+      this.title = 'Your special stats'
       if (!this.$page.props.userInfo.myPage) {
-        this.title = this.$page.props.userInfo.user.name + "'s special stats";
+        this.title = this.$page.props.userInfo.user.name + '\'s special stats'
       }
     },
 
     sortHeader(tableHeader) {
       if (this.currentTable.body.length < 2) {
-        return;
+        return
       }
 
       if (this.sort.sortType != tableHeader) {
-        this.sort.sortOrder = "DESC";
+        this.sort.sortOrder = 'DESC'
       } else {
         this.sort.sortOrder =
-          this.sort.sortOrder == "DESC" ? "ASC" : "DESC";
+          this.sort.sortOrder == 'DESC' ? 'ASC' : 'DESC'
       }
-      this.sort.sortType = tableHeader;
+      this.sort.sortType = tableHeader
 
-      this.getStats();
+      this.getStats()
     },
   },
-};
+}
 </script>

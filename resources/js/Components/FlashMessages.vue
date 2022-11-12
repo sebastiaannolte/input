@@ -1,23 +1,21 @@
-<template>
-
-</template>
+<template />
 <script>
 export default {
   data() {
     return {
       show: true,
-    };
+    }
   },
 
   watch: {
-    "$page.props.flash": {
+    '$page.props.flash': {
       handler() {
-        this.show = true;
+        this.show = true
 
         if (this.$page.props.flash.success && this.show) {
           this.$toast.success(this.$page.props.flash.success, {
-            position: "bottom-left",
-          });
+            position: 'bottom-left',
+          })
         }
 
         if (
@@ -25,25 +23,25 @@ export default {
             Object.keys(this.$page.props.errors).length > 0) &&
           this.show
         ) {
-          var errorMessage = "";
+          var errorMessage = ''
           if (this.$page.props.flash.error) {
-            errorMessage = this.$page.props.flash.error;
+            errorMessage = this.$page.props.flash.error
           } else {
             if (Object.keys(this.$page.props.errors).length === 1) {
-              errorMessage = "There is one form error";
+              errorMessage = 'There is one form error'
             } else {
               errorMessage =
-                "There are " +
+                'There are ' +
                 Object.keys(this.$page.props.errors).length +
-                " form errors";
+                ' form errors'
             }
           }
 
-          this.$toast.error(errorMessage, { position: "bottom-left" });
+          this.$toast.error(errorMessage, { position: 'bottom-left' })
         }
       },
       deep: true,
     },
   },
-};
+}
 </script>

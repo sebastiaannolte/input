@@ -22,25 +22,25 @@
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated.vue";
-import ShowFilterButton from "@/Components/ShowFilterButton.vue";
+import Layout from '@/Layouts/Authenticated.vue'
+import ShowFilterButton from '@/Components/ShowFilterButton.vue'
 
 export default {
-  layout: Layout,
 
   components: {
     ShowFilterButton,
   },
+  layout: Layout,
 
   props: {
     title: String,
   },
   data() {
-    return {};
+    return {}
   },
 
   created() {},
 
   methods: {},
-};
+}
 </script>

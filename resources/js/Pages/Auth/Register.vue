@@ -21,9 +21,9 @@
           <breeze-label for="name" value="Name" />
           <breeze-input
             id="name"
+            v-model="form.name"
             type="text"
             class="mt-1 block w-full"
-            v-model="form.name"
             required
             autofocus
             autocomplete="name"
@@ -33,9 +33,9 @@
           <breeze-label for="username" value="Username" />
           <breeze-input
             id="username"
+            v-model="form.username"
             type="text"
             class="mt-1 block w-full"
-            v-model="form.username"
             required
             autofocus
             autocomplete="username"
@@ -46,9 +46,9 @@
           <breeze-label for="email" value="Email" />
           <breeze-input
             id="email"
+            v-model="form.email"
             type="email"
             class="mt-1 block w-full"
-            v-model="form.email"
             required
             autocomplete="username"
           />
@@ -58,9 +58,9 @@
           <breeze-label for="password" value="Password" />
           <breeze-input
             id="password"
+            v-model="form.password"
             type="password"
             class="mt-1 block w-full"
-            v-model="form.password"
             required
             autocomplete="new-password"
           />
@@ -70,9 +70,9 @@
           <breeze-label for="password_confirmation" value="Confirm Password" />
           <breeze-input
             id="password_confirmation"
+            v-model="form.password_confirmation"
             type="password"
             class="mt-1 block w-full"
-            v-model="form.password_confirmation"
             required
             autocomplete="new-password"
           />
@@ -100,14 +100,13 @@
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button.vue";
-import Layout from "@/Layouts/Guest.vue";
-import BreezeInput from "@/Components/Input.vue";
-import BreezeLabel from "@/Components/Label.vue";
-import BreezeValidationErrors from "@/Components/ValidationErrors.vue";
+import BreezeButton from '@/Components/Button.vue'
+import Layout from '@/Layouts/Guest.vue'
+import BreezeInput from '@/Components/Input.vue'
+import BreezeLabel from '@/Components/Label.vue'
+import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
 
 export default {
-  layout: Layout,
 
   components: {
     BreezeButton,
@@ -115,26 +114,27 @@ export default {
     BreezeLabel,
     BreezeValidationErrors,
   },
+  layout: Layout,
 
   data() {
     return {
       form: this.$inertia.form({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
         terms: false,
       }),
-    };
+    }
   },
 
   methods: {
     submit() {
-      this.form.post(this.route("register"), {
-        onFinish: () => this.form.reset("password", "password_confirmation"),
-      });
+      this.form.post(this.route('register'), {
+        onFinish: () => this.form.reset('password', 'password_confirmation'),
+      })
     },
   },
-};
+}
 </script>
