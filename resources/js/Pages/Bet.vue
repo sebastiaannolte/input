@@ -1,7 +1,8 @@
 <template>
   <Head :title="bet.event" />
-  <div
-    class="
+  <Layout :title="bet.event" :errors="errors">
+    <div
+      class="
       px-4
       mb-4
       w-full
@@ -14,12 +15,12 @@
       rounded-md
       sm:overflow-hidden
     "
-  >
-    <div class="sm:flex pb-5">
-      <div class="hidden sm:block">
-        <inertia-link
-          :href="backUrl"
-          class="
+    >
+      <div class="sm:flex pb-5">
+        <div class="hidden sm:block">
+          <inertia-link
+            :href="backUrl"
+            class="
             bg-white
             border border-gray-300
             rounded-md
@@ -37,15 +38,15 @@
             flex
             items-center
           "
-        >
-          <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" /> All
-          bets
-        </inertia-link>
-      </div>
-      <div class="flex sm:flex-row flex-grow flex-col-reverse">
-        <h2
-          id="payment-details-heading"
-          class="
+          >
+            <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" /> All
+            bets
+          </inertia-link>
+        </div>
+        <div class="flex sm:flex-row flex-grow flex-col-reverse">
+          <h2
+            id="payment-details-heading"
+            class="
             text-2xl
             leading-6
             font-medium
@@ -55,14 +56,14 @@
             p-2
             flex-1
           "
-        >
-          {{ bet.event }}
-        </h2>
-        <div class="flex justify-between">
-          <div>
-            <inertia-link
-              :href="backUrl"
-              class="
+          >
+            {{ bet.event }}
+          </h2>
+          <div class="flex justify-between">
+            <div>
+              <inertia-link
+                :href="backUrl"
+                class="
                 block
                 sm:hidden
                 bg-white
@@ -82,14 +83,14 @@
                 flex
                 items-center
               "
-            >
-              <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" />
-              All bets
-            </inertia-link>
-          </div>
-          <div>
-            <button
-              class="
+              >
+                <ArrowNarrowLeftIcon class="h-4 w-4 mr-1.5" aria-hidden="true" />
+                All bets
+              </inertia-link>
+            </div>
+            <div>
+              <button
+                class="
                 mr-2
                 bg-white
                 border border-gray-300
@@ -106,12 +107,12 @@
                 focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
               "
-              @click="destroy"
-            >
-              Delete
-            </button>
-            <button
-              class="
+                @click="destroy"
+              >
+                Delete
+              </button>
+              <button
+                class="
                 bg-red-500
                 border border-transparent
                 rounded-md
@@ -127,150 +128,151 @@
                 focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
               "
-              @click="editBet"
-            >
-              Edit
-            </button>
+                @click="editBet"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-8 gap-4 text-left">
+        <div class="col-span-8 sm:col-span-4">
+          <div class="p-2">Event</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.event }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Selection</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.selection }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Category</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ categoryName }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Bookie</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.bookie }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Stake</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.stake }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Odds</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.odds }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Result</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ betResult }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Date</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ moment(bet.date).format("YYYY-MM-DD HH:mm") }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Tipster</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.tipster }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Status</div>
+          <div class="p-2 mb-2 font-bold">
+            {{ bet.status }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Type</div>
+          <div class="p-2 mb-2 font-bold capitalize">
+            {{ bet.type }}
+          </div>
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <div class="p-2">Placed on</div>
+          <div class="p-2 mb-2 font-bold capitalize">
+            {{ moment(bet.created_at).format("YYYY-MM-DD HH:mm") }}
           </div>
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-8 gap-4 text-left">
-      <div class="col-span-8 sm:col-span-4">
-        <div class="p-2">Event</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.event }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Selection</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.selection }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Category</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ categoryName }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Bookie</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.bookie }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Stake</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.stake }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Odds</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.odds }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Result</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ betResult }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Date</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ moment(bet.date).format("YYYY-MM-DD HH:mm") }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Tipster</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.tipster }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Status</div>
-        <div class="p-2 mb-2 font-bold">
-          {{ bet.status }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Type</div>
-        <div class="p-2 mb-2 font-bold capitalize">
-          {{ bet.type }}
-        </div>
-      </div>
-      <div class="col-span-4 sm:col-span-2">
-        <div class="p-2">Placed on</div>
-        <div class="p-2 mb-2 font-bold capitalize">
-          {{ moment(bet.created_at).format("YYYY-MM-DD HH:mm") }}
-        </div>
-      </div>
-    </div>
-  </div>
+  </Layout>
 </template>
 
 <script>
+export default {
+
+  created() {
+    // this.moment = moment
+
+  },
+  methods: {
+
+  },
+}
+</script>
+
+<script setup>
 import Layout from '@/Layouts/Authenticated.vue'
 import { ArrowNarrowLeftIcon } from '@heroicons/vue/outline'
 import moment from 'moment'
+import emitter from '@/Plugins/mitt'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { computed, ref } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 
-export default {
+const props = defineProps({
+  bet: Object,
+  errors: Object,
+})
 
-  components: {
-    ArrowNarrowLeftIcon,
-  },
-  layout: Layout,
+const backUrl = ref(route('userhome', usePage().props.value.userInfo.user.username))
 
-  props: {
-    bet: Object,
-  },
-  data() {
-    return {
-      backUrl: this.route('userhome', this.$page.props.userInfo.user.username),
-    }
-  },
-
-  computed: {
-    betResult() {
-      return this.bet.result ? this.bet.result : 'No result'
-    },
-  
-    categoryName() {
-      if (!this.bet.category) {
-        return
-      }
-      var categories = this.bet.category.split(', ')
-      var categoryNames = []
-      for (var key in categories) {
-        var value = categories[key]
-        categoryNames.push(
-          this.$page.props.betTypes[this.bet.sport].find((betType) => betType.id == value).name,
-        )
-      }
-      return categoryNames.join(', ')
-    },
-  },
-
-  created() {
-    this.moment = moment
-    var urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('backUrl')) {
-      this.backUrl = urlParams.get('backUrl')
-    }
-  },
-
-  methods: {
-    editBet() {
-      this.emitter.emit('event:edit', Object.assign({}, this.bet))
-    },
-    destroy() {
-      if (confirm('Are you sure you want to delete this bet?')) {
-        this.$inertia.delete(this.route('bet.delete', this.bet.id))
-      }
-    },
-  },
+var urlParams = new URLSearchParams(window.location.search)
+if (urlParams.get('backUrl')) {
+  backUrl.value = urlParams.get('backUrl')
 }
+
+const betResult = computed(() => props.bet.result ?? 'No result')
+
+const categoryName = computed(() => {
+  if (!props.bet.category) {
+    return
+  }
+  var categories = props.bet.category.split(', ')
+  var categoryNames = []
+  for (var key in categories) {
+    var value = categories[key]
+    categoryNames.push(
+      usePage().props.value.betTypes[props.bet.sport].find((betType) => betType.id == value).name,
+    )
+  }
+  return categoryNames.join(', ')
+})
+
+const editBet = () => {
+  emitter.emit('event:edit', Object.assign({}, props.bet))
+}
+
+const destroy = () => {
+  if (confirm('Are you sure you want to delete this bet?')) {
+    Inertia.delete(route('bet.delete', props.bet.id))
+  }
+}
+
 </script>

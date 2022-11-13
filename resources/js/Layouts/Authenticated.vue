@@ -1,4 +1,5 @@
 <template>
+  <Head :title="title" />
   <FlashMessages />
   <inertia-link
     :href="route('import.index')"
@@ -159,19 +160,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  methods: {
-    openBet() {
-      this.emitter.emit('betForm:show')
-    },
-    url() {
-      return location.pathname.substr(1)
-    },
-  },
-}
-</script>
-
 <script setup>
 import { ref, computed } from 'vue'
 import { BookmarkIcon } from '@heroicons/vue/solid'
@@ -181,16 +169,20 @@ import {
 import {
   BellIcon, MenuIcon, XIcon, PlusIcon as PlusIconOutline,
 } from '@heroicons/vue/outline'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { Head, usePage } from '@inertiajs/inertia-vue3'
 import BottomMenu from '@/Components/BottomMenu.vue'
 import Logo from '@/Components/Logo.vue'
 import FlashMessages from '@/Components/FlashMessages.vue'
 import BetFormSlideOver from '@/PageComponents/BetFormSlideOver.vue'
+import emitter from '@/Plugins/mitt'
 
-defineProps({
+const props = defineProps({
   errors: Object,
   bet: Object,
+  title: String,
 })
+
+console.log(props.errors)
 
 const user = computed(() => usePage().props.value.auth.user)
 
@@ -208,4 +200,12 @@ const menu = [
     url: `${user.value.username}/special`,
   },
 ]
+
+const openBet = () => {
+  emitter.emit('betForm:show')
+}
+
+const url = () => {
+  return location.pathname.substr(1)
+}
 </script>

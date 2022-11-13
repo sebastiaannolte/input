@@ -459,6 +459,7 @@ import moment from 'moment'
 import Button from '@/Components/Button.vue'
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
 import SportIcon from '@/Components/SportIcon.vue'
+import emitter from '@/Plugins/mitt'
 
 export default {
   components: {
@@ -529,7 +530,7 @@ export default {
 
   created() {
     this.moment = moment
-    this.emitter.on('event:scroll', (id) => {
+    emitter.on('event:scroll', (id) => {
       this.scrollAndHighlight(id)
     })
   },

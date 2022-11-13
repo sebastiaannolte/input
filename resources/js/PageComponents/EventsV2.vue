@@ -2,12 +2,12 @@
   <div>
     <div class="flex">
       <Multiselect
+        ref="multiselect"
         v-model="event"
         mode="single"
         placeholder="Search a match"
         no-options-text="Start typing to find a match"
         :filterResults="false"
-        ref="multiselect"
         :min-chars="3"
         :caret="false"
         :resolve-on-load="false"
@@ -86,6 +86,7 @@
 import TextInput from '@/Components/TextInput.vue'
 import Multiselect from '@vueform/multiselect'
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/vue/solid'
+import emitter from '@/Plugins/mitt'
 
 export default {
   components: { TextInput, Multiselect, LockClosedIcon, LockOpenIcon },
@@ -126,7 +127,7 @@ export default {
       this.betData = this.bet
     }
 
-    this.emitter.on('event:clear', () => {
+    emitter.on('event:clear', () => {
       this.betData.event = null
       this.betData.match = null
     })

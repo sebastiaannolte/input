@@ -41,6 +41,7 @@ import {
   SearchCircleIcon as SearchCircleIconSolid,
   DocumentReportIcon as DocumentReportIconSolid,
 } from '@heroicons/vue/solid'
+import emitter from '@/Plugins/mitt'
 
 export default {
   components: {
@@ -111,7 +112,7 @@ export default {
 
   methods: {
     openBet() {
-      this.emitter.emit('betForm:show')
+      emitter.emit('betForm:show')
     },
 
     getActiveItem(item) {

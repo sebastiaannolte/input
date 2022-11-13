@@ -1,66 +1,46 @@
 <template>
-  <Head :title="title" />
-  <stats :stats="stats" :upcomming-bets="upcommingBets" />
-  <bets
-    :bets="bets"
-    :filters="filters"
-    :filter-button="true"
-    :filter-route="
-      route('userhome', $page.props.userInfo.user.username)
-    "
-  />
+  <Layout :errors="errors" :title="title">
+    <stats :stats="stats" :upcomming-bets="upcommingBets" />
+    <bets
+      :bets="bets"
+      :filters="filters"
+      :filter-button="true"
+      :filter-route="
+        route('userhome', $page.props.userInfo.user.username)
+      "
+    />
+  </Layout>
 </template>
 
-<script>
+<script setup>
 import Layout from '@/Layouts/Authenticated.vue'
 import Bets from '@/PageComponents/Bets.vue'
 import Stats from '@/PageComponents/Stats.vue'
+import emitter from '@/Plugins/mitt'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { ref } from 'vue'
 
-export default {
-  components: {
-    Bets,
-    Stats,
-  },
-  layout: Layout,
+const props = defineProps({
+  errors: Object,
+  bets: Object,
+  stats: Object,
+  filters: Array,
+  upcommingBets: Object,
+  import: Object,
+})
 
-  props: {
-    errors: Object,
-    bets: Object,
-    stats: Object,
-    filters: Array,
-    upcommingBets: Object,
-    import: Object,
-  },
-  data() {
-    return {
-      betForm: this.$inertia.form(this.bet),
-      title: null,
-    }
-  },
+const title = ref(null)
 
-  created() {
-    this.setPageTitle()
-    if (this.import) {
-      this.emitter.emit('event:import', this.import)
-    }
-  },
-
-  methods: {
-    handleSubmit(bet) {
-      this.betForm = this.$inertia.form(bet)
-      this.betForm.post(this.route('bet.store'), {
-        preserveScroll: true,
-        onSuccess: () =>
-          this.betForm.clearInputs ? this.emitter.emit('event:clear') : '',
-      })
-    },
-
-    setPageTitle() {
-      this.title = 'Your bets'
-      if (!this.$page.props.userInfo.myPage) {
-        this.title = 'Bets by ' + this.$page.props.userInfo.user.name
-      }
-    },
-  },
+if (props.import) {
+  emitter.emit('event:import', props.import)
 }
+
+const setPageTitle = () => {
+  title.value = 'Your bets'
+  if (!usePage().props.value.userInfo.myPage) {
+    title.value = 'Bets by ' + usePage().props.value.userInfo.user.name
+  }
+}
+
+setPageTitle()
 </script>

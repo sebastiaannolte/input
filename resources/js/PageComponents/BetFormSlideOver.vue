@@ -325,6 +325,133 @@
 </template>
 
 <script>
+export default {
+  data() {
+    return {
+
+    }
+  },
+  computed: {
+    sports() {
+      return this.$page.props.sports
+    },
+  },
+  watch: {
+    open: function (newOpen, oldOpen) {
+      if (newOpen == false) {
+        this.bet = null
+      }
+    },
+  },
+  created() {
+
+  },
+  methods: {
+    // setUserSettings() {
+    //   var userSettings = this.$page.props.auth.settings
+    //   for (const key in userSettings) {
+    //     var setting = userSettings[key]
+    //     this.betData[key] = setting.value
+    //   }
+    // },
+    // setSportType(type) {
+    //   this.activeSport = type
+    //   this.betData.sport = type
+    // },
+
+    // addGame() {
+    //   this.currentGameId++
+    //   this.addedGames[this.currentGameId] = 0
+    // },
+    // save() {
+    //   var route = ''
+    //   if (this.bet && this.bet.id) {
+    //     route = this.route('bet.update')
+    //     this.betData.games = this.games
+
+    //     this.betData.put(route, {
+    //       preserveScroll: true,
+    //       onSuccess: () => {
+    //         this.setBetData()
+    //         this.open = false
+    //         emitter.emit('event:clear')
+    //       },
+    //     })
+    //   } else {
+    //     var importId = this.betData.importId
+    //     route = this.route('bet.store')
+    //     this.betData.games = this.games
+    //     this.betData.post(route, {
+    //       preserveScroll: true,
+    //       onSuccess: () => {
+    //         if (this.betData.clearInputs) {
+    //           this.setBetData()
+    //           this.open = false
+    //           emitter.emit('event:clear')
+    //         }
+
+    //         if (importId > 0) {
+    //           this.$http
+    //             .put(
+    //               this.route(
+    //                 'import.update',
+    //               ),
+    //               {
+    //                 id: importId,
+    //               },
+    //             )
+    //             .then((response) => {
+    //               this.$inertia.visit(this.route('import.index'))
+    //             })
+    //         }
+    //       },
+    //     })
+    //   }
+    // },
+
+    // setBetData() {
+    //   if (!this.bet) {
+    //     this.title = 'New bet'
+    //     this.betData = this.$inertia.form({
+    //       bookie: null,
+    //       tipster: null,
+    //       sport: this.activeSport,
+    //       odds: null,
+    //       stake: null,
+    //       type: null,
+    //       games: null,
+    //       clearInputs: true,
+    //     })
+    //     this.setUserSettings()
+    //   } else if (this.bet.id) {
+    //     this.bet.games = {}
+    //     this.betData = this.$inertia.form(this.bet)
+    //     this.title = 'Edit ' + this.bet.event
+    //   } else {
+    //     this.bet.games = {}
+    //     this.betData = this.$inertia.form(
+    //       Object.assign(
+    //         {
+    //           bookie: null,
+    //           tipster: null,
+    //           sport: this.activeSport,
+    //           odds: null,
+    //           stake: null,
+    //           type: null,
+    //           games: null,
+    //           clearInputs: true,
+    //         },
+    //         this.bet,
+    //       ),
+    //     )
+    //     this.title = 'New bet'
+    //   }
+    // },
+  },
+}
+</script>
+
+<script setup>
 import Button from '@/Components/Button.vue'
 import Events from '@/PageComponents/Events.vue'
 import Event from '@/PageComponents/Event.vue'
@@ -333,8 +460,7 @@ import AutocompleteInput from '@/Components/AutocompleteInput.vue'
 import LoadingButton from '@/Components/LoadingButton.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
-import moment from 'moment'
-import Multiselect from '@vueform/multiselect'
+
 import {
   Dialog,
   DialogOverlay,
@@ -345,220 +471,176 @@ import {
 import { XIcon, PlusIcon } from '@heroicons/vue/outline'
 import { ref } from 'vue'
 import SportIcon from '@/Components/SportIcon.vue'
+import emitter from '@/Plugins/mitt'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
 
-export default {
-  components: {
-    Dialog,
-    DialogOverlay,
-    DialogTitle,
-    TransitionChild,
-    TransitionRoot,
-    XIcon,
-    PlusIcon,
-    Button,
-    Events,
-    Event,
-    TextInput,
-    TextInputWithAddOn,
-    Dropdown,
-    LoadingButton,
-    AutocompleteInput,
-    Multiselect,
-    SportIcon,
-  },
+defineProps({
+  errors: Object,
+})
 
-  props: {
-    errors: Object,
-  },
-  setup() {
-    const open = ref(false)
+const open = ref(false)
 
-    return {
-      open,
-    }
-  },
-  data() {
-    return {
-      bet: null,
-      betData: {},
-      betTypes: this.$page.props.betTypes,
-      title: null,
-      addedGames: { 0: 0 },
-      currentGameId: 0,
-      games: {},
-      renderComponent: true,
-      isEdit: false,
-      activeSport: 'football',
-    }
-  },
+const bet = ref(null)
+const betData = ref({})
+const betTypes = ref(usePage().props.value.betTypes)
+const title= ref(null)
+const addedGames= ref({ 0:0 })
+const currentGameId= ref(0)
+const games= ref({})
+const renderComponent= ref(true)
+const isEdit= ref(false)
+const activeSport= ref('football')
 
-  computed: {
-    sports() {
-      return this.$page.props.sports
-    },
-  },
+emitter.on('betForm:show', () => {
+  open.value = true
+  isEdit.value = bet.value && Object.keys(bet.value).length > 0 && bet.value.id
+  if (!bet.value) {
+    // Reset games if slide over is opened
+    games.value = {}
+    addedGames.value = { 0: 0 }
+  }
+  setBetData()
+})
 
-  watch: {
-    open: function (newOpen, oldOpen) {
-      if (newOpen == false) {
-        this.bet = null
-      }
-    },
-  },
+emitter.on('game:delete', (index) => {
+  delete addedGames.value[index]
+  delete games.value[index]
+})
 
-  created() {
-    this.emitter.on('betForm:show', () => {
-      this.open = true
-      this.isEdit = this.bet && Object.keys(this.bet).length > 0 && this.bet.id
-      if (!this.bet) {
-        // Reset games if slide over is opened
-        this.games = {}
-        this.addedGames = { 0: 0 }
-      }
-      this.setBetData()
+emitter.on('event:search', (event) => {
+  betData.value.event = event.event
+})
+
+emitter.on('event:edit', (event) => {
+  bet.value = event
+  activeSport.value = bet.value.sport
+  currentGameId.value = bet.value.bet_fixture.length - 1
+  addedGames.value = Object.assign({}, bet.value.bet_fixture)
+  emitter.emit('betForm:show')
+})
+
+emitter.on('event:import', (event) => {
+  bet.value = event
+  currentGameId.value = bet.value.games.length - 1
+  addedGames.value = Object.assign({}, bet.value.games)
+  emitter.emit('betForm:show')
+})
+
+emitter.on('event:clear', (event) => {
+  betData.value = useForm({
+    bookie: null,
+    tipster: null,
+    odds: null,
+    stake: null,
+    sport: null,
+    type: null,
+    clearInputs: true,
+  })
+  setUserSettings()
+})
+
+const setBetData = () => {
+  if (!bet.value) {
+    title.value = 'New bet'
+    betData.value = useForm({
+      bookie: null,
+      tipster: null,
+      sport: activeSport.value,
+      odds: null,
+      stake: null,
+      type: null,
+      games: null,
+      clearInputs: true,
     })
-
-    this.emitter.on('game:delete', (index) => {
-      delete this.addedGames[index]
-      delete this.games[index]
-    })
-
-    this.moment = moment
-    this.emitter.on('event:search', (event) => {
-      this.betData.event = event.event
-    })
-
-    this.emitter.on('event:edit', (event) => {
-      this.bet = event
-      this.activeSport = this.bet.sport
-      this.currentGameId = this.bet.bet_fixture.length - 1
-      this.addedGames = Object.assign({}, this.bet.bet_fixture)
-      this.emitter.emit('betForm:show')
-    })
-
-    this.emitter.on('event:import', (event) => {
-      this.bet = event
-      this.currentGameId = this.bet.games.length - 1
-      this.addedGames = Object.assign({}, this.bet.games)
-      this.emitter.emit('betForm:show')
-    })
-
-    this.emitter.on('event:clear', (event) => {
-      this.betData = this.$inertia.form({
-        bookie: null,
-        tipster: null,
-        odds: null,
-        stake: null,
-        sport: null,
-        type: null,
-        clearInputs: true,
-      })
-      this.setUserSettings()
-    })
-  },
-
-  methods: {
-    setUserSettings() {
-      var userSettings = this.$page.props.auth.settings
-      for (const key in userSettings) {
-        var setting = userSettings[key]
-        this.betData[key] = setting.value
-      }
-    },
-    setSportType(type) {
-      this.activeSport = type
-      this.betData.sport = type
-    },
-
-    addGame() {
-      this.currentGameId++
-      this.addedGames[this.currentGameId] = 0
-    },
-    save() {
-      var route = ''
-      if (this.bet && this.bet.id) {
-        route = this.route('bet.update')
-        this.betData.games = this.games
-
-        this.betData.put(route, {
-          preserveScroll: true,
-          onSuccess: () => {
-            this.setBetData()
-            this.open = false
-            this.emitter.emit('event:clear')
-          },
-        })
-      } else {
-        var importId = this.betData.importId
-        route = this.route('bet.store')
-        this.betData.games = this.games
-        this.betData.post(route, {
-          preserveScroll: true,
-          onSuccess: () => {
-            if (this.betData.clearInputs) {
-              this.setBetData()
-              this.open = false
-              this.emitter.emit('event:clear')
-            }
-
-            if (importId > 0) {
-              this.$http
-                .put(
-                  this.route(
-                    'import.update',
-                  ),
-                  {
-                    id: importId,
-                  },
-                )
-                .then((response) => {
-                  this.$inertia.visit(this.route('import.index'))
-                })
-            }
-          },
-        })
-      }
-    },
-
-    setBetData() {
-      if (!this.bet) {
-        this.title = 'New bet'
-        this.betData = this.$inertia.form({
+    setUserSettings()
+  } else if (bet.value.id) {
+    bet.value.games = {}
+    betData.value = useForm(bet.value)
+    title.value = 'Edit ' + bet.value.event
+  } else {
+    bet.value.games = {}
+    betData.value = useForm(
+      Object.assign(
+        {
           bookie: null,
           tipster: null,
-          sport: this.activeSport,
+          sport: activeSport.value,
           odds: null,
           stake: null,
           type: null,
           games: null,
           clearInputs: true,
-        })
-        this.setUserSettings()
-      } else if (this.bet.id) {
-        this.bet.games = {}
-        this.betData = this.$inertia.form(this.bet)
-        this.title = 'Edit ' + this.bet.event
-      } else {
-        this.bet.games = {}
-        this.betData = this.$inertia.form(
-          Object.assign(
-            {
-              bookie: null,
-              tipster: null,
-              sport: this.activeSport,
-              odds: null,
-              stake: null,
-              type: null,
-              games: null,
-              clearInputs: true,
-            },
-            this.bet,
-          ),
-        )
-        this.title = 'New bet'
-      }
-    },
-  },
+        },
+        bet.value,
+      ),
+    )
+    title.value = 'New bet'
+  }
+}
+
+const setUserSettings = () => {
+  var userSettings = usePage().props.value.auth.settings
+  for (const key in userSettings) {
+    var setting = userSettings[key]
+    betData.value[key] = setting.value
+  }
+}
+
+const setSportType = (type) => {
+  activeSport.value = type
+  betData.value.sport = type
+}
+
+const addGame = () => {
+  currentGameId.value++
+  addedGames.value[currentGameId.value] = 0
+}
+
+const save = () => {
+  var router = ''
+  if (bet.value && bet.value.id) {
+    router = route('bet.update')
+    betData.value.games = this.games
+
+    betData.value.put(router, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setBetData()
+        open.value = false
+        emitter.emit('event:clear')
+      },
+    })
+  } else {
+    var importId = betData.value.importId
+    router = route('bet.store')
+    betData.value.games = games.value
+    betData.value.post(router, {
+      preserveScroll: true,
+      onSuccess: () => {
+        if (betData.value.clearInputs) {
+          setBetData()
+          open.value = false
+          emitter.emit('event:clear')
+        }
+
+        if (importId > 0) {
+          this.$http
+            .put(
+              route(
+                'import.update',
+              ),
+              {
+                id: importId,
+              },
+            )
+            .then((response) => {
+              Inertia.visit(route('import.index'))
+            })
+        }
+      },
+    })
+  }
 }
 </script>
 

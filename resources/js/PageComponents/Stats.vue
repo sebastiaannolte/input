@@ -65,31 +65,18 @@
   </div>
 </template>
 
-
-
-<script>
+<script setup>
 import Layout from '@/Layouts/Authenticated.vue'
 import moment from 'moment'
+import emitter from '@/Plugins/mitt'
 
-export default {
-  layout: Layout,
+defineProps({
+  stats: Object,
+  upcommingBets: Object,
+})
 
-  props: {
-    stats: Object,
-    upcommingBets: Object,
-  },
-  data() {
-    return {}
-  },
-
-  created() {
-    this.moment = moment
-  },
-
-  methods: {
-    scrollToElement(id) {
-      this.emitter.emit('event:scroll', id)
-    },
-  },
+const scrollToElement = (id) => {
+  console.log('123')
+  emitter.emit('event:scroll', id)
 }
 </script>

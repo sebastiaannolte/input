@@ -298,6 +298,7 @@ import TextInput from '@/Components/TextInput.vue'
 import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
 import { Inertia } from '@inertiajs/inertia'
 import pickBy from 'lodash/pickBy'
+import emitter from '@/Plugins/mitt'
 
 export default {
 
@@ -440,11 +441,11 @@ export default {
           filters: localFilters,
         }),
         {
-          only: ['filters', 'stats', 'bets'],
+          only: ['filters', 'stats', 'bets', 'generalStats', 'table'],
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
-            this.emitter.emit('filter:submit')
+            emitter.emit('filter:submit')
           },
         },
       )

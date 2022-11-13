@@ -1,65 +1,48 @@
 <template>
-  <Head :title="title" />
-  <table-filter-header :title="teamName" />
-  <bets
-    :bets="bets.bets"
-    :filters="filters"
-    :filter-route="
-      route('team', [$page.props.auth.user.username, team.id, league.id])
-    "
-    :is-stats="true"
-  />
+  <Layout :title="teamName" :errors="errors">
+    <Head :title="title" />
+    <table-filter-header :title="teamName" />
+    <bets
+      :bets="bets.bets"
+      :filters="filters"
+      :filter-route="
+        route('team', [$page.props.auth.user.username, team.id, league.id])
+      "
+      :is-stats="true"
+    />
+  </Layout>
 </template>
 
-
-<script>
+<script setup>
 import Layout from '@/Layouts/Authenticated.vue'
 import Bets from '@/PageComponents/Bets.vue'
-import ShowFilterButton from '@/Components/ShowFilterButton.vue'
 import TableFilterHeader from '@/PageComponents/TableFilterHeader.vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { computed, ref } from 'vue'
 
-export default {
-  components: {
-    Bets,
-    ShowFilterButton,
-    TableFilterHeader,
-  },
-  layout: Layout,
-  props: {
-    bets: Object,
-    team: Object,
-    league: Object,
-    filters: Array,
-  },
+const props = defineProps({
+  bets: Object,
+  team: Object,
+  league: Object,
+  filters: Array,
+  errors: Object,
+})
 
-  data() {
-    return {
-      currentTable: null,
-      localFilters: {},
-    }
-  },
-  computed: {
-    teamName() {
-      var teamName = this.team.name
-      if (this.league) {
-        teamName += ' - ' + this.league.name
-      }
-      return teamName
-    },
-  },
+const title = ref(null)
 
-  created() {
-    this.currentTable = this.bets
-    this.setPageTitle()
-  },
-
-  methods: {
-    setPageTitle() {
-      this.title = 'Your team stats'
-      if (!this.$page.props.userInfo.myPage) {
-        this.title = this.$page.props.userInfo.user.name + '\'s team stats'
-      }
-    },
-  },
+const setPageTitle = () => {
+  title.value = 'Your team stats'
+  if (!usePage().props.value.userInfo.myPage) {
+    title.value = usePage().props.value.userInfo.user.name + '\'s team stats'
+  }
 }
+    
+setPageTitle()
+const teamName = computed(() => {
+  var teamName = props.team.name
+  if (props.league) {
+    teamName += ' - ' + props.league.name
+  }
+  return teamName
+})
 </script>

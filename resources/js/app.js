@@ -5,15 +5,13 @@ import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
 import { InertiaProgress } from '@inertiajs/progress'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import mitt from 'mitt'
 import Toaster from '@meforma/vue-toaster'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-const emitter = mitt()
-import { Chart, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale } from 'chart.js'
-Chart.register(LineController, LineElement, PointElement, LinearScale, Title, CategoryScale)
+import { Chart, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend } from 'chart.js'
 
-// const regeneratorRuntime = require('regenerator-runtime')
+Chart.register(LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend)
+
 const el = document.getElementById('app')
 
 createInertiaApp({
@@ -28,12 +26,10 @@ createInertiaApp({
       .mixin({ methods: { route } })
       .use(plugin)
       .use(ZiggyVue, Ziggy)
-      .component('Head', Head)
       .component('InertiaLink', Link)
       .use(VueAxios, axios)
       .use(Toaster)
 
-    apps.config.globalProperties.emitter = emitter
     apps.mount(el)
   },
 })

@@ -95,7 +95,8 @@ class Stats
         $dateSelect = $this->dateSelect();
 
         $bets = Bet::
-            joinBets();
+            filters($this->filters)
+            ->joinBets();
 
         $columnsTable = $bets
             ->clone()
@@ -293,7 +294,7 @@ class Stats
     public function tableBodyRendered($typeValue, $output, $type, $specialId = '')
     {
         $output = [
-            $type => ['value' => $typeValue, 'type' => '', 'specialId' => $specialId],
+            $type => ['value' => $typeValue, 'type' => strtolower($type), 'specialId' => $specialId],
             'Bets' => ['value' => $output->bets, 'type' => ''],
             'Won' => ['value' => $output->won, 'type' => ''],
             'Staked' => ['value' => round($output->staked, 2), 'type' => ''],
@@ -384,6 +385,7 @@ class Stats
             $current = $this->profitPerDayGraph();
         } else {
             $current =  $this->createGraphAndTable($key);
+            // dd($current, $this->filters);
         }
 
         $colors = [

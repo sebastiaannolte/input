@@ -131,6 +131,7 @@ class StatsController extends Controller
         $filters['interval'] = $this->calculateInterval($filters['from']['value'], $filters['to']['value']);
         
         $stats = new Stats($userId, $filters, $sort);
+        // dd($stats->renderStats($type)[$type]);
         return $stats->renderStats($type)[$type];
     }
 }

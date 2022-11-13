@@ -69,6 +69,7 @@
 
 <script>
 import TextInput from '@/Components/TextInput.vue'
+import emitter from '@/Plugins/mitt'
 
 export default {
   components: { TextInput },
@@ -103,7 +104,7 @@ export default {
       this.betData = this.bet
     }
 
-    this.emitter.on('event:clear', () => {
+    emitter.on('event:clear', () => {
       this.betData.event = null
       this.betData.match = null
     })
@@ -213,7 +214,7 @@ export default {
     },
 
     setBet() {
-      this.emitter.emit('event:search', this.betData)
+      emitter.emit('event:search', this.betData)
     },
   },
 }

@@ -21,10 +21,23 @@ class SpecialStatsController extends Controller
             'sortOrder' => "DESC"
         ];
 
-        return Inertia::render('Competition', [
-            'competition' => League::find($id),
+        $userId = User::where('username', $username)->first()->id;
+        $filters = Request::get('filters');
+        $stats = new Stats($userId, $filters, $sort);
+        $table = $stats->competitionTable($id);
+
+        $pagination = [
+            'perPage' => $table['perPage'],
+            'totalResults' => $table['totalResults']
+        ];
+        return Inertia::render('TableStats', [
+            'table' => $table['table'],
+            'title' => League::find($id)->name,
+            'route' => ['name' => 'competition', 'id' => [$id]],
             'sort' => $sort,
             'filters' => $filters,
+            'pagination' => $pagination,
+            'currentRoute' => 'competition'
         ]);
     }
 

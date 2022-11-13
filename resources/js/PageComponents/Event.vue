@@ -148,6 +148,7 @@ import { ref } from 'vue'
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
+import emitter from '@/Plugins/mitt'
 
 export default {
   components: {
@@ -226,7 +227,7 @@ export default {
 
     this.save()
 
-    this.emitter.on('event:clear', (event) => {
+    emitter.on('event:clear', (event) => {
       this.betData = {
         event: null,
         selection: null,
@@ -253,7 +254,7 @@ export default {
     },
 
     deleteGame(index) {
-      this.emitter.emit('game:delete', index)
+      emitter.emit('game:delete', index)
     },
 
     setBetData() {

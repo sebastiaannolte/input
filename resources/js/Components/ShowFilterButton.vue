@@ -30,6 +30,7 @@
 <script>
 import Layout from '@/Layouts/Authenticated.vue'
 import { FilterIcon } from '@heroicons/vue/outline'
+import emitter from '@/Plugins/mitt'
 
 export default {
   components: { FilterIcon },
@@ -51,7 +52,7 @@ export default {
   methods: {
     showFilter() {
       this.filterStatus = !this.filterStatus
-      this.emitter.emit('filter:show', this.filterStatus)
+      emitter.emit('filter:show', this.filterStatus)
     },
   },
 }
