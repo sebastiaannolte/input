@@ -56,7 +56,7 @@
                       text-gray-900 text-left
                     "
                   >
-                    <button v-if="values.specialId" @click="goTo(values.type, values.specialId)">
+                    <button v-if="values.specialId" @click="goTo(values.route, values.specialId)">
                       {{ values.value }}
                     </button>
                     <span v-else> {{ values.value }}{{ values.type }} </span>

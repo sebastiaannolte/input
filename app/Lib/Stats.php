@@ -294,7 +294,7 @@ class Stats
     public function tableBodyRendered($typeValue, $output, $type, $specialId = '')
     {
         $output = [
-            $type => ['value' => $typeValue, 'type' => strtolower($type), 'specialId' => $specialId],
+            $type => ['value' => $typeValue, 'type' => '', 'specialId' => $specialId, 'route' => strtolower($type)],
             'Bets' => ['value' => $output->bets, 'type' => ''],
             'Won' => ['value' => $output->won, 'type' => ''],
             'Staked' => ['value' => round($output->staked, 2), 'type' => ''],
