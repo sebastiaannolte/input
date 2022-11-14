@@ -624,7 +624,7 @@ const save = () => {
         }
 
         if (importId > 0) {
-          this.$http
+          axios
             .put(
               route(
                 'import.update',
