@@ -129,6 +129,7 @@
 <script setup>
 import Layout from '@/Layouts/Authenticated.vue'
 import { Inertia } from '@inertiajs/inertia'
+import { usePage } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue'
 
 const props = defineProps({
@@ -188,6 +189,6 @@ const toQueryString = (obj, prefix) => {
 const toUrl = (item) => {
   item.data.importId = item.id
   var query = toQueryString(item.data, 'import')
-  return `/sebastiaan?${query}`
+  return `/${usePage().props.value.auth.user.username}?${query}`
 }
 </script>

@@ -76,7 +76,6 @@ defineProps({
 })
 
 const scrollToElement = (id) => {
-  console.log('123')
   emitter.emit('event:scroll', id)
 }
 </script>

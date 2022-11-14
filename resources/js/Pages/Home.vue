@@ -18,7 +18,7 @@ import Bets from '@/PageComponents/Bets.vue'
 import Stats from '@/PageComponents/Stats.vue'
 import emitter from '@/Plugins/mitt'
 import { usePage } from '@inertiajs/inertia-vue3'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const props = defineProps({
   errors: Object,
@@ -30,10 +30,13 @@ const props = defineProps({
 })
 
 const title = ref(null)
+onMounted(() => {
+  if (props.import) {
+    emitter.emit('event:import', props.import)
+  }
+})
 
-if (props.import) {
-  emitter.emit('event:import', props.import)
-}
+onUnmounted(() => emitter.off('event:import'))
 
 const setPageTitle = () => {
   title.value = 'Your bets'

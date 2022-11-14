@@ -182,8 +182,6 @@ const props = defineProps({
   title: String,
 })
 
-console.log(props.errors)
-
 const user = computed(() => usePage().props.value.auth.user)
 
 const menu = [

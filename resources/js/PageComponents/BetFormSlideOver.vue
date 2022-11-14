@@ -469,7 +469,7 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 import { XIcon, PlusIcon } from '@heroicons/vue/outline'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SportIcon from '@/Components/SportIcon.vue'
 import emitter from '@/Plugins/mitt'
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
@@ -519,7 +519,6 @@ emitter.on('event:edit', (event) => {
   addedGames.value = Object.assign({}, bet.value.bet_fixture)
   emitter.emit('betForm:show')
 })
-
 emitter.on('event:import', (event) => {
   bet.value = event
   currentGameId.value = bet.value.games.length - 1
