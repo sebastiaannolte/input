@@ -136,7 +136,7 @@ export default {
   mounted() {
     if (this.bet.event) {
       this.event = {
-        value: this.bet.fixture_id ? this.bet.fixture_id : 0,
+        value: this.bet.fixture_id ? this.bet.fixture_id : null,
         label: this.bet.event,
       }
 
