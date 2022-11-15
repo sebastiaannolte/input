@@ -129,7 +129,7 @@
 <script setup>
 import Layout from '@/Layouts/Authenticated.vue'
 import { Inertia } from '@inertiajs/inertia'
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue'
 
 const props = defineProps({

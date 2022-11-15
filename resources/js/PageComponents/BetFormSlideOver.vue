@@ -326,11 +326,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-
-    }
-  },
   computed: {
     sports() {
       return this.$page.props.sports
@@ -343,117 +338,11 @@ export default {
       }
     },
   },
-  created() {
-
-  },
-  methods: {
-    // setUserSettings() {
-    //   var userSettings = this.$page.props.auth.settings
-    //   for (const key in userSettings) {
-    //     var setting = userSettings[key]
-    //     this.betData[key] = setting.value
-    //   }
-    // },
-    // setSportType(type) {
-    //   this.activeSport = type
-    //   this.betData.sport = type
-    // },
-
-    // addGame() {
-    //   this.currentGameId++
-    //   this.addedGames[this.currentGameId] = 0
-    // },
-    // save() {
-    //   var route = ''
-    //   if (this.bet && this.bet.id) {
-    //     route = this.route('bet.update')
-    //     this.betData.games = this.games
-
-    //     this.betData.put(route, {
-    //       preserveScroll: true,
-    //       onSuccess: () => {
-    //         this.setBetData()
-    //         this.open = false
-    //         emitter.emit('event:clear')
-    //       },
-    //     })
-    //   } else {
-    //     var importId = this.betData.importId
-    //     route = this.route('bet.store')
-    //     this.betData.games = this.games
-    //     this.betData.post(route, {
-    //       preserveScroll: true,
-    //       onSuccess: () => {
-    //         if (this.betData.clearInputs) {
-    //           this.setBetData()
-    //           this.open = false
-    //           emitter.emit('event:clear')
-    //         }
-
-    //         if (importId > 0) {
-    //           this.$http
-    //             .put(
-    //               this.route(
-    //                 'import.update',
-    //               ),
-    //               {
-    //                 id: importId,
-    //               },
-    //             )
-    //             .then((response) => {
-    //               this.$inertia.visit(this.route('import.index'))
-    //             })
-    //         }
-    //       },
-    //     })
-    //   }
-    // },
-
-    // setBetData() {
-    //   if (!this.bet) {
-    //     this.title = 'New bet'
-    //     this.betData = this.$inertia.form({
-    //       bookie: null,
-    //       tipster: null,
-    //       sport: this.activeSport,
-    //       odds: null,
-    //       stake: null,
-    //       type: null,
-    //       games: null,
-    //       clearInputs: true,
-    //     })
-    //     this.setUserSettings()
-    //   } else if (this.bet.id) {
-    //     this.bet.games = {}
-    //     this.betData = this.$inertia.form(this.bet)
-    //     this.title = 'Edit ' + this.bet.event
-    //   } else {
-    //     this.bet.games = {}
-    //     this.betData = this.$inertia.form(
-    //       Object.assign(
-    //         {
-    //           bookie: null,
-    //           tipster: null,
-    //           sport: this.activeSport,
-    //           odds: null,
-    //           stake: null,
-    //           type: null,
-    //           games: null,
-    //           clearInputs: true,
-    //         },
-    //         this.bet,
-    //       ),
-    //     )
-    //     this.title = 'New bet'
-    //   }
-    // },
-  },
 }
 </script>
 
 <script setup>
 import Button from '@/Components/Button.vue'
-import Events from '@/PageComponents/Events.vue'
 import Event from '@/PageComponents/Event.vue'
 import TextInput from '@/Components/TextInput.vue'
 import AutocompleteInput from '@/Components/AutocompleteInput.vue'
@@ -483,7 +372,6 @@ const open = ref(false)
 
 const bet = ref(null)
 const betData = ref({})
-const betTypes = ref(usePage().props.value.betTypes)
 const title= ref(null)
 const addedGames= ref({ 0:0 })
 const currentGameId= ref(0)
@@ -519,6 +407,7 @@ emitter.on('event:edit', (event) => {
   addedGames.value = Object.assign({}, bet.value.bet_fixture)
   emitter.emit('betForm:show')
 })
+
 emitter.on('event:import', (event) => {
   bet.value = event
   currentGameId.value = bet.value.games.length - 1

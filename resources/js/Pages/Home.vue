@@ -36,8 +36,6 @@ onMounted(() => {
   }
 })
 
-onUnmounted(() => emitter.off('event:import'))
-
 const setPageTitle = () => {
   title.value = 'Your bets'
   if (!usePage().props.value.userInfo.myPage) {
