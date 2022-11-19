@@ -8,9 +8,9 @@ import VueAxios from 'vue-axios'
 import Toaster from '@meforma/vue-toaster'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { Chart, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend } from 'chart.js'
+import { Chart, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend, Tooltip } from 'chart.js'
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend)
+Chart.register(LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend, Tooltip)
 
 const el = document.getElementById('app')
 
