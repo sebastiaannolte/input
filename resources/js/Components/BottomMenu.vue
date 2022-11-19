@@ -2,7 +2,6 @@
   <section
     id="bottom-navigation"
     class="sm:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
-    style="padding-bottom: env(safe-area-inset-bottom)"
   >
     <div id="tabs" class="flex justify-between">
       <span
@@ -14,7 +13,6 @@
         <span v-if="item.counter" class="absolute top-1 right-1 rounded-md bg-red-500 text-white px-0.5 text-[10px]">{{ item.counter }}</span>
         <component :is="item.icon" class="w-6 h-6 inline-block mb-1" :class="activeItem == item.name ? 'text-black' : 'text-gray-400'" />
         <span class="tab tab-home block text-[10px]">{{ item.name }}</span>
-        
       </span>
     </div>
   </section>
