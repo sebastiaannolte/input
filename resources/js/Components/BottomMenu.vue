@@ -2,6 +2,7 @@
   <section
     id="bottom-navigation"
     class="sm:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
+    style="padding-bottom: env(safe-area-inset-bottom)"
   >
     <div id="tabs" class="flex justify-between">
       <span
