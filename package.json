@@ -40,6 +40,7 @@
         "mitt": "^3.0.0",
         "moment": "^2.29.1",
         "regenerator-runtime": "^0.13.9",
+        "v-calendar": "^3.0.0-alpha.8",
         "vue-axios": "^3.4.0",
         "vue-chartjs": "^4.1.2",
         "vue-loading-overlay": "^4.0.4",

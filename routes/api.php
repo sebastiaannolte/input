@@ -36,7 +36,14 @@ Route::middleware(['auth', 'isHost'])->group(function () {
     })->name('event.search');
 
     Route::get('/games/{date}/{sport}', function ($search, $sport) {
-        return GamesApi::get($search, $sport);
+        $dates = json_decode($search, true);
+        $message = '';
+        foreach ($dates as $date) {
+           $response = GamesApi::get($date, $sport);
+           $message .= key($response).': '.$response[key($response)].'<br>';
+        }
+
+        return response()->json(['message' => $message]);
     })->name('games.get');
 
     Route::get('/find-bet/{id}', function ($id) {

@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 import Toaster from '@meforma/vue-toaster'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import { SetupCalendar } from 'v-calendar'
 import { Chart, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend, Tooltip } from 'chart.js'
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend, Tooltip)
@@ -29,7 +30,8 @@ createInertiaApp({
       .component('InertiaLink', Link)
       .use(VueAxios, axios)
       .use(Toaster)
-
+      .use(SetupCalendar, {})
+      
     apps.mount(el)
   },
 })

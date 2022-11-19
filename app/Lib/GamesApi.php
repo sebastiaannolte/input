@@ -19,6 +19,7 @@ class GamesApi
 {
     public static function get($date, $sport)
     {
+        $date = Carbon::parse($date)->format('Y-m-d');
         // $json = file_get_contents(storage_path() . '/games.json');
         $responses = [
             'football' => Http::withHeaders([
@@ -138,8 +139,7 @@ class GamesApi
                 );
             }
         }
-        return response()
-            ->json(['message' => count($games) . ' games found']);
+        return [$date => count($games) . ' games'];
     }
 
     public static function getBookmakers($parameters = false)
