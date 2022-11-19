@@ -120,7 +120,7 @@
                     text-sm
                     font-medium
                     text-gray-700
-                    dark:text-gray-400
+
                   "
                 >Sport:</label>
                 <select
@@ -166,7 +166,6 @@
                     text-sm
                     font-medium
                     text-gray-700
-                    dark:text-gray-400
                   "
                 >Status:</label>
                 <select

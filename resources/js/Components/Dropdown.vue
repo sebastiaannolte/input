@@ -8,7 +8,6 @@
         text-sm
         font-medium
         text-gray-700
-        dark:text-gray-400
         capitalize
       "
       :for="id"
@@ -26,8 +25,6 @@
         w-full
         sm:text-sm
         border-gray-300
-        dark:bg-gray-800
-        dark:text-gray-400
         rounded-md
       "
       :class="{ error: error }"

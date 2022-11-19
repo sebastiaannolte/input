@@ -42,7 +42,6 @@
                 text-sm
                 font-medium
                 text-gray-700
-                dark:text-gray-400
                 capitalize
               "
               >Games:</label>
@@ -99,7 +98,6 @@
                 text-sm
                 font-medium
                 text-gray-700
-                dark:text-gray-400
                 capitalize
               "
               >Bookies:</label>
