@@ -14,7 +14,7 @@
           class="w-full justify-center inline-block text-center pt-2 pb-1"
           @click="clickAction(item)"
         >
-          <component :is=" activeItem == item.name ? item.icon+'Solid' : item.icon" class="w-6 h-6 inline-block mb-1" />
+          <component :is="item.icon" class="w-6 h-6 inline-block mb-1" :class="activeItem == item.name ? 'text-black' : 'text-gray-400'" />
           <span class="tab tab-home block text-xs">{{ item.name }}</span>
         </span>
       </div>
@@ -32,14 +32,6 @@ import {
   CogIcon,
   SearchCircleIcon,
   DocumentReportIcon,
-} from '@heroicons/vue/outline'
-
-import {
-  HomeIcon as HomeIconSolid,
-  PlusCircleIcon as PlusCircleIconSolid,
-  CogIcon as CogIconSolid,
-  SearchCircleIcon as SearchCircleIconSolid,
-  DocumentReportIcon as DocumentReportIconSolid,
 } from '@heroicons/vue/solid'
 import emitter from '@/Plugins/mitt'
 
@@ -50,12 +42,6 @@ export default {
     CogIcon,
     SearchCircleIcon,
     DocumentReportIcon,
-
-    HomeIconSolid,
-    PlusCircleIconSolid,
-    CogIconSolid,
-    SearchCircleIconSolid,
-    DocumentReportIconSolid,
   },
   props: {
     errors: Object,
@@ -77,6 +63,12 @@ export default {
         icon: 'DocumentReportIcon',
       },
       {
+        name: 'New bet',
+        url: '',
+        click: 'openBet',
+        icon: 'PlusCircleIcon',
+      },
+      {
         name: 'Special stats',
         url: '/' + user.value.username + '/special',
         icon: 'SearchCircleIcon',
@@ -85,12 +77,6 @@ export default {
         name: 'Settings',
         url: '/' + user.value.username + '/settings',
         icon: 'CogIcon',
-      },
-      {
-        name: 'New bet',
-        url: '',
-        click: 'openBet',
-        icon: 'PlusCircleIcon',
       },
     ]
 
