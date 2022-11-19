@@ -26,7 +26,7 @@
     @vite('resources/js/app.js')
 </head>
 
-<body class="font-inter bg-gray-100" style="padding-bottom: env(safe-area-inset-bottom)">
+<body class="font-inter bg-gray-100">
     @inertia
 
     @env ('local')
