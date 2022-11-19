@@ -2,23 +2,19 @@
   <section
     id="bottom-navigation"
     class="sm:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
+    style="bottom: env(safe-area-inset-bottom)"
   >
-    <section
-      id="bottom-navigation"
-      class="block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
-    >
-      <div id="tabs" class="flex justify-between">
-        <span
-          v-for="item in menu"
-          :key="item.name"
-          class="w-full justify-center inline-block text-center pt-2 pb-1"
-          @click="clickAction(item)"
-        >
-          <component :is="item.icon" class="w-6 h-6 inline-block mb-1" :class="activeItem == item.name ? 'text-black' : 'text-gray-400'" />
-          <span class="tab tab-home block text-xs">{{ item.name }}</span>
-        </span>
-      </div>
-    </section>
+    <div id="tabs" class="flex justify-between">
+      <span
+        v-for="item in menu"
+        :key="item.name"
+        class="w-full justify-center inline-block text-center pt-2 pb-1"
+        @click="clickAction(item)"
+      >
+        <component :is="item.icon" class="w-6 h-6 inline-block mb-1" :class="activeItem == item.name ? 'text-black' : 'text-gray-400'" />
+        <span class="tab tab-home block text-xs">{{ item.name }}</span>
+      </span>
+    </div>
   </section>
 </template>
 
