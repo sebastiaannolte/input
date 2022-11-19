@@ -8,11 +8,13 @@
       <span
         v-for="item in menu"
         :key="item.name"
-        class="w-full justify-center inline-block text-center pt-2 pb-1"
+        class="w-full justify-center inline-block text-center pt-2 pb-1 relative"
         @click="clickAction(item)"
       >
+        <span v-if="item.counter" class="absolute top-1 right-1 rounded-md bg-red-500 text-white px-0.5 text-[10px]">{{ item.counter }}</span>
         <component :is="item.icon" class="w-6 h-6 inline-block mb-1" :class="activeItem == item.name ? 'text-black' : 'text-gray-400'" />
-        <span class="tab tab-home block text-xs">{{ item.name }}</span>
+        <span class="tab tab-home block text-[10px]">{{ item.name }}</span>
+        
       </span>
     </div>
   </section>
@@ -52,6 +54,7 @@ export default {
         name: 'Your bets',
         url: '/' + user.value.username,
         icon: 'HomeIcon',
+        counter: usePage().props.value.openBetCount,
       },
       {
         name: 'Your stats',

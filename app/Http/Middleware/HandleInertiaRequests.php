@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Bet;
 use App\Models\BetType;
 use App\Models\Import;
 use App\Models\Setting;
@@ -60,6 +61,7 @@ class HandleInertiaRequests extends Middleware
                     'error' => $request->session()->get('error'),
                 ];
             },
+            'openBetCount' => Bet::whereNull('result')->count()
         ]);
     }
 }
