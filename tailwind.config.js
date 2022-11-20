@@ -3,6 +3,7 @@ const colors = require('tailwindcss/colors')
 const svgToDataUri = require('mini-svg-data-uri')
 
 module.exports = {
+  darkMode: 'class',
   purge: [
     './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
     './storage/framework/views/*.php',
@@ -11,18 +12,6 @@ module.exports = {
   ],
 
   theme: {
-    colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: colors.black,
-      white: colors.white,
-      gray: colors.gray,
-      red: colors.red,
-      yellow: colors.amber,
-      blue: colors.sky,
-      indigo: colors.sky,
-      green: colors.green,
-    },
     extend: {
       fontFamily: {
         sans: ['Nunito', ...defaultTheme.fontFamily.sans],

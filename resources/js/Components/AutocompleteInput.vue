@@ -1,61 +1,13 @@
-  
 <template>
-  <label
-    v-if="label"
-    class="
-      block
-      text-sm
-      font-medium
-      text-gray-700
-      capitalize
-    "
-    :for="id"
-  >{{ label }}:</label>
+  <label v-if="label" class="block text-sm font-medium capitalize text-gray-700 dark:text-slate-400" :for="id">{{ label }}:</label>
   <div class="relative" style="height: 38px">
-    <input
-      ref="input"
-      v-model="autocomplete"
-      autocomplete="off"
-      v-bind="{ ...$attrs, class: null }"
-      class="
-        shadow-sm
-        focus:ring-indigo-500
-        focus:border-indigo-500
-        block
-        w-full
-        sm:text-sm
-        border-gray-300
-        rounded-md
-      "
-      :class="{ error: error }"
-      :type="type"
-      @input="check"
-      @keydown.enter.prevent="onEnter"
-      @keydown.tab="onTab"
-      @blur="outOfFocus"
-    />
-    <input
-      v-model="placeholderValue"
-      type="text"
-      class="
-        autocomplete
-        shadow-sm
-        focus:ring-indigo-500
-        focus:border-indigo-500
-        block
-        w-full
-        sm:text-sm
-        border-gray-300
-        rounded-md
-      "
-      disabled
-    />
+    <input ref="input" v-model="autocomplete" autocomplete="off" v-bind="{ ...$attrs, class: null }" class="block w-full appearance-none rounded-md border border-transparent bg-white py-2 px-3 leading-5 text-slate-900 shadow ring-1 ring-slate-900/5 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:text-slate-400 dark:ring-slate-200/20 dark:focus:ring-sky-500 sm:text-sm" :class="{ error: error }" :type="type" @input="check" @keydown.enter.prevent="onEnter" @keydown.tab="onTab" @blur="outOfFocus" />
+    <input v-model="placeholderValue" type="text" class="autocomplete block w-full appearance-none rounded-md border border-transparent bg-white py-2 px-3 leading-5 text-slate-900 shadow ring-1 ring-slate-900/5 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:bg-slate-700/20 dark:text-slate-400 dark:ring-slate-200/20 dark:focus:ring-sky-500 sm:text-sm" disabled />
   </div>
   <div v-if="error" class="form-error text-gray-400">
     <small>{{ error }}</small>
   </div>
 </template>
-
 
 <script>
 import { computed } from 'vue'
@@ -65,7 +17,7 @@ export default {
     id: {
       type: String,
       default() {
-        return `select-input-${Math.random() * 1000}`
+        return `autocomplete-input-${Math.random() * 1000}`
       },
     },
     type: {
@@ -120,8 +72,6 @@ export default {
       } else {
         this.placeholderValue = null
       }
-
-      // this.$emit("update:modelValue", e.target.value);
     },
 
     onEnter() {

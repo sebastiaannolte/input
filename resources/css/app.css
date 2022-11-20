@@ -1,7 +1,8 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import '../../node_modules/@vueform/multiselect/themes/tailwind.scss';
+/* @import '../../node_modules/@vueform/multiselect/themes/tailwind.scss'; */
+@import 'tailwind.scss';
 .btn-spinner,
 .btn-spinner:after {
     border-radius: 50%;

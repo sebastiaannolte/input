@@ -1,18 +1,9 @@
 <template>
-  <section
-    id="bottom-navigation"
-    class="sm:hidden block fixed inset-x-0 bottom-0 z-10 bg-white shadow"
-    style="padding-bottom: env(safe-area-inset-bottom)"
-  >
+  <section id="bottom-navigation" class="fixed inset-x-0 bottom-0 z-10 block bg-white shadow dark:bg-slate-800 sm:hidden" style="padding-bottom: env(safe-area-inset-bottom)">
     <div id="tabs" class="flex justify-between">
-      <span
-        v-for="item in menu"
-        :key="item.name"
-        class="w-full justify-center inline-block text-center pt-2 pb-1 relative"
-        @click="clickAction(item)"
-      >
-        <span v-if="item.counter" class="absolute top-1 right-1 rounded-md bg-red-500 text-white px-0.5 text-[10px]">{{ item.counter }}</span>
-        <component :is="item.icon" class="w-6 h-6 inline-block mb-1" :class="activeItem == item.name ? 'text-black' : 'text-gray-400'" />
+      <span v-for="item in menu" :key="item.name" class="relative inline-block w-full justify-center pt-2 pb-1 text-center" @click="clickAction(item)">
+        <span v-if="item.counter" class="absolute top-1 right-1 rounded-md bg-red-500 px-0.5 text-[10px] text-white">{{ item.counter }}</span>
+        <component :is="item.icon" class="mb-1 inline-block h-6 w-6" :class="activeItem == item.name ? 'text-black dark:text-slate-200' : 'text-gray-400 dark:text-slate-400'" />
         <span class="tab tab-home block text-[10px]">{{ item.name }}</span>
       </span>
     </div>
@@ -23,13 +14,7 @@
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 
-import {
-  HomeIcon,
-  PlusCircleIcon,
-  CogIcon,
-  SearchCircleIcon,
-  DocumentReportIcon,
-} from '@heroicons/vue/solid'
+import { HomeIcon, PlusCircleIcon, CogIcon, SearchCircleIcon, DocumentReportIcon } from '@heroicons/vue/solid'
 import emitter from '@/Plugins/mitt'
 
 export default {

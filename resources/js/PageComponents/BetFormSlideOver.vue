@@ -1,61 +1,28 @@
 <template>
   <TransitionRoot as="template" :show="open">
-    <Dialog
-      as="div"
-      class="fixed inset-0 overflow-hidden z-20"
-      @close="open = false"
-    >
+    <Dialog as="div" class="fixed inset-0 z-20 overflow-hidden" @close="open = false">
       <div class="absolute inset-0 overflow-hidden">
         <DialogOverlay class="absolute inset-0" />
 
-        <div class="fixed inset-y-0 pl-16 max-w-full right-0 flex">
-          <TransitionChild
-            as="template"
-            enter="transform transition ease-in-out duration-500 sm:duration-700"
-            enter-from="translate-x-full"
-            enter-to="translate-x-0"
-            leave="transform transition ease-in-out duration-500 sm:duration-700"
-            leave-from="translate-x-0"
-            leave-to="translate-x-full"
-          >
+        <div class="fixed inset-y-0 right-0 flex max-w-full pl-16">
+          <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
             <div class="w-screen max-w-md">
-              <form
-                class="
-                  h-full
-                  divide-y divide-gray-200
-                  flex flex-col
-                  bg-white
-                  shadow-xl
-                "
-              >
-                <div class="flex-1 h-0 overflow-y-auto">
-                  <div class="py-6 px-4 bg-indigo-700 sm:px-6">
+              <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl dark:divide-slate-200/5 dark:bg-slate-800">
+                <div class="h-0 flex-1 overflow-y-auto">
+                  <div class="bg-indigo-700 py-6 px-4 sm:px-6">
                     <div class="flex items-center justify-between">
-                      <DialogTitle class="text-lg font-medium text-white">
+                      <DialogTitle class="text-lg font-medium text-white dark:text-slate-200">
                         {{ title }}
                       </DialogTitle>
-                      <div class="ml-3 h-7 flex items-center">
-                        <button
-                          type="button"
-                          class="
-                            bg-indigo-700
-                            rounded-md
-                            text-indigo-200
-                            hover:text-white
-                            focus:outline-none focus:ring-2 focus:ring-white
-                          "
-                          @click="open = false"
-                        >
+                      <div class="ml-3 flex h-7 items-center">
+                        <button type="button" class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" @click="open = false">
                           <span class="sr-only">Close panel</span>
                           <XIcon class="h-6 w-6" aria-hidden="true" />
                         </button>
                       </div>
                     </div>
                     <div class="mt-1">
-                      <p class="text-sm text-indigo-300">
-                        Get started by filling in the information below to
-                        create your new project.
-                      </p>
+                      <p class="text-sm text-indigo-300 dark:text-slate-400">Get started by filling in the information below to create your new project.</p>
                     </div>
                   </div>
                   <div class="space-y-6 lg:col-span-9">
@@ -70,186 +37,41 @@
                                   :key="sport.name"
                                   type="button"
                                   :class="{
-                                    'bg-gray-200 text-white inner-shadow':
-                                      activeSport == sport.name,
+                                    'inner-shadow bg-gray-200 text-white dark:hover:bg-slate-400/20': activeSport == sport.name,
                                   }"
-                                  class="
-                                    mr-2
-                                    w-10
-                                    h-10
-                                    inline-flex
-                                    items-center
-                                    px-1.5
-                                    py-1.5
-                                    border border-gray-300
-                                    shadow-sm
-                                    text-xs
-                                    font-medium
-                                    rounded
-                                    text-gray-700
-                                    bg-white
-                                    hover:bg-gray-50
-                                    focus:outline-none focus:bg-gray-300
-                                  "
+                                  class="mr-2 inline-flex h-10 w-10 items-center rounded border border-gray-300 bg-white px-1.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:bg-gray-300 focus:outline-none dark:border-slate-200/5 dark:bg-slate-800"
                                   @click="setSportType(sport.name)"
                                 >
-                                  <sport-icon
-                                    class="w-6 h-6"
-                                    :name="sport.name"
-                                  />
+                                  <sport-icon class="h-6 w-6" :name="sport.name" />
                                 </button>
                               </span>
-                              <div
-                                v-if="renderComponent"
-                                class="col-span-4 sm:col-span-4"
-                              >
-                                <Event
-                                  v-for="(game, key) in addedGames"
-                                  :key="key"
-                                  v-model="games[key]"
-                                  :errors="errors"
-                                  :name="index"
-                                  :game="game"
-                                  :index="key"
-                                  :is-edit="isEdit"
-                                  :sport="activeSport"
-                                />
+                              <div v-if="renderComponent" class="col-span-4 sm:col-span-4">
+                                <Event v-for="(game, key) in addedGames" :key="key" v-model="games[key]" :errors="errors" :name="index" :game="game" :index="key" :is-edit="isEdit" :sport="activeSport" />
                                 <div class="flex justify-end">
-                                  <button
-                                    class="
-                                      inline-flex
-                                      items-center
-                                      px-1.5
-                                      py-1.5
-                                      border border-transparent
-                                      text-xs
-                                      font-medium
-                                      rounded
-                                      shadow-sm
-                                      text-white
-                                      bg-indigo-600
-                                      hover:bg-indigo-700
-                                      focus:outline-none
-                                      focus:ring-2
-                                      focus:ring-offset-2
-                                      focus:ring-indigo-500
-                                    "
-                                    @click.prevent="addGame"
-                                  >
-                                    <PlusIcon
-                                      class="h-4 w-4"
-                                      aria-hidden="true"
-                                    />
+                                  <button class="inline-flex items-center rounded border border-transparent bg-indigo-600 px-1.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click.prevent="addGame">
+                                    <PlusIcon class="h-4 w-4" aria-hidden="true" />
                                   </button>
                                 </div>
                               </div>
                               <div class="col-span-4 sm:col-span-2">
-                                <text-input-with-add-on
-                                  id="stake"
-                                  v-model="betData.stake"
-                                  :error="errors.stake"
-                                  add-on="units"
-                                  label="Stake"
-                                  type="text"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                />
+                                <text-input-with-add-on id="stake" v-model="betData.stake" :error="errors.stake" add-on="units" label="Stake" type="text" class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                               </div>
 
                               <div class="col-span-4 sm:col-span-2">
-                                <text-input
-                                  id="odds"
-                                  v-model="betData.odds"
-                                  :error="errors.odds"
-                                  label="Odds"
-                                  type="text"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                />
+                                <text-input id="odds" v-model="betData.odds" :error="errors.odds" label="Odds" type="text" class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                               </div>
                               <div class="col-span-4 sm:col-span-2">
-                                <autocomplete-input
-                                  id="bookie"
-                                  v-model="betData.bookie"
-                                  :options="
-                                    $page.props.auth.settings.bookmakers.value
-                                  "
-                                  :error="errors.bookie"
-                                  label="Bookie"
-                                  type="text"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                />
+                                <autocomplete-input id="bookie" v-model="betData.bookie" :options="$page.props.auth.settings.bookmakers.value" :error="errors.bookie" label="Bookie" type="text" class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                               </div>
                               <div class="col-span-4 sm:col-span-2">
-                                <dropdown
-                                  v-model="betData.type"
-                                  :error="errors.type"
-                                  label="Type"
-                                  :options="{
-                                    prematch: 'Prematch',
-                                    inplay: 'Inplay',
-                                  }"
-                                />
+                                <SelectInput v-model="betData.type" :error="errors.type" label="Type">
+                                  <option v-for="item in ['Prematch', 'Inplay']" :key="key" class="capitalize dark:bg-slate-700 dark:text-slate-400" :value="item.toLowerCase()">
+                                    {{ item }}
+                                  </option>
+                                </SelectInput>
                               </div>
                               <div class="col-span-4 sm:col-span-2">
-                                <text-input
-                                  id="tipster"
-                                  v-model="betData.tipster"
-                                  :error="errors.tipster"
-                                  label="Tipster"
-                                  type="text"
-                                  class="
-                                    mt-1
-                                    block
-                                    w-full
-                                    border border-gray-300
-                                    rounded-md
-                                    shadow-sm
-                                    py-2
-                                    px-3
-                                    focus:outline-none
-                                    focus:ring-gray-900
-                                    focus:border-gray-900
-                                    sm:text-sm
-                                  "
-                                />
+                                <text-input id="tipster" v-model="betData.tipster" :error="errors.tipster" label="Tipster" type="text" class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                               </div>
                             </div>
                           </div>
@@ -258,62 +80,17 @@
                     </section>
                   </div>
                 </div>
-                <div class="flex-shrink-0 px-4 py-4 flex justify-end">
-                  <div v-if="!bet" class="flex items-center mr-5">
+                <div class="flex flex-shrink-0 justify-end px-4 py-4">
+                  <div v-if="!bet" class="mr-5 flex items-center">
                     <div class="text-sm">
-                      <label
-                        for="comments"
-                        class="font-medium text-gray-700 mr-2"
-                      >Clear inputs</label>
+                      <label for="comments" class="mr-2 font-medium text-gray-700 dark:text-slate-400">Clear inputs</label>
                     </div>
-                    <div class="flex items-center h-5">
-                      <input
-                        id="comments"
-                        v-model="betData.clearInputs"
-                        aria-describedby="comments-description"
-                        name="comments"
-                        type="checkbox"
-                        class="
-                          focus:ring-indigo-500
-                          h-4
-                          w-4
-                          text-indigo-600
-                          border-gray-300
-                          rounded
-                        "
-                      />
+                    <div class="flex h-5 items-center">
+                      <input id="comments" v-model="betData.clearInputs" aria-describedby="comments-description" name="comments" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    class="
-                      bg-white
-                      py-2
-                      px-4
-                      border border-gray-300
-                      rounded-md
-                      shadow-sm
-                      text-sm
-                      font-medium
-                      text-gray-700
-                      hover:bg-gray-50
-                      focus:outline-none
-                      focus:ring-2
-                      focus:ring-offset-2
-                      focus:ring-indigo-500
-                    "
-                    @click="open = false"
-                  >
-                    Cancel
-                  </button>
-
-                  <loading-button
-                    class="ml-5"
-                    :loading="betData.processing"
-                    @click.prevent="save"
-                  >
-                    Save
-                  </loading-button>
+                  <button type="button" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:border-slate-200/5 dark:bg-slate-400/10 dark:text-slate-400" @click="open = false">Cancel</button>
+                  <loading-button class="ml-5" :loading="betData.processing" @click.prevent="save"> Save </loading-button>
                 </div>
               </form>
             </div>
@@ -338,6 +115,7 @@ export default {
       }
     },
   },
+  components: { SelectInput },
 }
 </script>
 
@@ -350,19 +128,14 @@ import LoadingButton from '@/Components/LoadingButton.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
 
-import {
-  Dialog,
-  DialogOverlay,
-  DialogTitle,
-  TransitionChild,
-  TransitionRoot,
-} from '@headlessui/vue'
+import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XIcon, PlusIcon } from '@heroicons/vue/outline'
 import { onMounted, ref } from 'vue'
 import SportIcon from '@/Components/SportIcon.vue'
 import emitter from '@/Plugins/mitt'
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
+import SelectInput from '@/Components/SelectInput.vue'
 
 defineProps({
   errors: Object,
@@ -372,13 +145,13 @@ const open = ref(false)
 
 const bet = ref(null)
 const betData = ref({})
-const title= ref(null)
-const addedGames= ref({ 0:0 })
-const currentGameId= ref(0)
-const games= ref({})
-const renderComponent= ref(true)
-const isEdit= ref(false)
-const activeSport= ref('football')
+const title = ref(null)
+const addedGames = ref({ 0: 0 })
+const currentGameId = ref(0)
+const games = ref({})
+const renderComponent = ref(true)
+const isEdit = ref(false)
+const activeSport = ref('football')
 
 emitter.on('betForm:show', () => {
   open.value = true
@@ -514,14 +287,9 @@ const save = () => {
 
         if (importId > 0) {
           axios
-            .put(
-              route(
-                'import.update',
-              ),
-              {
-                id: importId,
-              },
-            )
+            .put(route('import.update'), {
+              id: importId,
+            })
             .then((response) => {
               Inertia.visit(route('import.index'))
             })

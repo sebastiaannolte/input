@@ -19,65 +19,30 @@
         :clear-on-search="false"
         :options="
           async function (query) {
-            return await fetchMatches(query, searchType, sport);
+            return await fetchMatches(query, searchType, sport)
           }
         "
         class="rounded-r-0"
         @select="onSelect"
       >
-        <template #option="{ option }">
-          <img class="h-4 mr-2" :src="option.icon" /> {{ option.label }}
-        </template>
+        <template #option="{ option }"> <img class="mr-2 h-4" :src="option.icon" /> {{ option.label }} </template>
       </Multiselect>
       <button
         type="button"
         :class="{
-          'bg-gray-200 text-white inner-shadow': searchType == 'simple',
+          'inner-shadow bg-gray-200 text-white': searchType == 'simple',
         }"
-        class="
-          inline-flex
-          items-center
-          px-2.5
-          py-1.5
-          border border-gray-300
-          shadow-sm
-          text-xs
-          font-medium
-          text-gray-700
-          bg-white
-        "
+        class="inline-flex items-center border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm"
         @click="setSearchType('simple')"
       >
         <LockClosedIcon class="h-4 w-4" aria-hidden="true" />
       </button>
-      <button
-        type="button"
-        :class="{ 'bg-gray-200 text-white inner-shadow': searchType == 'full' }"
-        class="
-          inline-flex
-          items-center
-          px-2.5
-          py-1.5
-          border border-gray-300
-          shadow-sm
-          text-xs
-          font-medium
-          rounded-r
-          text-gray-700
-          bg-white
-          hover:bg-gray-50
-          focus:outline-none focus:bg-gray-300
-        "
-        @click="setSearchType('full')"
-      >
+      <button type="button" :class="{ 'inner-shadow bg-gray-200 text-white': searchType == 'full' }" class="inline-flex items-center rounded-r border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:bg-gray-300 focus:outline-none" @click="setSearchType('full')">
         <LockOpenIcon class="h-4 w-4" aria-hidden="true" />
       </button>
     </div>
-    <div
-      v-if="errors['games.' + index + '.event']"
-      class="form-error text-gray-400"
-    >
-      <small>{{ errors["games." + index + ".event"] }}</small>
+    <div v-if="errors['games.' + index + '.event']" class="form-error text-gray-400">
+      <small>{{ errors['games.' + index + '.event'] }}</small>
     </div>
   </div>
 </template>
@@ -100,10 +65,7 @@ export default {
 
   setup() {
     const fetchMatches = async (query, searchType, sport) => {
-      const response = await fetch(
-        '/api/search/' + query + '/' + searchType + '/' + sport,
-        {},
-      )
+      const response = await fetch('/api/search/' + query + '/' + searchType + '/' + sport, {})
       const data = await response.json()
       return Object.values(data).map((item) => {
         return { value: item.id, label: item.match, icon: item.icon }
@@ -140,7 +102,6 @@ export default {
         label: this.bet.event,
       }
 
-      // this.$refs.multiselects.refreshOptions();
       this.setBet()
     }
   },
@@ -179,4 +140,3 @@ export default {
   },
 }
 </script>
-

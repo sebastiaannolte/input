@@ -24,9 +24,21 @@
     <!-- Scripts -->
     @routes
     @vite('resources/js/app.js')
+
+    <script>
+        if (
+            localStorage.getItem('color-theme') === 'dark' ||
+            (!('color-theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 
-<body class="font-inter bg-gray-100" style="padding-bottom: env(safe-area-inset-bottom)">
+<body class="font-inter bg-gray-100 dark:text-slate-400 dark:bg-slate-900" style="padding-bottom: env(safe-area-inset-bottom)">
     @inertia
 
     @env ('local')

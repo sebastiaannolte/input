@@ -1,48 +1,9 @@
-  
 <template>
   <div>
-    <label
-      v-if="label"
-      class="block text-sm font-medium text-gray-700"
-      :for="id"
-    >{{ label }}:</label>
+    <label v-if="label" class="block text-sm font-medium text-gray-700 dark:text-slate-400" :for="id">{{ label }}:</label>
     <div class="flex rounded-md shadow-sm">
-      <input
-        :id="id"
-        ref="input"
-        autocomplete="off"
-        v-bind="{ ...$attrs, class: null }"
-        name="company-website"
-        class="
-          flex-1
-          min-w-0
-          block
-          w-full
-          px-3
-          py-2
-          rounded-none rounded-l-md
-          focus:ring-indigo-500
-          focus:border-indigo-500
-          sm:text-sm
-          border-gray-300
-        "
-        :class="{ error: error }"
-        :type="type"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-      />
-      <span
-        class="
-          inline-flex
-          items-center
-          px-3
-          rounded-r-md
-          border border-l-0 border-gray-300
-          bg-gray-50
-          text-gray-500
-          sm:text-sm
-        "
-      >
+      <input :id="id" ref="input" autocomplete="off" v-bind="{ ...$attrs, class: null }" class="block w-full appearance-none rounded-l-md border border-gray-300 bg-white py-2 px-3 leading-5 text-slate-900 shadow ring-slate-900/5 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:border-slate-200/20 dark:bg-slate-700/20 dark:text-slate-400 dark:ring-slate-200/20 dark:focus:ring-sky-500 sm:text-sm" :class="{ error: error }" :type="type" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
+      <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 dark:border-slate-200/20 dark:bg-slate-700/20 dark:text-slate-400 sm:text-sm">
         {{ addOn }}
       </span>
     </div>
@@ -51,7 +12,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 export default {
