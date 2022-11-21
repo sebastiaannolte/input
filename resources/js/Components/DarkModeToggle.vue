@@ -10,8 +10,6 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
-
 let dark = localStorage.getItem('color-theme') == 'dark'
 const toggleDarkMode = () => {
   console.log('13', dark)

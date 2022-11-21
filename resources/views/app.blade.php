@@ -6,7 +6,7 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, viewport-fit=cover" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+    <meta name="theme-color" content="#fff">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +32,10 @@
             window.matchMedia('(prefers-color-scheme: dark)').matches)
         ) {
             document.documentElement.classList.add('dark');
+            document.querySelector('meta[name="theme-color"]').setAttribute("content", '#000');
         } else {
             document.documentElement.classList.remove('dark');
+            document.querySelector('meta[name="theme-color"]').setAttribute("content", '#ffffff');
         }
     </script>
 </head>
