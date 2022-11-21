@@ -73,8 +73,12 @@
 </head>
 
 <body class="font-inter bg-gray-100 dark:text-slate-400 dark:bg-slate-900">
-<header></header>
+<header class="fixed">
+</header>
+<main class="mt-11" style="padding-top: env(safe-area-inset-top)">
     @inertia
+
+    </main>
 
     @env ('local')
     <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
