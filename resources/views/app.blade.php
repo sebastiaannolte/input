@@ -72,7 +72,8 @@
     </script>
 </head>
 
-<body class="font-inter bg-gray-100 dark:text-slate-400 dark:bg-slate-900" style="padding-bottom: env(safe-area-inset-bottom)">
+<body class="font-inter bg-gray-100 dark:text-slate-400 dark:bg-slate-900">
+<header></header>
     @inertia
 
     @env ('local')
