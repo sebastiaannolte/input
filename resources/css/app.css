@@ -86,7 +86,7 @@
   @supports (padding-top: env(safe-area-inset-top)) {
     body {
       --safe-area-inset-top: env(safe-area-inset-top);
-      height: calc(100% + var(--safe-area-inset-top));
+      height: 100%;
     }
   }
   
