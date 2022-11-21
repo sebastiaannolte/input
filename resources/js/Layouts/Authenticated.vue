@@ -2,7 +2,7 @@
   <Head :title="title" />
   <FlashMessages />
   <BetFormSlideOver :errors="errors" />
-  <Disclosure v-slot="{ open }" as="nav" class="bg-white shadow dark:border dark:border-slate-200/5 dark:bg-slate-900/75">
+  <Disclosure v-slot="{ open }" as="nav" class="bg-white shadow dark:border-b dark:border-slate-200/5 dark:bg-slate-900/75">
     <div class="mx-auto max-w-7xl px-4">
       <div class="flex h-16 justify-center sm:justify-between">
         <div class="flex">
