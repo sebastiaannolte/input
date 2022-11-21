@@ -50,6 +50,12 @@
     @apply border border-gray-300
 }
 
-header {
-    padding-top: env(safe-area-inset-top);
+body {
+    min-height: 100vh;
+    /* mobile viewport bug fix */
+    min-height: -webkit-fill-available;
+  }
+  
+  html {
+    height: -webkit-fill-available;
   }
