@@ -5,11 +5,15 @@
   <Disclosure v-slot="{ open }" as="nav" class="bg-white shadow dark:border-b dark:border-slate-200/5 dark:bg-slate-900/75">
     <div class="mx-auto max-w-7xl px-4">
       <div class="flex h-16 justify-center sm:justify-between">
-        <div class="flex">
-          <div class="flex flex-shrink-0 items-center">
+        <div class="flex flex-1">
+          <div class="flex w-full flex-shrink-0 items-center justify-between">
+            <div class="flex-1 sm:hidden"></div>
             <inertia-link v-if="user" :href="route('userhome', user.username)">
               <Logo class="h-8 w-auto" />
             </inertia-link>
+            <div class="flex flex-1 justify-end sm:hidden">
+              <inertia-link type="button" :href="route('import.index')" class="relative -mr-px inline-flex w-10 items-center justify-center rounded-md border border-gray-300 bg-white py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-200 dark:hover:bg-slate-400/20"> {{ $page.props.importCounter }}</inertia-link>
+            </div>
           </div>
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:items-center">
@@ -98,7 +102,7 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
-  <div class="mx-auto max-w-7xl px-4 pt-4 pb-12 lg:pb-16">
+  <div class="mx-auto max-w-7xl px-4 pb-[55px] pt-4 sm:pb-16">
     <slot />
     <BottomMenu />
   </div>

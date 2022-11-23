@@ -1,9 +1,9 @@
 <template>
   <Layout :title="title" :errors="errors">
-    <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="mb-2 grid grid-cols-1 gap-2 sm:mb-4 sm:grid-cols-2 sm:gap-4">
       <div class="w-full rounded-md bg-white p-4 px-4 text-center leading-4 shadow dark:bg-slate-800 sm:overflow-hidden">
         <div>
-          <div class="mb-4 flex flex-col">
+          <div class="mb-2 flex flex-col">
             <span class="dark:text-slate-200">ROI</span>
             <span class="text-xl font-bold">{{ generalStats.roi }}%</span>
           </div>

@@ -1,17 +1,20 @@
 <template>
-  <Disclosure as="section" aria-labelledby="filter-heading" class="relative z-0 mb-4 grid items-center rounded-md bg-white shadow dark:bg-slate-800 sm:overflow-hidden">
+  <Disclosure as="section" aria-labelledby="filter-heading" class="relative z-0 mb-2 grid items-center rounded-md bg-white shadow dark:bg-slate-800 sm:mb-4 sm:overflow-hidden">
     <h2 id="filter-heading" class="sr-only">Filters</h2>
     <div class="relative col-start-1 row-start-1 py-4">
-      <div class="mx-auto flex max-w-7xl space-x-6 divide-x divide-slate-200/20 px-4 text-sm sm:px-6 lg:px-8">
-        <div>
-          <DisclosureButton class="group flex items-center font-medium text-gray-700 dark:text-slate-400">
-            <FilterIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
-            {{ Object.values(activeFilters).length }} Filters
-          </DisclosureButton>
+      <div class="flex justify-between px-4 text-sm sm:px-6 lg:px-8">
+        <div class="flex space-x-6 divide-x divide-slate-200/20">
+          <div>
+            <DisclosureButton class="group flex items-center font-medium text-gray-700 dark:text-slate-400">
+              <FilterIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
+              {{ Object.values(activeFilters).length }} Filters
+            </DisclosureButton>
+          </div>
+          <div class="pl-6">
+            <button type="button" class="text-gray-500 dark:text-slate-400" @click.prevent="resetFilters">Clear all</button>
+          </div>
         </div>
-        <div class="pl-6">
-          <button type="button" class="text-gray-500 dark:text-slate-400" @click.prevent="resetFilters">Clear all</button>
-        </div>
+        <span class="group inline-flex cursor-pointer justify-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-slate-400" @click="filter"> Filter </span>
       </div>
     </div>
     <DisclosurePanel class="border-t border-gray-200 dark:border-slate-200/20">
@@ -63,27 +66,6 @@
         </div>
       </form>
     </DisclosurePanel>
-    <div class="col-start-1 row-start-1 py-4">
-      <div class="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
-        <Menu as="div" class="relative inline-block">
-          <div class="flex">
-            <MenuButton class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-slate-400" @click.prevent="filter()"> Filter </MenuButton>
-          </div>
-
-          <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-            <MenuItems class="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div class="py-1">
-                <MenuItem v-for="option in sortOptions" :key="option.name" v-slot="{ active }">
-                  <a :href="option.href" :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">
-                    {{ option.name }}
-                  </a>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </div>
-    </div>
   </Disclosure>
 </template>
 

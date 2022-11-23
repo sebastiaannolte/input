@@ -1,5 +1,5 @@
 <template>
-  <div class="border-gray-10 mb-2 rounded-md border bg-white p-2 leading-4 shadow dark:bg-slate-800">
+  <div class="mb-2 rounded-md border border-gray-100 bg-white p-2 leading-4 shadow dark:border-slate-200/5 dark:bg-slate-800">
     <div class="flex items-center">
       <EventsV2 v-model="betData.event" :bet="betData" :errors="errors" :index="index" :sport="sport" class="z-50 mr-2 w-full" />
 

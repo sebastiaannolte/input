@@ -1,7 +1,7 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2900 1000" style="enable-background:new 0 0 2900 1000" xml:space="preserve">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2900 1000" style="enable-background: new 0 0 2900 1000" xml:space="preserve">
     <g id="Layer_2">
-      <path id="XMLID_40_" style="fill:#ef4443;stroke:#000;stroke-miterlimit:10" d="M.5 0h2899v1000H.5z" />
+      <path id="XMLID_40_" style="fill: #ef4443; stroke: #000; stroke-miterlimit: 10" d="M.5 0h2899v1000H.5z" />
       <g id="XMLID_41_">
         <g id="XMLID_151_">
           <g id="XMLID_165_">
@@ -24,7 +24,3 @@
     </g>
   </svg>
 </template>
-
-  <style>
-    .st1{fill:#fff}
-  </style>

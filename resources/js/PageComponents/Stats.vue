@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+  <div class="mb-2 grid grid-cols-1 gap-2 sm:mb-4 sm:grid-cols-2 sm:gap-4">
     <div class="w-full rounded-md bg-white p-4 px-4 text-center leading-5 shadow dark:bg-slate-800 sm:overflow-hidden">
       <span class="font-bold text-indigo-500">Next bets:</span>
       <div>
@@ -33,7 +33,6 @@
 </template>
 
 <script setup>
-import Layout from '@/Layouts/Authenticated.vue'
 import moment from 'moment'
 import emitter from '@/Plugins/mitt'
 
