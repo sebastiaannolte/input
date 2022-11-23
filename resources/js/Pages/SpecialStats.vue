@@ -137,6 +137,7 @@ const getStats = () => {
       filters: props.filters,
     }),
     {
+      preserveScroll: true,
       only: ['type', 'sort', 'filters', 'stats'],
     },
   )
