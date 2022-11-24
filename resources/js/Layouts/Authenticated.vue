@@ -8,8 +8,8 @@
         <div class="flex flex-1">
           <div class="flex w-full flex-shrink-0 items-center justify-between">
             <div class="flex-1 sm:hidden"></div>
-            <inertia-link v-if="user" :href="route('userhome', user.username)">
-              <Logo class="h-8 w-auto" />
+            <inertia-link v-if="user" :href="route('userhome', user.username)" class="inline-flex items-start justify-start rounded bg-red-500 px-4 py-1.5">
+              <p class="font-archivo text-xl uppercase tracking-wider text-white">input</p>
             </inertia-link>
             <div class="flex flex-1 justify-end sm:hidden">
               <inertia-link type="button" :href="route('import.index')" class="relative -mr-px inline-flex w-10 items-center justify-center rounded-md border border-gray-300 bg-white py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-200 dark:hover:bg-slate-400/20"> {{ $page.props.importCounter }}</inertia-link>
