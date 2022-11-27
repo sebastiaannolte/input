@@ -41,7 +41,7 @@
                   </th>
                 </thead>
                 <tbody class="dark:bg-slate-900">
-                  <tr v-for="(values, key) in currentTable.body" :key="key" :class="key % 2 === 0 ? 'bg-white dark:bg-slate-800' : 'bg-gray-50 dark:bg-slate-800/80'">
+                  <tr v-for="(values, key) in currentTable.body" :key="key" :class="key % 2 === 0 ? 'bg-white dark:bg-slate-800/80' : 'bg-gray-50 dark:bg-slate-800'">
                     <td v-for="(values, key) in values" :key="key" class="whitespace-nowrap px-6 py-2 text-left text-sm font-medium text-gray-900 first:font-bold dark:text-slate-400">
                       <button v-if="values.specialId" @click="goTo(currentTab.route, values.specialId)">
                         {{ values.value }}

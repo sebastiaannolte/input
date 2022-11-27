@@ -19,7 +19,7 @@
             </thead>
             <tbody>
               <template v-for="(bet, betKey) in bets.data" :key="betKey">
-                <tr :ref="'bet-' + bet.id" :class="[betKey % 2 === 1 ? 'dark:bg-slate-800 ' : 'dark:bg-slate-800/80 ', highlighted == bet.id ? ' bg-indigo-200' : '', statusColor(bet.status, 'border')]" class="cursor-pointer border-r-8">
+                <tr :ref="'bet-' + bet.id" :class="[betKey % 2 === 1 ? 'bg-gray-50 dark:bg-slate-800 ' : 'dark:bg-slate-800/80 ', highlighted == bet.id ? ' bg-indigo-200 dark:bg-gray-600' : '', statusColor(bet.status, 'border')]" class="cursor-pointer border-r-8">
                   <td class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell">
                     <sport-icon class="h-6 w-6" :name="bet.sport" />
                   </td>

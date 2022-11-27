@@ -29,12 +29,8 @@ class ImportController extends Controller
 
     public function delete(Import $import)
     {
-        //Create ImportPolicy
-        // if (Request::user()->cannot('delete', $bet)) {
-        //     abort(403);
-        // }
-
         $import->delete();
-        return redirect()->route('import.index')->with('success', 'Import deleted');;
+
+        return Redirect::back()->with('success', 'Import row deleted');
     }
 }

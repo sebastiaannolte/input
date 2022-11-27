@@ -34,6 +34,7 @@
                 </tr>
               </tbody>
             </table>
+            <div v-if="!parsedData.length" class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900 dark:bg-slate-800/80 dark:text-slate-400">No results</div>
           </div>
         </div>
       </div>
@@ -53,14 +54,21 @@ const props = defineProps({
 
 const parsedData = ref(null)
 
-parsedData.value = props.data.map(function (item) {
-  return { id: item.id, data: JSON.parse(item.data) }
-})
+const parseData = () => {
+  parsedData.value = props.data.map(function (item) {
+    return { id: item.id, data: JSON.parse(item.data) }
+  })
+}
+
+parseData()
 
 const destroy = (id) => {
-  if (confirm('Are you sure you want to delete this import?')) {
-    Inertia.delete(route('import.delete', id))
-  }
+  Inertia.delete(route('import.delete', id), {
+    onBefore: () => confirm('Are you sure you want to delete this user?'),
+    onSuccess: () => {
+      parseData()
+    },
+  })
 }
 
 const eventsToString = (games) => {
