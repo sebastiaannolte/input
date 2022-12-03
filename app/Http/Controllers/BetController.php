@@ -164,7 +164,7 @@ class BetController extends Controller
             $event = $game['event']['event'];
 
             $data = [
-                'fixture_id' => is_int($event['value']) ? $event['value'] : null,
+                'fixture_id' => is_int($event['value']) ? $event['value'] > 0 ? $event['value'] : null : null,
                 'event' => $event['label'],
                 'selection' => $game['selection'],
                 'date' => $game['date'] ?: now(),

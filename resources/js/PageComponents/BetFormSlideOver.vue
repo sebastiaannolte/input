@@ -262,7 +262,7 @@ const save = () => {
   var router = ''
   if (bet.value && bet.value.id) {
     router = route('bet.update')
-    betData.value.games = this.games
+    betData.value.games = games.value
 
     betData.value.put(router, {
       preserveScroll: true,
