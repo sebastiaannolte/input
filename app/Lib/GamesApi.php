@@ -256,9 +256,8 @@ class GamesApi
         $teams = explode(' v ', $filters['query']);
         $team1 = $teams[0];
         $team2 = array_key_exists(1, $teams) ?? $teams[1];
-        $bets = BetFixture::with(['fixture', 'bet.betFixture'])
-            ->where('event', 'like', '%'.$filters['query'].'%')
-            ->searchFilter($filters['allBets'])
+        $bets = BetFixture::with(['fixture', 'fixture.league', 'bet.betFixture'])
+            ->searchFilter($filters)
             ->orderBy('date')
             ->get();
 

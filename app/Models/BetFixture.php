@@ -21,13 +21,22 @@ class BetFixture extends Model
         return $this->hasOne(Bet::class, 'id', 'bet_id');
     }
 
-    public function scopeSearchFilter($query, $allBets)
+    public function scopeSearchFilter($query, $filters)
     {
-        if ($allBets) {
-            return $query;
+        if (!$filters['allBets']) {
+            $query->where('status', 'new');
         }
 
-        return $query->where('status', 'new');
+        if($filters['type'] == 'event'){
+            $query->where('event', 'like', '%'.$filters['query'].'%');
+        } elseif($filters['type'] == 'competition'){
+            $query->whereHas('fixture.league', function ($query) use ($filters){
+                return $query->where('name', 'LIKE', '%'.$filters['query'].'%');
+            });
+        }
+
+
+        return $query;
     }
 
 }

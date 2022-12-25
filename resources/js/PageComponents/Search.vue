@@ -33,12 +33,23 @@
                     results
                   </p>
                 </div>
-                <span>
-                  <Switch v-model="filters.allBets" :class="filters.allBets ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'" class="relative inline-flex h-3 w-6 items-center rounded-full">
-                    <span class="sr-only">Enable notifications</span>
-                    <span :class="filters.allBets ? 'translate-x-3' : 'translate-x-1'" class="inline-block h-2 w-2 transform rounded-full bg-white transition" />
-                  </Switch>
-                  <span class="ml-1 text-xs">All bets</span>
+
+                <span class="flex items-center gap-3">
+                  <ul class="flex flex-wrap text-center text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <li class="mr-2">
+                      <span @click="filters.type = 'event'" class="inline-block cursor-pointer rounded-lg py-1.5 px-2" :class="filters.type == 'event' ? 'bg-blue-600 dark:text-gray-300' : 'dark:text-gray-400 hover:dark:text-gray-300'">Event</span>
+                    </li>
+                    <li class="mr-2">
+                      <span @click="filters.type = 'competition'" class="inline-block cursor-pointer rounded-lg py-1.5 px-2" :class="filters.type == 'competition' ? 'bg-blue-600 dark:text-gray-300' : 'dark:text-gray-400 hover:dark:text-gray-300'">Competition</span>
+                    </li>
+                  </ul>
+                  <span>
+                    <Switch v-model="filters.allBets" :class="filters.allBets ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'" class="relative inline-flex h-3 w-6 items-center rounded-full">
+                      <span class="sr-only">Enable notifications</span>
+                      <span :class="filters.allBets ? 'translate-x-3' : 'translate-x-1'" class="inline-block h-2 w-2 transform rounded-full bg-white transition" />
+                    </Switch>
+                    <span class="ml-1 text-xs">All bets</span>
+                  </span>
                 </span>
               </div>
 
@@ -121,10 +132,11 @@ const filters = reactive({
   query: '',
   allBets: false,
   page: 1,
+  type: 'event',
 })
 
 watch(
-  () => [filters.allBets, filters.page],
+  () => [filters.allBets, filters.page, filters.type],
   (value) => {
     console.log('123')
     search(filters.query)
