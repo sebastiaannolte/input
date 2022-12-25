@@ -271,7 +271,7 @@ class GamesApi
                 'date' => $item->date,
                 'odds' => $item->bet->odds,
                 'stake' => $item->bet->stake,
-                'url' => route('bet.show', $item->id),
+                'url' => route('bet.show', $item->bet->id),
                 'bet' => $item->bet,
                 'status' => $item->status,
                 'result' => $item->bet->result
