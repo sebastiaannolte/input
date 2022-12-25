@@ -4,7 +4,7 @@
     <div class="mb-4 w-full rounded-md bg-white p-4 px-4 text-right leading-4 shadow dark:bg-slate-800 sm:overflow-hidden sm:text-center">
       <div class="pb-5 sm:flex">
         <div class="hidden sm:block">
-          <ButtonLink :href="backUrl"> <ArrowNarrowLeftIcon class="mr-1.5 h-4 w-4" aria-hidden="true" /> All bets</ButtonLink>
+          <ButtonLink :href="backUrl"> <ArrowLongLeftIcon class="mr-1.5 h-4 w-4" aria-hidden="true" /> All bets</ButtonLink>
         </div>
         <div class="flex flex-grow flex-col-reverse sm:flex-row">
           <h2 id="payment-details-heading" class="flex-1 p-2 text-left text-2xl font-bold leading-6 text-gray-900 dark:text-slate-200">
@@ -12,7 +12,7 @@
           </h2>
           <div class="flex justify-between">
             <div>
-              <ButtonLink class="sm:hidden" :href="backUrl"> <ArrowNarrowLeftIcon class="mr-1.5 h-4 w-4" aria-hidden="true" /> All bets</ButtonLink>
+              <ButtonLink class="sm:hidden" :href="backUrl"> <ArrowLongLeftIcon class="mr-1.5 h-4 w-4" aria-hidden="true" /> All bets</ButtonLink>
             </div>
             <div>
               <button class="mr-2 inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2" @click="destroy">Delete</button>
@@ -99,19 +99,9 @@
   </Layout>
 </template>
 
-<script>
-export default {
-  created() {
-    // this.moment = moment
-  },
-  methods: {},
-  components: { ButtonLink },
-}
-</script>
-
 <script setup>
 import Layout from '@/Layouts/Authenticated.vue'
-import { ArrowNarrowLeftIcon } from '@heroicons/vue/outline'
+import { ArrowLongLeftIcon } from '@heroicons/vue/20/solid'
 import moment from 'moment'
 import emitter from '@/Plugins/mitt'
 import { usePage } from '@inertiajs/inertia-vue3'

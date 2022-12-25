@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/solid'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 
 export default {
   components: {

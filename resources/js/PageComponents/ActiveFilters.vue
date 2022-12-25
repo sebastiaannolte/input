@@ -6,7 +6,7 @@
         <div class="flex space-x-6 divide-x divide-slate-200/20">
           <div>
             <DisclosureButton class="group flex items-center font-medium text-gray-700 dark:text-slate-400">
-              <FilterIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
+              <FunnelIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
               {{ Object.values(activeFilters).length }} Filters
             </DisclosureButton>
           </div>
@@ -71,7 +71,7 @@
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { ChevronDownIcon, FilterIcon } from '@heroicons/vue/solid'
+import { ChevronDownIcon, FunnelIcon } from '@heroicons/vue/20/solid'
 import TextInput from '@/Components/TextInput.vue'
 import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
 import { Inertia } from '@inertiajs/inertia'
@@ -89,7 +89,7 @@ export default {
     MenuItem,
     MenuItems,
     ChevronDownIcon,
-    FilterIcon,
+    FunnelIcon,
     TextInputWithAddOn,
     TextInput,
     SelectInput,

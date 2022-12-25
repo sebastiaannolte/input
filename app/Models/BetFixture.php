@@ -16,4 +16,18 @@ class BetFixture extends Model
         return $this->hasOne(Fixture::class, 'id', 'fixture_id');
     }
 
+    public function bet()
+    {
+        return $this->hasOne(Bet::class, 'id', 'bet_id');
+    }
+
+    public function scopeSearchFilter($query, $allBets)
+    {
+        if ($allBets) {
+            return $query;
+        }
+
+        return $query->where('status', 'new');
+    }
+
 }

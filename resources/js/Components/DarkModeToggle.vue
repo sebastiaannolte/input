@@ -12,7 +12,6 @@
 <script setup>
 let dark = localStorage.getItem('color-theme') == 'dark'
 const toggleDarkMode = () => {
-  console.log('13', dark)
   if (dark) {
     localStorage.setItem('color-theme', 'light')
     dark = false

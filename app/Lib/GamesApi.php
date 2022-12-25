@@ -214,6 +214,7 @@ class GamesApi
         $fixtures = Fixture::with(['homeTeam', 'awayTeam'])
             ->where('date', '>', now()->subDays($daysBefore)->startOfDay()->format('Y-m-d H:i:s'))
             ->where('sport', $sport)
+            ->orderBy('date')
             ->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
@@ -248,6 +249,39 @@ class GamesApi
         });
 
         return $output;
+    }
+
+    public static function globalSearch() {
+        $filters = Request::all();
+        $teams = explode(' v ', $filters['query']);
+        $team1 = $teams[0];
+        $team2 = array_key_exists(1, $teams) ?? $teams[1];
+        $bets = BetFixture::with(['fixture', 'bet.betFixture'])
+            ->where('event', 'like', '%'.$filters['query'].'%')
+            ->searchFilter($filters['allBets'])
+            ->orderBy('date')
+            ->get();
+
+        $items = $bets->slice(($filters['page'] * 8) - 8, 8 * $filters['page'])->map(function ($item) use ($bets) {
+            return [
+                'match' => $item->event, 
+                'id' => $item->id,
+                'icon' => $item->fixture ? $item->fixture->league->flag ?: $item->fixture->league->logo : null,
+                'selection' => $item->selection,
+                'date' => $item->date,
+                'odds' => $item->bet->odds,
+                'stake' => $item->bet->stake,
+                'url' => route('bet.show', $item->id),
+                'bet' => $item->bet,
+                'status' => $item->status,
+                'result' => $item->bet->result
+            ];
+        });
+
+        return [
+            'totalResults' => count($bets),
+            'items' => $items
+        ];
     }
 
     public static function match($matchId)

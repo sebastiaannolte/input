@@ -149,7 +149,7 @@ import Pagination from '@/PageComponents/Pagination.vue'
 import ActiveFilters from '@/PageComponents/ActiveFilters.vue'
 import moment from 'moment'
 import Button from '@/Components/Button.vue'
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import SportIcon from '@/Components/SportIcon.vue'
 import emitter from '@/Plugins/mitt'
 

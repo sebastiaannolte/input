@@ -43,11 +43,10 @@ import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
 import moment from 'moment'
 import Multiselect from '@vueform/multiselect'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { XIcon } from '@heroicons/vue/outline'
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue'
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
 import emitter from '@/Plugins/mitt'
 
 export default {
@@ -57,7 +56,6 @@ export default {
     DialogTitle,
     TransitionChild,
     TransitionRoot,
-    XIcon,
     Button,
     Events,
     EventsV2,

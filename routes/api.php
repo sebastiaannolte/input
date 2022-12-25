@@ -35,6 +35,10 @@ Route::middleware(['auth', 'isHost'])->group(function () {
         return GamesApi::search($search, $type, $sport);
     })->name('event.search');
 
+    Route::post('/globalsearch', function () {
+        return GamesApi::globalSearch();
+    })->name('event.global-search');
+
     Route::get('/games/{date}/{sport}', function ($search, $sport) {
         $dates = json_decode($search, true);
         $message = '';

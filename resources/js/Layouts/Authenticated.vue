@@ -1,6 +1,7 @@
 <template>
   <Head :title="title" />
   <FlashMessages />
+  <Search :open="searchOpen" @close="closeSearch" />
   <BetFormSlideOver :errors="errors" />
   <Disclosure v-slot="{ open }" as="nav" class="bg-white shadow dark:border-b dark:border-slate-200/5 dark:bg-slate-900/75">
     <div class="mx-auto max-w-7xl px-4">
@@ -8,7 +9,7 @@
         <div class="flex flex-1">
           <div class="flex w-full flex-shrink-0 items-center justify-between">
             <div class="flex-1 sm:hidden"></div>
-            <inertia-link v-if="user" :href="route('userhome', user.username)" class="inline-flex items-start justify-start rounded bg-red-500 px-4 py-1.5">
+            <inertia-link v-if="user" :href="route('userhome', user.username)" class="inline-flex items-start justify-start rounded bg-red-500 px-4 py-1.5 hover:bg-red-600">
               <p class="font-archivo text-xl uppercase tracking-wider text-white">input</p>
             </inertia-link>
             <div class="flex flex-1 justify-end sm:hidden">
@@ -46,6 +47,10 @@
               </MenuItems>
             </transition>
           </Menu>
+
+          <div @click="searchOpen = true" class="mr-4 inline-flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20">
+            <MagnifyingGlassIcon class="h-5 w-5" />
+          </div>
 
           <span class="isolate inline-flex rounded-md shadow-sm">
             <inertia-link type="button" :href="route('import.index')" class="relative -mr-px inline-flex w-10 items-center justify-center rounded-l-md border border-gray-300 bg-white py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-200 dark:hover:bg-slate-400/20"> {{ $page.props.importCounter }}</inertia-link>
@@ -102,7 +107,7 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
-  <div class="mx-auto max-w-7xl px-4 pb-[55px] pt-4 sm:pb-16">
+  <div class="mx-auto max-w-7xl p-4 pb-[55px] sm:pb-16">
     <slot />
     <BottomMenu />
   </div>
@@ -110,15 +115,14 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { BookmarkIcon } from '@heroicons/vue/solid'
+import { BookmarkIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon, PlusIcon as PlusIconOutline } from '@heroicons/vue/outline'
 import { Head, usePage } from '@inertiajs/inertia-vue3'
 import BottomMenu from '@/Components/BottomMenu.vue'
-import Logo from '@/Components/Logo.vue'
 import FlashMessages from '@/Components/FlashMessages.vue'
 import BetFormSlideOver from '@/PageComponents/BetFormSlideOver.vue'
 import emitter from '@/Plugins/mitt'
+import Search from '@/PageComponents/Search.vue'
 
 const props = defineProps({
   errors: Object,
@@ -143,11 +147,17 @@ const menu = [
   },
 ]
 
+const searchOpen = ref(false)
+
 const openBet = () => {
   emitter.emit('betForm:show')
 }
 
 const url = () => {
   return location.pathname.substr(1)
+}
+
+const closeSearch = () => {
+  searchOpen.value = false
 }
 </script>

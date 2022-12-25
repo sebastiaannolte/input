@@ -17,7 +17,7 @@
                       <div class="ml-3 flex h-7 items-center">
                         <button type="button" class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" @click="open = false">
                           <span class="sr-only">Close panel</span>
-                          <XIcon class="h-6 w-6" aria-hidden="true" />
+                          <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                         </button>
                       </div>
                     </div>
@@ -129,7 +129,7 @@ import Dropdown from '@/Components/Dropdown.vue'
 import TextInputWithAddOn from '@/Components/TextInputWithAddOn.vue'
 
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { XIcon, PlusIcon } from '@heroicons/vue/outline'
+import { XMarkIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import { onMounted, ref } from 'vue'
 import SportIcon from '@/Components/SportIcon.vue'
 import emitter from '@/Plugins/mitt'

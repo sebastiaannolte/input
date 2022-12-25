@@ -14,7 +14,7 @@
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 
-import { HomeIcon, PlusCircleIcon, CogIcon, SearchCircleIcon, DocumentReportIcon } from '@heroicons/vue/solid'
+import { HomeIcon, PlusCircleIcon, CogIcon, MagnifyingGlassIcon, DocumentChartBarIcon } from '@heroicons/vue/20/solid'
 import emitter from '@/Plugins/mitt'
 
 export default {
@@ -22,8 +22,8 @@ export default {
     PlusCircleIcon,
     HomeIcon,
     CogIcon,
-    SearchCircleIcon,
-    DocumentReportIcon,
+    MagnifyingGlassIcon,
+    DocumentChartBarIcon,
   },
   props: {
     errors: Object,
@@ -43,7 +43,7 @@ export default {
       {
         name: 'Your stats',
         url: '/' + user.value.username + '/stats',
-        icon: 'DocumentReportIcon',
+        icon: 'DocumentChartBarIcon',
       },
       {
         name: 'New bet',
@@ -54,7 +54,7 @@ export default {
       {
         name: 'Special stats',
         url: '/' + user.value.username + '/special',
-        icon: 'SearchCircleIcon',
+        icon: 'MagnifyingGlassIcon',
       },
       {
         name: 'Settings',

@@ -50,7 +50,7 @@
 <script>
 import TextInput from '@/Components/TextInput.vue'
 import Multiselect from '@vueform/multiselect'
-import { LockClosedIcon, LockOpenIcon } from '@heroicons/vue/solid'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/vue/20/solid'
 import emitter from '@/Plugins/mitt'
 
 export default {
