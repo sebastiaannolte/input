@@ -17,7 +17,7 @@
 
               <div class="flex items-center justify-between px-4 py-2" v-if="filteredItems.length > 0 || filters.query">
                 <div>
-                  <p class="text-xs text-gray-700 dark:text-slate-400" v-if="filteredItems.length > 0 && !loading">
+                  <p class="hidden text-xs text-gray-700 dark:text-slate-400 sm:block" v-if="filteredItems.length > 0 && !loading">
                     Showing
                     {{ ' ' }}
                     <span class="font-medium">{{ pagination.from }}</span>

@@ -8,7 +8,11 @@
       <div class="flex h-16 justify-center sm:justify-between">
         <div class="flex flex-1">
           <div class="flex w-full flex-shrink-0 items-center justify-between">
-            <div class="flex-1 sm:hidden"></div>
+            <div class="flex-1 sm:hidden">
+              <div @click="searchOpen = true" class="mr-4 inline-flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20">
+                <MagnifyingGlassIcon class="h-5 w-5" />
+              </div>
+            </div>
             <inertia-link v-if="user" :href="route('userhome', user.username)" class="inline-flex items-start justify-start rounded bg-red-500 px-4 py-1.5 hover:bg-red-600">
               <p class="font-archivo text-xl uppercase tracking-wider text-white">input</p>
             </inertia-link>
