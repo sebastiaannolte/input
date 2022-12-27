@@ -49,7 +49,7 @@ class StatsController extends Controller
                 'units' => round($betStats->profit, 2),
                 'roi' => round($betStats->roi, 2),
                 'bets' => $betStats->bets,
-                'totalStake' => $betStats->staked,
+                'totalStake' => round($betStats->staked, 2),
                 'winRate' => $betStats->bets ? round($betStats->won / $betStats->bets * 100, 2) : 0,
                 'profit' =>  round($betStats->profit, 2),
                 'avgStake' => round($betStats->avgStake, 2),
