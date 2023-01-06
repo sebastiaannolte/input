@@ -8,45 +8,11 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { MenuIcon, XIcon } from '@heroicons/vue/outline'
-import Logo from '@/Components/Logo.vue'
-
 export default {
-  components: {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    MenuIcon,
-    XIcon,
-    Logo,
-  },
-
-  setup() {
-    const open = ref(false)
-
-    const menu = [
-      {
-        name: 'Login',
-        url: 'login',
-      },
-    ]
-
-    return {
-      open,
-      menu,
-    }
-  },
-
-  methods: {
-    url() {
-      return location.pathname.substr(1)
-    },
-  },
+  methods: {},
 }
+</script>
+
+<script setup>
+import Logo from '@/Components/Logo.vue'
 </script>
