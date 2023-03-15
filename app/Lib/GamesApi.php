@@ -24,7 +24,7 @@ class GamesApi
         $responses = [
             'football' => Http::withHeaders([
                 'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
-                'x-rapidapi-key' => '***REMOVED***'
+                'x-rapidapi-key' => config('games.key')
             ])->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
                 'date' => $date,
                 "timezone" => "Europe/Amsterdam"
@@ -32,7 +32,7 @@ class GamesApi
 
             'basketball' => Http::withHeaders([
                 'x-rapidapi-host' => 'api-basketball.p.rapidapi.com',
-                'x-rapidapi-key' => '***REMOVED***'
+                'x-rapidapi-key' => config('games.key')
             ])->get('https://api-basketball.p.rapidapi.com/games', [
                 'date' => $date,
                 "timezone" => "Europe/Amsterdam"
@@ -146,7 +146,7 @@ class GamesApi
     {
         $response = Http::withHeaders([
             'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
-            'x-rapidapi-key' => '***REMOVED***'
+            'x-rapidapi-key' => config('games.key')
         ])->get('https://api-football-v1.p.rapidapi.com/v3/odds/bookmakers');
 
 
@@ -172,12 +172,12 @@ class GamesApi
         $responses = [
             'football' => Http::withHeaders([
                 'x-rapidapi-host' => 'api-football-v1.p.rapidapi.com',
-                'x-rapidapi-key' => '***REMOVED***'
+                'x-rapidapi-key' => config('games.key')
             ])->get('https://api-football-v1.p.rapidapi.com/v3/odds/bets'),
 
             'basketball' => Http::withHeaders([
                 'x-rapidapi-host' => 'api-basketball.p.rapidapi.com',
-                'x-rapidapi-key' => '***REMOVED***'
+                'x-rapidapi-key' => config('games.key')
             ])->get('https://api-basketball.p.rapidapi.com/bets')
         ];
 
