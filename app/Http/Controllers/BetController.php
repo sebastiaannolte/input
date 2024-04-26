@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Lib\BetHelper;
 use App\Lib\StatsHelper;
 use App\Models\Bet;
 use App\Models\BetFixture;
@@ -87,6 +88,7 @@ class BetController extends Controller
         );
 
         $bet = Bet::create([
+            'bookie_id' => Request::get('bookieId'),
             'bookie' => Request::get('bookie'),
             'tipster' => Request::get('tipster'),
             'sport' => Request::get('sport'),
@@ -94,9 +96,13 @@ class BetController extends Controller
             'stake' => Request::get('stake'),
             'odds' => Request::get('odds'),
             'user_id' => Auth::user()->id,
-            'status' => 'new',
+            'status' => Request::get('status') ?: 'new',
         ]);
 
+        if ($bet->status != 'new') {
+            (new BetHelper)->updateStatus($bet, $bet->status);
+        }
+        
         foreach ($games as $key => $game) {
             $event = $game['event']['event'];
             BetFixture::create([

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\StatsController;
+use App\Lib\BetHelper;
 use App\Lib\GamesApi;
+use App\Models\Bet;
 use App\Models\Import;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +22,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['authKey'])->group(function () {
     Route::post('/import', function () {
-        Import::create([
-            'data' => json_encode(Request::all()),
-        ]);
+        foreach (Request::all() as $item) {
+            if (isset($item['bookieId']) && !empty($item['bookieId'])) {
+                // if bet_id, update, if bet_id not exist, create
+                Import::updateOrCreate(
+                    ['bookie_id' => $item['bookieId']],
+                    ['data' => json_encode($item)]
+                );
+            } else {
+                Import::create(['data' => json_encode($item)]);
+            }
+        }
+    })->name('import');
+
+    Route::post('/status-update', function () {
+        foreach (Request::all() as $item) {
+            $bet = Bet::where('bookie_id', $item['bookieId'])->first();
+            if ($bet) {
+               (new BetHelper)->updateStatus($bet, $item['status']);
+            }
+        }
     })->name('import');
 });
 
@@ -40,11 +59,12 @@ Route::middleware(['auth', 'isHost'])->group(function () {
     })->name('event.global-search');
 
     Route::get('/games/{date}/{sport}', function ($search, $sport) {
+        ini_set('max_execution_time', '3000');
         $dates = json_decode($search, true);
         $message = '';
         foreach ($dates as $date) {
-           $response = GamesApi::get($date, $sport);
-           $message .= key($response).': '.$response[key($response)].'<br>';
+            $response = GamesApi::get($date, $sport);
+            $message .= key($response) . ': ' . $response[key($response)] . '<br>';
         }
 
         return response()->json(['message' => $message]);

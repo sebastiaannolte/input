@@ -51,7 +51,7 @@
                   </tr>
                 </tbody>
               </table>
-              <div v-if="currentTable && currentTable.body && currentTable.body.length == 0" class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900">No results</div>
+              <div v-if="currentTable && currentTable.body && currentTable.body.length == 0" class="col-span-1 whitespace-nowrap bg-white px-6 py-4 text-center text-sm font-medium text-gray-900 dark:bg-slate-800 dark:text-slate-400">No results</div>
             </div>
           </div>
         </div>

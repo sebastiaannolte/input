@@ -13,7 +13,7 @@ class Bet extends Model
 {
     use HasFactory;
 
-    public $fillable = ['match_id', 'event', 'selection', 'category', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result', 'type'];
+    public $fillable = ['bookie_id', 'match_id', 'event', 'selection', 'category', 'bookie', 'stake', 'odds', 'tipster', 'sport', 'date', 'user_id', 'status', 'result', 'type'];
 
     public function betFixture()
     {

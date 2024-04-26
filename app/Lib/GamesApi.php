@@ -155,7 +155,9 @@ class GamesApi
         $bookmakers = json_decode($json, true)['response'];
 
         foreach ($bookmakers as $key => $bookmaker) {
-
+            if(!$bookmaker['name']){
+                continue;
+            }
             Bookmaker::updateOrCreate(
                 [
                     'id' => $bookmaker['id'],

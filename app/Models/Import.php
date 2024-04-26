@@ -9,5 +9,5 @@ class Import extends Model
 {
     use HasFactory;
 
-    public $fillable = ['data', 'is_completed'];
+    public $fillable = ['bookie_id', 'data', 'is_completed'];
 }
