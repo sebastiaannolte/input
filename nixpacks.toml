@@ -1,0 +1,2 @@
+[phases.setup]
+nixPkgs = ["...", "(lib.hiPrio php83Packages.composer)"]
