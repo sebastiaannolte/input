@@ -1,2 +1,21 @@
 [phases.setup]
 nixPkgs = ["...", "(lib.hiPrio php81Packages.composer)"]
+
+nginx_template_conf = '''
+# ...
+http {
+    # ...
+    server {
+        # ...
+        location ~ \.php$ {
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_buffer_size 8k;
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+            include ${nginx}/conf/fastcgi_params;
+            include ${nginx}/conf/fastcgi.conf;
+
+            # ...
+        }
+    }
+}
+'''
