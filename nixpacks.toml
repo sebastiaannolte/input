@@ -2,43 +2,12 @@
 #nixPkgs = ["...", "python311Packages.supervisor"]
 nixPkgs = ["...", "(lib.hiPrio php81Packages.composer)"]
 
-[phases.build]
-cmds = [
-    "mkdir -p /etc/supervisor/conf.d/",
-    "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
-    "cp /assets/supervisord.conf /etc/supervisord.conf",
-    "chmod +x /assets/start.sh",
-    "..."
-]
-
-[start]
-cmd = '/assets/start.sh'
-
 [staticAssets]
 "start.sh" = '''
 #!/bin/bash
 
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
-
-# Start supervisor
-supervisord -c /etc/supervisord.conf -n
-'''
-
-"supervisord.conf" = '''
-[unix_http_server]
-file=/assets/supervisor.sock
-
-[supervisord]
-logfile=/var/log/supervisord.log
-logfile_maxbytes=50MB
-logfile_backups=10
-loglevel=info
-pidfile=/assets/supervisord.pid
-nodaemon=false
-silent=false
-minfds=1024
-minprocs=200
 
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
