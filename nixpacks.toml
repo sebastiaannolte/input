@@ -1,5 +1,6 @@
 [phases.setup]
-nixPkgs = ["...", "python311Packages.supervisor"]
+#nixPkgs = ["...", "python311Packages.supervisor"]
+nixPkgs = ["...", "(lib.hiPrio php81Packages.composer)"]
 
 [phases.build]
 cmds = [
