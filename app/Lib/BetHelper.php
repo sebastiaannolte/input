@@ -25,7 +25,7 @@ class BetHelper
                 $result = '-' . number_format(($bet->stake / 2), 2, '.', '');
                 break;
             default:
-                $result = 0;
+                $result = null;
                 break;
         }
 
