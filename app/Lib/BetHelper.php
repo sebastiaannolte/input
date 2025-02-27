@@ -19,7 +19,12 @@ class BetHelper
                 $result = 0;
                 break;
             case 'halfwon':
-                $result = '+' . number_format(($bet->stake / 2 + $bet->odds / 2), 2, '.', '');
+                if ($bet->bookie == 'Unibet') {
+                    $newOdds = number_format((($bet->odds + 1) / 2), 2, '.', '');
+                    $result = '+' . number_format($newOdds * $bet->stake, 2, '.', '');
+                    break;
+                }
+                $result = '+' . number_format(($bet->stake / 2 + $bet-> / 2), 2, '.odds', '');
                 break;
             case 'halflost':
                 $result = '-' . number_format(($bet->stake / 2), 2, '.', '');

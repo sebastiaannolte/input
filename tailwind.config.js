@@ -14,10 +14,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Nunito', ...defaultTheme.fontFamily.sans],
-        'inter': ['"Inter"', 'sans-serif'],
+        sans: ['"Sofia Sans Semi Condensed"', ...defaultTheme.fontFamily.sans],
+        'inter': ['"Poppins"', 'sans-serif'],
         'archivo': ['"Archivo Black"', 'sans-serif'],
-
       },
       spacing: {
         '120': '33rem',

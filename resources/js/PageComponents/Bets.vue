@@ -1,44 +1,43 @@
 <template>
   <active-filters :prop-filters="filters" :filter-route="filterRoute" />
-  <div class="flex flex-col">
+  <Card class="flex flex-col bg-white">
     <div class="-my-2">
       <div class="min-w-full py-2 align-middle">
-        <div class="overflow-hidden rounded-md shadow">
-          <table class="w-full table-auto border-collapse">
-            <thead class="border-r-8 border-gray-50 bg-gray-50 dark:border-slate-200/20 dark:bg-slate-800">
-              <tr class="rounded-md text-left text-sm font-medium text-gray-700">
-                <th class="hidden w-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell" />
-                <th class="hidden px-2 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell">Time</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Event</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">selection</th>
-                <th class="hidden px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell">stake</th>
-                <th class="hidden px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:table-cell">odds</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">result</th>
-                <th />
+        <div class="overflow-hidden rounded-t-md">
+          <table class="w-full table-auto border-collapse divide-y-2 divide-black border-b-2 border-black">
+            <thead>
+              <tr class="rounded-md text-left text-sm text-gray-700">
+                <th class="hidden w-4 text-left text-xs uppercase tracking-wider sm:table-cell" />
+                <th class="hidden px-2 py-3 text-left text-xs uppercase tracking-wider sm:table-cell">Time</th>
+                <th class="px-6 py-3 text-left text-xs uppercase tracking-wider text-gray-500">Event</th>
+                <th class="px-6 py-3 text-left text-xs uppercase tracking-wider text-gray-500">selection</th>
+                <th class="hidden px-6 py-3 text-left text-xs uppercase tracking-wider sm:table-cell">stake</th>
+                <th class="hidden px-6 py-3 text-left text-xs uppercase tracking-wider sm:table-cell">odds</th>
+                <th class="px-6 py-3 text-left text-xs uppercase tracking-wider text-gray-500">result</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y-2 divide-black border-b-2 border-black">
               <template v-for="(bet, betKey) in bets.data" :key="betKey">
-                <tr :ref="'bet-' + bet.id" :class="[betKey % 2 === 1 ? 'bg-gray-50 dark:bg-slate-800 ' : 'dark:bg-slate-800/80 ', highlighted == bet.id ? ' bg-indigo-200 dark:bg-gray-600' : '', statusColor(bet.status, 'border')]" class="cursor-pointer border-r-8">
+                <tr :ref="'bet-' + bet.id" :class="[highlighted == bet.id ? ' bg-indigo-200' : '']" class="cursor-pointer odd:bg-gray-200 even:bg-gray-50">
                   <td class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell">
                     <sport-icon class="h-6 w-6" :name="bet.sport" />
                   </td>
                   <td class="hidden whitespace-nowrap px-2 py-4 text-sm font-medium text-gray-900 dark:text-slate-400 sm:table-cell">
                     {{ moment(bet.date).format('DD MMM HH:mm') }}
                   </td>
-                  <td class="px-6 py-4 text-sm text-gray-500 dark:text-slate-400" @click="openBetDetail(isStats ? bet.bet_id : bet.id)">
+                  <td class="px-6 py-4 text-sm dark:text-slate-400" @click="openBetDetail(isStats ? bet.bet_id : bet.id)">
                     {{ bet.event }}
                   </td>
-                  <td class="px-6 py-4 text-sm text-gray-500 dark:text-slate-400">
+                  <td class="px-6 py-4 text-sm dark:text-slate-400">
                     {{ bet.selection }}
                   </td>
-                  <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-slate-400 sm:table-cell">
+                  <td class="hidden whitespace-nowrap px-6 py-4 text-sm dark:text-slate-400 sm:table-cell">
                     {{ bet.stake }}
                   </td>
-                  <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-slate-400 sm:table-cell">
+                  <td class="hidden whitespace-nowrap px-6 py-4 text-sm dark:text-slate-400 sm:table-cell">
                     {{ bet.odds }}
                   </td>
-                  <td class="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-slate-400" @click.prevent="showDropdown(betKey)">
+                  <td class="whitespace-nowrap px-6 py-3 text-sm dark:text-slate-400" @click.prevent="showDropdown(betKey)">
                     <span>
                       <span v-if="activeKeyBet != betKey || activeKeyBetFixture != -1">
                         <span v-if="bet.result" class="flex items-center justify-between">
@@ -78,9 +77,10 @@
                     </button>
                   </td>
                   <td v-else />
+                  <td class=w-2 :class="[statusColor(bet.status, 'background')]"></td>
                 </tr>
                 <template v-if="bet.bet_fixture && bet.bet_fixture.length > 1">
-                  <tr v-for="(bet_fixture, betFixtureKey) in bet.bet_fixture" v-show="openedBets.includes(bet_fixture.bet_id)" :key="betFixtureKey" :class="[statusColor(bet_fixture.status, 'border')]" class="cursor-pointer border-r-8 bg-gray-100">
+                  <tr v-for="(bet_fixture, betFixtureKey) in bet.bet_fixture" v-show="openedBets.includes(bet_fixture.bet_id)" :key="betFixtureKey" :class="[statusColor(bet_fixture.status, 'border')]" class="cursor-pointer">
                     <td class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell" />
                     <td class="hidden whitespace-nowrap px-2 py-4 text-sm font-medium text-gray-900 sm:table-cell">
                       {{ moment(bet_fixture.date).format('DD MMM HH:mm') }}
@@ -91,10 +91,10 @@
                     <td class="px-6 py-4 text-sm text-gray-500">
                       {{ bet_fixture.selection }}
                     </td>
-                    <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 sm:table-cell">
+                    <td class="hidden whitespace-nowrap px-6 py-4 text-sm sm:table-cell">
                       {{ bet_fixture.stake }}
                     </td>
-                    <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 sm:table-cell">
+                    <td class="hidden whitespace-nowrap px-6 py-4 text-sm sm:table-cell">
                       {{ bet_fixture.odds }}
                     </td>
                     <td class="whitespace-nowrap px-6 py-3 text-sm text-gray-500" @click.prevent="showDropdown(betKey, betFixtureKey)">
@@ -137,7 +137,7 @@
       </div>
     </div>
     <pagination :data="bets" />
-  </div>
+  </Card>
 </template>
 
 <script>
@@ -152,6 +152,7 @@ import Button from '@/Components/Button.vue'
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import SportIcon from '@/Components/SportIcon.vue'
 import emitter from '@/Plugins/mitt'
+import Card from '@/PageComponents/Card.vue'
 
 export default {
   components: {
@@ -163,6 +164,7 @@ export default {
     ChevronUpIcon,
     ChevronDownIcon,
     SportIcon,
+    Card,
   },
   layout: Layout,
 
@@ -191,26 +193,32 @@ export default {
         new: {
           border: 'dark:border-slate-200/20',
           label: 'bg-yellow-100 text-yellow-800',
+          background: 'bg-gray-300',
         },
         won: {
           border: 'border-green-500',
           label: 'bg-green-100 text-green-800',
+          background: 'bg-green-500',
         },
         lost: {
           border: 'border-red-500',
           label: 'bg-red-100 text-red-800',
+          background: 'bg-red-500',
         },
         void: {
           border: 'border-gray-300 dark:border-slate-200/20',
           label: 'bg-gray-100 text-gray-800',
+          background: 'bg-gray-300',
         },
         halfwon: {
           border: 'border-green-500',
           label: 'bg-green-100 text-green-800',
+          background: 'bg-green-500',
         },
         halflost: {
           border: 'border-red-500',
           label: 'bg-red-100 text-red-800',
+          background: 'bg-red-500',
         },
       },
       localFilters: {},

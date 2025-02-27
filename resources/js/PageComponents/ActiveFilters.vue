@@ -1,71 +1,74 @@
 <template>
-  <Disclosure as="section" aria-labelledby="filter-heading" class="relative z-0 mb-2 grid items-center rounded-md bg-white shadow dark:bg-slate-800 sm:mb-4 sm:overflow-hidden">
-    <h2 id="filter-heading" class="sr-only">Filters</h2>
-    <div class="relative col-start-1 row-start-1 py-4">
-      <div class="flex justify-between px-4 text-sm sm:px-6 lg:px-8">
-        <div class="flex space-x-6 divide-x divide-slate-200/20">
-          <div>
-            <DisclosureButton class="group flex items-center font-medium text-gray-700 dark:text-slate-400">
-              <FunnelIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
-              {{ Object.values(activeFilters).length }} Filters
-            </DisclosureButton>
+  <Disclosure as="section" aria-labelledby="filter-heading" class="mb-4">
+    <Card class="bg-white px-4 py-2">
+      <h2 id="filter-heading" class="sr-only">Filters</h2>
+      <div class="relative col-start-1 row-start-1">
+        <div class="flex justify-between text-sm">
+          <div class="flex gap-4">
+            <Card class="flex items-center bg-gray-200 px-2 sm:px-4" :hover="true">
+              <DisclosureButton class="flex">
+                <FunnelIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
+                <div class="whitespace-nowrap">{{ Object.values(activeFilters).length }} Filters</div>
+              </DisclosureButton>
+            </Card>
+            <Card :hover="true" class="bg-red-500 py-2 px-2 text-center text-white sm:px-4" @click="resetFilters">Clear all</Card>
           </div>
-          <div class="pl-6">
-            <button type="button" class="text-gray-500 dark:text-slate-400" @click.prevent="resetFilters">Clear all</button>
-          </div>
+          <!-- <span class="group inline-flex cursor-pointer justify-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-slate-400" @click="filter"> Filter </span> -->
+          <span>
+            <Card :hover="true" class="cursor-pointer bg-blue-500 py-2 px-2 text-white sm:px-4">Filter</Card>
+          </span>
         </div>
-        <span class="group inline-flex cursor-pointer justify-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-slate-400" @click="filter"> Filter </span>
       </div>
-    </div>
-    <DisclosurePanel class="border-t border-gray-200 dark:border-slate-200/20">
-      <form @submit.prevent="filter" @keyup.enter="filter">
-        <div class="ssm:overflow-hidden">
-          <div class="py-6 px-4 sm:p-6">
-            <div class="mt-6 grid grid-cols-8 gap-4">
-              <div class="col-span-4 sm:col-span-2">
-                <text-input v-model="filters.from.value" :error="errors" type="date" label="From" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <text-input v-model="filters.to.value" :error="errors" type="date" label="To" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <text-input v-model="filters.minOdds.value" :error="errors" label="Min odds" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <text-input v-model="filters.maxOdds.value" :error="errors" label="Max odds" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <text-input-with-add-on id="stake" v-model="filters.minStake.value" :error="errors" add-on="units" label="Min stake" type="text" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <text-input-with-add-on id="stake" v-model="filters.maxStake.value" :error="errors" add-on="units" label="Max stake" type="text" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <SelectInput label="Sport" v-model="filters.sport.value">
-                  <option v-for="(sport, key) in $page.props.sports" :key="key" class="capitalize dark:bg-slate-700 dark:text-slate-400" :value="sport.name">
-                    {{ sport.name }}
-                  </option>
-                </SelectInput>
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <text-input v-model="filters.bookie.value" :error="errors" label="Bookie" />
-              </div>
-              <div class="col-span-4 sm:col-span-2">
-                <SelectInput label="Status" v-model="filters.status.value">
-                  <option v-for="(status, key) in statuses" :key="key" class="capitalize dark:bg-slate-700 dark:text-slate-400" :value="key">
-                    {{ key }}
-                  </option>
-                </SelectInput>
-              </div>
+      <DisclosurePanel class="border-t border-gray-200 dark:border-slate-200/20">
+        <form @submit.prevent="filter" @keyup.enter="filter">
+          <div class="ssm:overflow-hidden">
+            <div class="py-6 px-4 sm:p-6">
+              <div class="mt-6 grid grid-cols-8 gap-4">
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input v-model="filters.from.value" :error="errors" type="date" label="From" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input v-model="filters.to.value" :error="errors" type="date" label="To" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input v-model="filters.minOdds.value" :error="errors" label="Min odds" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input v-model="filters.maxOdds.value" :error="errors" label="Max odds" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input-with-add-on id="stake" v-model="filters.minStake.value" :error="errors" add-on="units" label="Min stake" type="text" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input-with-add-on id="stake" v-model="filters.maxStake.value" :error="errors" add-on="units" label="Max stake" type="text" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <SelectInput label="Sport" v-model="filters.sport.value">
+                    <option v-for="(sport, key) in $page.props.sports" :key="key" class="capitalize dark:bg-slate-700 dark:text-slate-400" :value="sport.name">
+                      {{ sport.name }}
+                    </option>
+                  </SelectInput>
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input v-model="filters.bookie.value" :error="errors" label="Bookie" />
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                  <SelectInput label="Status" v-model="filters.status.value">
+                    <option v-for="(status, key) in statuses" :key="key" class="capitalize dark:bg-slate-700 dark:text-slate-400" :value="key">
+                      {{ key }}
+                    </option>
+                  </SelectInput>
+                </div>
 
-              <div class="col-span-4 sm:col-span-2">
-                <text-input id="tipster" v-model="filters.tipster.value" :error="errors" label="Tipster" type="text" />
+                <div class="col-span-4 sm:col-span-2">
+                  <text-input id="tipster" v-model="filters.tipster.value" :error="errors" label="Tipster" type="text" />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
-    </DisclosurePanel>
+        </form>
+      </DisclosurePanel>
+    </Card>
   </Disclosure>
 </template>
 
@@ -78,6 +81,7 @@ import { Inertia } from '@inertiajs/inertia'
 import pickBy from 'lodash/pickBy'
 import emitter from '@/Plugins/mitt'
 import SelectInput from '@/Components/SelectInput.vue'
+import Card from './Card.vue'
 
 export default {
   components: {
@@ -93,6 +97,7 @@ export default {
     TextInputWithAddOn,
     TextInput,
     SelectInput,
+    Card,
   },
   props: {
     propFilters: Object,
