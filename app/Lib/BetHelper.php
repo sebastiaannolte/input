@@ -24,7 +24,7 @@ class BetHelper
                     $result = '+' . number_format($newOdds * $bet->stake, 2, '.', '');
                     break;
                 }
-                $result = '+' . number_format(($bet->stake / 2 + $bet-> / 2), 2, '.odds', '');
+                $result = '+' . number_format(($bet->stake / 2 + $bet->odds / 2), 2, '.odds', '');
                 break;
             case 'halflost':
                 $result = '-' . number_format(($bet->stake / 2), 2, '.', '');
