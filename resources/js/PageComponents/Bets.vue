@@ -1,6 +1,6 @@
 <template>
   <active-filters :prop-filters="filters" :filter-route="filterRoute" />
-  <Card class="flex flex-col bg-white">
+  <Card :hover="false" class="flex flex-col bg-white">
     <div class="-my-2">
       <div class="min-w-full py-2 align-middle">
         <div class="overflow-hidden rounded-t-md">

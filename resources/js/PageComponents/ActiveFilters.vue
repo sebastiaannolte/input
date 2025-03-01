@@ -1,21 +1,21 @@
 <template>
   <Disclosure as="section" aria-labelledby="filter-heading" class="mb-4">
-    <Card class="bg-white px-4 py-2">
+    <Card :hover="false" class="bg-white px-4 py-2">
       <h2 id="filter-heading" class="sr-only">Filters</h2>
       <div class="relative col-start-1 row-start-1">
         <div class="flex justify-between text-sm">
           <div class="flex gap-4">
-            <Card class="flex items-center bg-gray-200 px-2 sm:px-4" :hover="true">
+            <Card class="flex items-center bg-gray-200 px-2 sm:px-4">
               <DisclosureButton class="flex">
                 <FunnelIcon class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500 dark:text-slate-400" aria-hidden="true" />
                 <div class="whitespace-nowrap">{{ Object.values(activeFilters).length }} Filters</div>
               </DisclosureButton>
             </Card>
-            <Card :hover="true" class="bg-red-500 py-2 px-2 text-center text-white sm:px-4" @click="resetFilters">Clear all</Card>
+            <Card class="bg-red-500 py-2 px-2 text-center text-white sm:px-4" @click="resetFilters">Clear all</Card>
           </div>
           <!-- <span class="group inline-flex cursor-pointer justify-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-slate-400" @click="filter"> Filter </span> -->
           <span>
-            <Card :hover="true" class="cursor-pointer bg-blue-500 py-2 px-2 text-white sm:px-4">Filter</Card>
+            <Card class="cursor-pointer bg-blue-500 py-2 px-2 text-white sm:px-4">Filter</Card>
           </span>
         </div>
       </div>

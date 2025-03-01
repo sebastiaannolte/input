@@ -29,28 +29,28 @@
         </p>
       </div>
       <div>
-        <nav class="relative z-0 inline-flex gap-1.5 -space-x-px rounded-md font-bold shadow-sm" aria-label="Pagination">
-          <Card v-if="currentPage == 1" class="relative inline-flex cursor-not-allowed items-center rounded-l-md border border-gray-300 bg-gray-100 px-2 py-2 text-sm text-gray-400 dark:border-slate-200/20 dark:bg-slate-400/20 dark:text-slate-400 dark:hover:bg-slate-400/20">
+        <nav class="relative z-0 inline-flex gap-1.5 -space-x-pxfont-bold shadow-sm" aria-label="Pagination">
+          <Card v-if="currentPage == 1" class="px-2 py-2 cursor-not-allowed">
             <span class="sr-only">Previous</span>
             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
           </Card>
-          <Card v-else>
-            <inertia-link :href="url(currentPage - 1)" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20">
+          <Card v-else class="px-2 py-2 hover:bg-gray-50">
+            <inertia-link :href="url(currentPage - 1)">
               <span class="sr-only">Previous</span>
               <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
             </inertia-link>
           </Card>
-          <Card v-for="index in pages" :key="index">
-            <inertia-link preserve-scroll :href="url(index)" aria-current="page" class="relative inline-flex items-center border px-4 py-2 text-sm dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20" :class="[currentPage == index ? 'z-10 border-indigo-500 bg-indigo-50 text-indigo-600 focus:z-20 dark:text-sky-500 dark:ring-1 dark:ring-sky-500' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:z-20']">
+          <Card v-for="index in pages" :key="index" class="px-4 py-2" :class="[currentPage == index ? 'border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50']">
+            <inertia-link preserve-scroll :href="url(index)" aria-current="page">
               {{ index }}
             </inertia-link>
           </Card>
-          <Card v-if="currentPage == lastPage" class="relative inline-flex cursor-not-allowed items-center rounded-r-md border border-gray-300 bg-gray-100 px-2 py-2 text-sm text-gray-400 dark:border-slate-200/20 dark:bg-slate-400/20 dark:text-slate-400 dark:hover:bg-slate-400/20">
+          <Card v-if="currentPage == lastPage" class="px-2 py-2 cursor-not-allowed">
             <span class="sr-only">Next</span>
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </Card>
-          <Card v-else>
-            <inertia-link preserve-scroll :href="url(currentPage + 1)" class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20">
+          <Card v-else class="px-2 py-2 hover:bg-gray-50">
+            <inertia-link preserve-scroll :href="url(currentPage + 1)">
               <span class="sr-only">Next</span>
               <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
             </inertia-link>
