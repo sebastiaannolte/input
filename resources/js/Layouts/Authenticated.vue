@@ -4,7 +4,7 @@
   <Search :open="searchOpen" @close="closeSearch" />
   <BetFormSlideOver :errors="errors" />
   <Disclosure v-slot="{ open }" as="nav" class="mx-auto w-full max-w-7xl px-4 pt-4 pb-4 sm:px-0 sm:pt-8">
-    <Card class="bg-white px-4">
+    <Card :hover="false" class="bg-white px-4">
       <div class="mx-auto max-w-7xl">
         <div class="flex h-16 justify-center sm:justify-between">
           <div class="flex flex-1">
