@@ -1,13 +1,13 @@
 <template>
   <div v-if="from" class="flex items-center justify-between p-4">
     <div class="flex flex-1 justify-between sm:hidden">
-      <Card v-if="currentPage == 1" class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-slate-200/20 dark:bg-slate-400/20 dark:text-slate-400 dark:hover:bg-slate-400/20">Previous</Card>
-      <Card v-else>
-        <inertia-link preserve-scroll :href="url(currentPage - 1)" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20"> Previous </inertia-link>
+      <Card v-if="currentPage == 1" class="bg-gray-100 px-4 py-2 hover:bg-gray-50">Previous</Card>
+      <Card v-else class="bg-gray-100 px-4 py-2 hover:bg-gray-50">
+        <inertia-link preserve-scroll :href="url(currentPage - 1)"> Previous </inertia-link>
       </Card>
-      <Card v-if="currentPage == lastPage" class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-slate-200/20 dark:bg-slate-400/20 dark:text-slate-400 dark:hover:bg-slate-400/20">Next</Card>
-      <Card v-else>
-        <inertia-link preserve-scroll :href="url(currentPage + 1)" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-slate-200/20 dark:bg-slate-400/10 dark:text-slate-400 dark:hover:bg-slate-400/20"> Next </inertia-link>
+      <Card v-if="currentPage == lastPage" class="bg-gray-100 px-4 py-2 hover:bg-gray-50">Next</Card>
+      <Card v-else class="bg-gray-100 px-4 py-2 hover:bg-gray-50">
+        <inertia-link preserve-scroll :href="url(currentPage + 1)"> Next </inertia-link>
       </Card>
     </div>
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
