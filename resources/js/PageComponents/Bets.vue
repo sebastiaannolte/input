@@ -18,7 +18,7 @@
             </thead>
             <tbody class="divide-y-2 divide-black border-b-2 border-black">
               <template v-for="(bet, betKey) in bets.data" :key="betKey">
-                <tr :ref="'bet-' + bet.id" :class="[highlighted == bet.id ? ' bg-indigo-200' : '']" class="cursor-pointer odd:bg-gray-200 even:bg-gray-50">
+                <tr :ref="'bet-' + bet.id" :class="[betKey % 2 ? 'bg-gray-50' : 'bg-gray-200', highlighted == bet.id ? ' bg-indigo-200' : '']" class="cursor-pointer ">
                   <td class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell">
                     <sport-icon class="h-6 w-6" :name="bet.sport" />
                   </td>
@@ -80,7 +80,7 @@
                   <td class=w-2 :class="[statusColor(bet.status, 'background')]"></td>
                 </tr>
                 <template v-if="bet.bet_fixture && bet.bet_fixture.length > 1">
-                  <tr v-for="(bet_fixture, betFixtureKey) in bet.bet_fixture" v-show="openedBets.includes(bet_fixture.bet_id)" :key="betFixtureKey" :class="[statusColor(bet_fixture.status, 'border')]" class="cursor-pointer">
+                  <tr v-for="(bet_fixture, betFixtureKey) in bet.bet_fixture" v-show="openedBets.includes(bet_fixture.bet_id)" :key="betFixtureKey" :class="[statusColor(bet_fixture.status, 'border')]" class="cursor-pointer bg-gray-100">
                     <td class="hidden whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 sm:table-cell" />
                     <td class="hidden whitespace-nowrap px-2 py-4 text-sm font-medium text-gray-900 sm:table-cell">
                       {{ moment(bet_fixture.date).format('DD MMM HH:mm') }}
