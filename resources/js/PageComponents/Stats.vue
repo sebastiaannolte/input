@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-2 sm:mb-4 flex gap-2 sm:gap-4">
-    <Card :hover="false" class="w-full bg-white text-center p-4 w-2/5">
+  <div class="mb-2 sm:mb-4 flex gap-2 sm:gap-4 flex-col sm:flex-row">
+    <Card :hover="false" class="w-full bg-white text-center p-4 w-full sm:w-2/5">
       <span class="font-bold text-indigo-500">Next bets:</span>
       <div>
         <div v-for="(bet, key) in upcommingBets" :key="key" class="first:text-lg first:font-bold">
@@ -9,7 +9,7 @@
         <div v-if="upcommingBets.length == 0">No upcomming bets</div>
       </div>
     </Card>
-    <Card :hover="false" class="text-center bg-white p-4 grid grid-cols-2 sm:grid-cols-4 gap-2 w-3/5">
+    <Card :hover="false" class="text-center bg-white p-4 grid grid-cols-2 sm:grid-cols-4 gap-2 w-full sm:w-3/5">
         <Card class="flex flex-1 flex-col bg-gray-200 p-2 sm:p-4 gap-2">
           <span>Bets</span>
           <span class="font-bold text-xl">{{ stats.totalBets }}</span>
