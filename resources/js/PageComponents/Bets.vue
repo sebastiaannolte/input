@@ -41,11 +41,11 @@
                     <span>
                       <span v-if="activeKeyBet != betKey || activeKeyBetFixture != -1">
                         <span v-if="bet.result" class="flex items-center justify-between">
-                          <span class="inline-flex rounded-full px-2 text-xs leading-5" :class="[statusColor(bet.status, 'label')]">
+                          <span class="inline-flex rounded-full px-2 border border-black" :class="[statusColor(bet.status, 'label')]">
                             {{ bet.result }}
                           </span>
                         </span>
-                        <span v-else class="inline-flex rounded-full bg-yellow-100 px-2 text-xs leading-5 text-yellow-800">
+                        <span v-else class="inline-flex rounded-full bg-yellow-100 px-2 text-yellow-800 border border-black">
                           {{ bet.status }}
                         </span>
                       </span>
