@@ -67,7 +67,7 @@ export default {
     return {
       betData: {},
       event: null,
-      showFilters: true,
+      showFilters: false,
       filters: {
         club: null,
         searchType: 'simple',
