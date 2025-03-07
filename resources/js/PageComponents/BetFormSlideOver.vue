@@ -74,7 +74,7 @@
                                 <text-input id="tipster" v-model="betData.tipster" :error="errors.tipster" label="Tipster" type="text" class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                               </div>
                               <div class="col-span-4 sm:col-span-2">
-                                <SelectInput v-model="betData.status" :error="errors.type" label="Status:">
+                                <SelectInput v-model="betData.status" :error="errors.status" label="Status:">
                                   <option v-for="item in ['new', 'won', 'lost', 'void', 'halfwon', 'halflost']" :key="key" class="capitalize dark:bg-slate-700 dark:text-slate-400" :value="item.toLowerCase()">
                                     {{ item }}
                                   </option>
@@ -190,6 +190,7 @@ emitter.on('event:edit', (event) => {
 
 emitter.on('event:import', (event) => {
   bet.value = event
+  bet.value.type = 'prematch'
   currentGameId.value = bet.value.games.length - 1
   addedGames.value = Object.assign({}, bet.value.games)
   emitter.emit('betForm:show')

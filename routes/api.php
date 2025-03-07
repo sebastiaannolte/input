@@ -3,6 +3,7 @@
 use App\Http\Controllers\SpecialStatsController;
 use App\Http\Controllers\StatsController;
 use App\Lib\BetHelper;
+use App\Lib\Category;
 use App\Lib\GamesApi;
 use App\Models\Bet;
 use App\Models\Import;
@@ -22,8 +23,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['authKey'])->group(function () {
     Route::post('/import', function () {
+        $category = new Category();
         foreach (Request::all() as $item) {
             if (isset($item['bookieId']) && !empty($item['bookieId'])) {
+                foreach ($item['games'] as &$game) {
+                    $categoryId = $category->get($game['selection']);
+                    if ($categoryId) {
+                        $game['category'] = $categoryId;
+                    }
+                }
                 // if bet_id, update, if bet_id not exist, create
                 Import::updateOrCreate(
                     ['bookie_id' => $item['bookieId']],
