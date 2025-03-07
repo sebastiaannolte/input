@@ -18,7 +18,7 @@ class Category
             'Scoort ten minste 2 doelpunten: ' => 323,
             'Scoort ten minste 3 doelpunten: ' => 324,
             'Draw No Bet:  ' => 544,
-            'Scoort of Geeft Een Assist : ' => 364,
+            'Scoort of Geeft Een Assist ' => 364,
             'Schoten van Speler op Doel, ' => 371,
         ];
 
