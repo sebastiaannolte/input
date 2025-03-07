@@ -3,7 +3,7 @@
   <FlashMessages />
   <Search :open="searchOpen" @close="closeSearch" />
   <BetFormSlideOver :errors="errors" />
-  <Disclosure v-slot="{ open }" as="nav" class="mx-auto w-full max-w-7xl px-4 pt-4 pb-4 sm:px-0 sm:pt-8">
+  <Disclosure v-slot="{ open }" as="nav" class="mx-auto w-full max-w-7xl px-2 sm:px-4 pt-2 pb-4 sm:px-0 sm:pt-8">
     <Card :hover="false" class="bg-white px-4">
       <div class="mx-auto max-w-7xl">
         <div class="flex h-16 justify-center sm:justify-between">
@@ -117,7 +117,7 @@
       </DisclosurePanel>
     </Card>
   </Disclosure>
-  <div class="mx-auto max-w-7xl p-4 pt-0 pb-[55px] sm:pb-16 lg:px-0">
+  <div class="mx-auto max-w-7xl p-2 sm:p-4 pt-0 pb-[55px] sm:pb-16 lg:px-0">
     <slot />
     <BottomMenu />
   </div>

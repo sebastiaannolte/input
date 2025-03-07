@@ -1,5 +1,5 @@
 <template>
-  <Disclosure as="section" aria-labelledby="filter-heading" class="mb-4">
+  <Disclosure as="section" aria-labelledby="filter-heading" class="mb-2 sm:mb-4">
     <Card :hover="false" class="bg-white px-4 py-2">
       <h2 id="filter-heading" class="sr-only">Filters</h2>
       <div class="relative col-start-1 row-start-1">
