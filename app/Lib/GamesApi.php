@@ -207,8 +207,11 @@ class GamesApi
         }
     }
 
-    public static function search($keyword, $type, $sport)
+    public static function search($data)
     {
+        $keyword = $data['query'];
+        $type = $data['searchType'];
+        $sport = $data['sport'];
         $daysBefore = 1;
         if ($type == "full") {
             $daysBefore = 10;
@@ -216,8 +219,14 @@ class GamesApi
         $fixtures = Fixture::with(['homeTeam', 'awayTeam'])
             ->where('date', '>', now()->subDays($daysBefore)->startOfDay()->format('Y-m-d H:i:s'))
             ->where('sport', $sport)
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date');
+
+        if ($data['club']) {
+            $type = $data['club']['location'] == 'home' ? 'home_team' : 'away_team';
+            $fixtures->where($type, $data['club']['value']);
+        }
+        
+        $fixtures = $fixtures->get();
 
         $fixtures = $fixtures->filter(function ($item) use ($keyword) {
             $hasV = array_filter(explode(' v ', $keyword));

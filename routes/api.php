@@ -7,6 +7,7 @@ use App\Lib\Category;
 use App\Lib\GamesApi;
 use App\Models\Bet;
 use App\Models\Import;
+use App\Models\Team;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,7 +48,7 @@ Route::middleware(['authKey'])->group(function () {
         foreach (Request::all() as $item) {
             $bet = Bet::where('bookie_id', $item['bookieId'])->first();
             if ($bet) {
-               (new BetHelper)->updateStatus($bet, $item['status']);
+                (new BetHelper)->updateStatus($bet, $item['status']);
             }
         }
     })->name('import');
@@ -58,8 +59,8 @@ Route::middleware(['auth', 'isHost'])->group(function () {
         return GamesApi::match($id);
     })->name('event.match');
 
-    Route::get('/search/{search}/{type}/{sport}', function ($search, $type, $sport) {
-        return GamesApi::search($search, $type, $sport);
+    Route::post('/search', function () {
+        return GamesApi::search(Request::all());
     })->name('event.search');
 
     Route::post('/globalsearch', function () {
@@ -81,6 +82,13 @@ Route::middleware(['auth', 'isHost'])->group(function () {
     Route::get('/find-bet/{id}', function ($id) {
         return GamesApi::findPageOfBet($id);
     })->name('bet.pageNumber');
+
+    Route::post('teams', function () {
+        $data = Request::all();
+        return Team::where('sport', 'football')
+            ->where('name', 'like', '%' . $data['query'] . '%')
+            ->get();
+    })->name('teams.get');
 
     Route::post('/{username}/stats', [StatsController::class, 'stats'])->name('stats.stats');
     Route::post('/{username}/comps', [SpecialStatsController::class, 'competitions'])->name('competitions.get');
