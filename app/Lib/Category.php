@@ -20,6 +20,8 @@ class Category
             'Draw No Bet:  ' => 544,
             'Scoort of Geeft Een Assist ' => 364,
             'Schoten van Speler op Doel, ' => 371,
+            'Dubbele Kans: ' => 12,
+            'Totaal Aantal Doelpunten: ' => 5,
         ];
 
         foreach ($mapping as $key => $value) {

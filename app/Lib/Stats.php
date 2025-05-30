@@ -145,7 +145,8 @@ class Stats
 
     public function profitPerDayGraph()
     {
-        $carbonDates = CarbonPeriod::create(Carbon::parse(Auth::user()->created_at), '1 day', now()->endOfDay());
+        $fromDate = $this->filters['from']['value'];
+        $carbonDates = CarbonPeriod::create(Carbon::parse($fromDate), '1 day', now()->endOfDay());
 
         $labels = [];
         $columns = [
@@ -385,7 +386,6 @@ class Stats
             $current = $this->profitPerDayGraph();
         } else {
             $current =  $this->createGraphAndTable($key);
-            // dd($current, $this->filters);
         }
 
         $colors = [
@@ -485,7 +485,6 @@ class Stats
     {
         $type = 'country/competition';
         $head = $this->tableHeader($type);
-
         $bets = Bet::user($this->userId)
             ->filters($this->filters);
         $types = $bets->clone()
