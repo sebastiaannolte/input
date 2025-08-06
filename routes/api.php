@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['authKey'])->group(function () {
     Route::post('/import', function () {
         $category = new Category();
+        $total = 0;
         foreach (Request::all() as $item) {
             if (isset($item['bookieId']) && !empty($item['bookieId'])) {
                 foreach ($item['games'] as &$game) {
@@ -33,15 +34,24 @@ Route::middleware(['authKey'])->group(function () {
                         $game['category'] = $categoryId;
                     }
                 }
-                // if bet_id, update, if bet_id not exist, create
-                Import::updateOrCreate(
-                    ['bookie_id' => $item['bookieId']],
-                    ['data' => json_encode($item)]
-                );
+
+                $import = Import::where('bookie_id', $item['bookieId'])->first();
+                if (!$import) {
+                    Import::create(['bookie_id' => $item['bookieId'], 'data' => json_encode($item)]);
+                    $total++;
+                } else {
+                    $import->update(['data' => json_encode($item)]);
+                    $bet = Bet::where('bookie_id', $item['bookieId'])->first();
+                    if ($bet) {
+                        (new BetHelper)->updateStatus($bet, $item['status']);
+                    }
+                }
             } else {
                 Import::create(['data' => json_encode($item)]);
             }
         }
+
+        return response()->json(['message' => $total . ' bets imported']);
     })->name('import');
 
     Route::post('/status-update', function () {
