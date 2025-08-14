@@ -34,13 +34,13 @@
             <span class="sr-only">Previous</span>
             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
           </Card>
-          <Card v-else class="px-2 py-2 hover:bg-gray-50">
+          <Card v-else class="px-2 py-2 hover:bg-gray-50 cursor-pointer">
             <inertia-link :href="url(currentPage - 1)">
               <span class="sr-only">Previous</span>
               <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
             </inertia-link>
           </Card>
-          <Card v-for="index in pages" :key="index" class="px-4 py-2" :class="[currentPage == index ? 'border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50']">
+          <Card v-for="index in pages" :key="index" class="px-4 py-2 cursor-pointer" :class="[currentPage == index ? 'border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50']">
             <inertia-link preserve-scroll :href="url(index)" aria-current="page">
               {{ index }}
             </inertia-link>
@@ -49,7 +49,7 @@
             <span class="sr-only">Next</span>
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </Card>
-          <Card v-else class="px-2 py-2 hover:bg-gray-50">
+          <Card v-else class="px-2 py-2 hover:bg-gray-50 cursor-pointer">
             <inertia-link preserve-scroll :href="url(currentPage + 1)">
               <span class="sr-only">Next</span>
               <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />

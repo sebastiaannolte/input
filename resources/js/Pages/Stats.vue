@@ -1,7 +1,7 @@
 <template>
   <Layout :title="title" :errors="errors">
     <div class="mb-2 grid grid-cols-1 gap-2 sm:mb-4 sm:grid-cols-2 sm:gap-4">
-      <div class="w-full rounded-md bg-white p-4 px-4 text-center leading-4 shadow dark:bg-slate-800 sm:overflow-hidden">
+      <Card :hover="false" class="bg-white p-4 px-4 text-center">
         <div>
           <div class="mb-2 flex flex-col">
             <span class="dark:text-slate-200">ROI</span>
@@ -24,8 +24,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="w-full rounded-md bg-white p-4 px-4 text-center leading-4 shadow dark:bg-slate-800 sm:overflow-hidden">
+      </Card>
+      <Card :hover="false" class="bg-white p-4 px-4 text-center">
         <div>
           <div class="mb-4 flex flex-col">
             <span class="dark:text-slate-200">Profit</span>
@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
 
     <active-filters :prop-filters="filters" :filter-route="filterRoute" />
@@ -62,7 +62,7 @@
           </option>
         </select>
       </div>
-      <div class="mb-4 w-full rounded-md bg-white text-center leading-4 shadow dark:bg-slate-800 sm:overflow-hidden">
+      <Card :hover="false" class="w-full bg-white">
         <div class="hidden sm:block">
           <div class="border-b border-gray-200 border-slate-200/5">
             <nav class="-mb-px flex justify-center space-x-8" aria-label="Tabs">
@@ -112,7 +112,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   </Layout>
 </template>
@@ -127,6 +127,7 @@ import emitter from '@/Plugins/mitt'
 import { ref } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { computed } from 'vue'
+import Card from '@/PageComponents/Card.vue'
 
 const props = defineProps({
   generalStats: Object,
