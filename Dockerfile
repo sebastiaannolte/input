@@ -18,10 +18,10 @@ RUN a2enmod rewrite
 # Set the working directory
 WORKDIR /var/www/html
 
-
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+COPY composer.json composer.lock ./
 # Install Laravel dependencies
 RUN composer install
 
