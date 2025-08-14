@@ -17,14 +17,11 @@ WORKDIR /var/www/html
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy only composer files first
-COPY composer.json composer.lock ./
-
-# Install dependencies (this step needs artisan and all Laravel files later)
-RUN composer install --no-interaction --prefer-dist
-
-# Now copy the rest of the application code
+# Copy all application files (including artisan, public, etc.)
 COPY . .
+
+# Install dependencies (artisan now exists)
+RUN composer install --no-interaction --prefer-dist
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
