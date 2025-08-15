@@ -12,7 +12,7 @@ class Import extends Model
     public $fillable = ['bookie_id', 'data', 'is_completed'];
 
     protected $casts = [
-        'data' => 'object',
+        'data' => 'array',
         'is_completed' => 'boolean',
     ];
 }

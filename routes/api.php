@@ -37,17 +37,17 @@ Route::middleware(['authKey'])->group(function () {
 
                 $import = Import::where('bookie_id', $item['bookieId'])->first();
                 if (!$import) {
-                    Import::create(['bookie_id' => $item['bookieId'], 'data' => json_encode($item)]);
+                    Import::create(['bookie_id' => $item['bookieId'], 'data' => $item]);
                     $total++;
                 } else {
-                    $import->update(['data' => json_encode($item)]);
+                    $import->update(['data' => $item]);
                     $bet = Bet::where('bookie_id', $item['bookieId'])->first();
                     if ($bet) {
                         (new BetHelper)->updateStatus($bet, $item['status']);
                     }
                 }
             } else {
-                Import::create(['data' => json_encode($item)]);
+                Import::create(['data' => $item]);
             }
         }
 
