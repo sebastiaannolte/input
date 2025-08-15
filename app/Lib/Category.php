@@ -27,7 +27,7 @@ class Category
             'Beide Teams Scoren - 2e Helft: ' => 35,
             'Team Bereikt Volgende Ronde: ' => 61,
             'Rust/Eindresultaat: ' => 7,
-            'Geeft Een Assist (Afgehandeld volgens Opta-gegevens): ' => 212,
+            'Geeft Een Assist (Afgehandeld volgens Opta-gegevens): ' => 319,
         ];
 
         foreach ($mapping as $key => $value) {
