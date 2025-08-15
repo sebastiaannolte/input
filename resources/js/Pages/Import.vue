@@ -56,7 +56,7 @@ const parsedData = ref(null)
 
 const parseData = () => {
   parsedData.value = props.data.map(function (item) {
-    return { id: item.id, data: JSON.parse(item.data) }
+    return { id: item.id, data: item.data }
   })
 }
 

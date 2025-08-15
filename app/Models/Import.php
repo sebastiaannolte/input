@@ -10,4 +10,9 @@ class Import extends Model
     use HasFactory;
 
     public $fillable = ['bookie_id', 'data', 'is_completed'];
+
+    protected $casts = [
+        'data' => 'object',
+        'is_completed' => 'boolean',
+    ];
 }
