@@ -15,14 +15,14 @@ class ImportController extends Controller
     {
 
         $import = Import::where('is_completed', false)->get()->map(function ($import) {
-            $games = collect($import->data->games)->map(function ($game) {
-                $game->selection = preg_replace('/ \(Afgehandeld volgens Opta-gegevens\)/', '', $game->selection);
+            $games = collect($import->data['games'])->map(function ($game) {
+                $game['selection'] = preg_replace('/ \(Afgehandeld volgens Opta-gegevens\)/', '', $game['selection']);
                 return $game;
             })->toArray();
 
             // Update the model's data attribute directly
             $data = $import->data;
-            $data->games = $games;
+            $data['games'] = $games;
             $import->data = $data;
 
             return $import;
