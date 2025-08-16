@@ -23,7 +23,7 @@ const props = defineProps({
     required: true,
   },
 })
-
+console.log('Timeline:', groupTimeline(props.items),props.items)
 // Group bets by date and time
 function groupTimeline(rawItems) {
   const grouped = {}
