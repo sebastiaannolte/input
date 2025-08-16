@@ -1,7 +1,6 @@
 <template>
   <span v-if="title">{{ title }}</span>
   <div class="flex w-full gap-8 overflow-x-auto">
-    <!-- // Reset button -->
     <button @click="reset" class="text-blue-600 hover:underline">Reset</button>
     <div v-for="(item, idx) in timeline" :key="item.key" class="flex cursor-pointer flex-col items-center" @click="selectTimeline(idx)">
       <div>
@@ -25,9 +24,6 @@ const props = defineProps({
   },
 })
 
-const views = ['by-date', 'by-time', 'by-bet']
-const defaultView = views[0]
-
 // Group bets by date and time
 function groupTimeline(rawItems) {
   const grouped = {}
@@ -35,13 +31,11 @@ function groupTimeline(rawItems) {
     bet.key = bet.event
     bet.items = []
     bet.count = 1
-
-    bet.type = 'by-date' // Default type
     const date = new Date(bet.date).toISOString().split('T')[0]
     const time = new Date(bet.date).toISOString().split('T')[1].slice(0, 5) // HH:mm
     bet.title = date + ' ' + time
-    if (!grouped[date]) grouped[date] = { key: date, count: 0, items: {}, type: 'by-date' }
-    if (!grouped[date].items[time]) grouped[date].items[time] = { key: time, count: 0, items: [], type: 'by-time' }
+    if (!grouped[date]) grouped[date] = { key: date, count: 0, items: {} }
+    if (!grouped[date].items[time]) grouped[date].items[time] = { key: time, count: 0, items: [] }
     grouped[date].items[time].items.push(bet)
     grouped[date].items[time].count = grouped[date].items[time].items.length
     grouped[date].items[time].title = date
@@ -57,11 +51,7 @@ function groupTimeline(rawItems) {
   return result
 }
 
-console.log('Timeline:', groupTimeline(props.items))
-
 const getTitle = (items) => {
-  console.log('getTitle called with items:', items)
-  // get first item, its a
   const item = items[0].title
   if (item) {
     return item
@@ -74,8 +64,6 @@ const timeline = ref(groupTimeline(props.items))
 const title = ref('Bets Timeline')
 function selectTimeline(idx) {
   if (timeline.value[idx].items && timeline.value[idx].items.length > 0) {
-    console.log('Selected timeline index:', idx)
-    // selectedIndex.value = idx
     timeline.value = timeline.value[idx].items
     title.value = getTitle(timeline.value)
   }
