@@ -48,6 +48,12 @@ class BetController extends Controller
             ->get()
             ->take(3);
 
+        $timeline = Bet::whereNull('result')
+            ->where('user_id', $userId)
+            ->bets()
+            ->get();
+
+
         return Inertia::render('Home', [
             'import' => $import,
             'stats' => [
@@ -61,6 +67,7 @@ class BetController extends Controller
             'bets' => $allBets,
             'upcommingBets' => $upcommintBets,
             'filters' => $filters,
+            'timeline' => $timeline
         ]);
     }
 
