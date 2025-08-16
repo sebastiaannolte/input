@@ -8,7 +8,7 @@
           <span class="text-xs font-bold text-white">{{ item.count }}</span>
         </div>
       </div>
-      <div>
+      <div class="max-w-[200px] text-center">
         <time class="text-sm">{{ item.key }}</time>
       </div>
     </div>
@@ -41,11 +41,12 @@ function groupTimeline(rawItems) {
     grouped[date].items[time].title = date
     grouped[date].count++
   })
-  // Convert to array sorted by date desc
-  const result = Object.values(grouped).sort((a, b) => b.date.localeCompare(a.date))
+
+  const result = Object.values(grouped).sort((a, b) => a.key.localeCompare(b.key))
 
   result.forEach((dateGroup) => {
     dateGroup.items = Object.values(dateGroup.items)
+    dateGroup.items.sort((a, b) => a.key.localeCompare(b.key))
   })
 
   return result
