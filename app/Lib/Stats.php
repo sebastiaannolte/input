@@ -52,7 +52,7 @@ class Stats
             ->groupBy('odds', 'formatted_date')
             ->orderBy($this->sort['sortType'], $this->sort['sortOrder'])
             ->get();
-        
+
         $labels = [];
         foreach ($carbonDates as $key => $date) {
             foreach ($bets as $key => $odd) {
@@ -94,8 +94,7 @@ class Stats
         $carbonDates = CarbonPeriod::create($this->filters['from']['value'], key($this->filters['interval']), $this->filters['to']['value']);
         $dateSelect = $this->dateSelect();
 
-        $bets = Bet::
-            filters($this->filters)
+        $bets = Bet::filters($this->filters)
             ->joinBets();
 
         $columnsTable = $bets
@@ -145,8 +144,7 @@ class Stats
 
     public function profitPerDayGraph()
     {
-        $fromDate = $this->filters['from']['value'];
-        $carbonDates = CarbonPeriod::create(Carbon::parse($fromDate), '1 day', now()->endOfDay());
+
 
         $labels = [];
         $columns = [
@@ -166,6 +164,9 @@ class Stats
             ->orderBy('formatted_date')->get()->mapWithKeys(function ($values) {
                 return [$values->formatted_date => $values];
             });
+
+        $fromDate = $bets->keys()->min();
+        $carbonDates = CarbonPeriod::create(Carbon::parse($fromDate), '1 day', now()->endOfDay());
 
         foreach ($carbonDates as $key => $date) {
             foreach ($columns as $columnValue) {
@@ -385,7 +386,7 @@ class Stats
         } elseif ($key == 'profit') {
             $current = $this->profitPerDayGraph();
         } else {
-            $current =  $this->createGraphAndTable($key);
+            $current = $this->createGraphAndTable($key);
         }
 
         $colors = [

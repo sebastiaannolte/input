@@ -7,7 +7,6 @@
       <div @click="showFilters = !showFilters" :class="{ 'inner-shadow bg-gray-200 text-white': showFilters }" class="inline-flex cursor-pointer items-center border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm">
         <FunnelIcon class="h-4 w-4" aria-hidden="true" />
       </div>
-      <button type="button" class="inline-flex cursor-pointer items-center border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm" @click="searchMatches">Search</button>
     </div>
     <div v-if="errors['games.' + index + '.event']" class="form-error text-gray-400">
       <small>{{ errors['games.' + index + '.event'] }}</small>

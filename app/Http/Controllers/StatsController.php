@@ -34,7 +34,6 @@ class StatsController extends Controller
         $bets = Bet::user($userId)->filters($filters);
         $betStats = $bets->clone();
 
-
         $betStats = $betStats->clone()->select((new StatsHelper)->statsSelect(), (new StatsHelper)->advancedStats())->whereNotNull('result')->first();
 
         return Inertia::render('Stats', [

@@ -1,7 +1,7 @@
 <template>
   <Layout :errors="errors" :title="title">
     <stats :stats="stats" :upcomming-bets="upcommingBets" />
-    <Card :hover="false" class="mb-4 bg-white p-4">
+    <Card :hover="false" class="bg-white p-4 mb-2 sm:mb-4">
       <BetsTimeline :items="timeline" />
     </Card>
     <bets :bets="bets" :filters="filters" :filter-button="true" :filter-route="route('userhome', $page.props.userInfo.user.username)" />
