@@ -26,6 +26,8 @@ Route::middleware(['authKey'])->group(function () {
     Route::post('/import', function () {
         $category = new Category();
         $total = 0;
+        $autoImported = 0;
+        $statusUpdated = 0;
         foreach (Request::all() as $item) {
             if (isset($item['bookieId']) && !empty($item['bookieId'])) {
                 foreach ($item['games'] as &$game) {
@@ -37,13 +39,30 @@ Route::middleware(['authKey'])->group(function () {
 
                 $import = Import::where('bookie_id', $item['bookieId'])->first();
                 if (!$import) {
+                    if ((new BetHelper)->validateBet($item) === true) {
+                        $autoImported++;
+                        (new BetHelper)->createBet($item);
+                        $item['is_completed'] = true;
+                    } else {
+                        $total++;
+                    }
+
                     Import::create(['bookie_id' => $item['bookieId'], 'data' => $item]);
-                    $total++;
                 } else {
                     $import->update(['data' => $item]);
                     $bet = Bet::where('bookie_id', $item['bookieId'])->first();
                     if ($bet) {
+                        if ($bet->status != $item['status']) {
+                            $statusUpdated++;
+                        }
                         (new BetHelper)->updateStatus($bet, $item['status']);
+
+                    } else {
+                        if ((new BetHelper)->validateBet($item) === true) {
+                            $autoImported++;
+                            (new BetHelper)->createBet($item);
+                            $import->update(['is_completed' => true]);
+                        }
                     }
                 }
             } else {
@@ -51,7 +70,9 @@ Route::middleware(['authKey'])->group(function () {
             }
         }
 
-        return response()->json(['message' => $total . ' bets imported']);
+        return response()->json([
+            'message' => $total . " imported\n" . $autoImported . " auto imported\n" . $statusUpdated . " status updated",
+        ]);
     })->name('import');
 
     Route::post('/status-update', function () {

@@ -3,6 +3,8 @@
 namespace App\Lib;
 
 use App\Models\Bet;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class BetHelper
 {
@@ -39,5 +41,61 @@ class BetHelper
             'result' => $result,
             'status' => $status,
         ]);
+    }
+
+    public function validateBet($data)
+    {
+        $data['sport'] = 'football';
+        $data['type'] = 'prematch';
+        $validator = Validator::make($data, [
+            'bookie' => ['required', 'max:50'],
+            'tipster' => ['required', 'max:50'],
+            'sport' => ['required', 'max:50'],
+            'type' => ['required', 'max:50'],
+            'stake' => ['required', 'max:50'],
+            'odds' => ['required', 'max:50'],
+            // games
+            'games' => ['required', 'array'],
+            'games.*.event' => ['required', 'max:50'],
+            'games.*.selection' => ['required', 'max:255'],
+            'games.*.date' => ['required', 'max:50'],
+            'games.*.category' => ['required', 'max:50'],
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        return true;
+    }
+
+    public function createBet($data)
+    {
+        $data['sport'] = 'football';
+        $data['type'] = 'prematch';
+        $bet = Bet::create([
+            'bookie_id' => $data['bookieId'],
+            'bookie' => $data['bookie'],
+            'tipster' => $data['tipster'],
+            'sport' => $data['sport'],
+            'type' => $data['type'],
+            'stake' => $data['stake'],
+            'odds' => $data['odds'],
+            'user_id' => 1,
+            'status' => $data['status'],
+        ]);
+
+        foreach ($data['games'] as $game) {
+            $bet->betFixture()->create([
+                'fixture_id' => null,
+                'event' => $game['event'],
+                'selection' => $game['selection'],
+                'date' => Carbon::parse($game['date'])->setTimezone(config('app.timezone'))->toDateTimeString(),
+                'category' => $game['category'],
+                'status' => 'new',
+            ]);
+        }
+
+        return $bet;
     }
 }
