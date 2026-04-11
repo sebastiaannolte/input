@@ -42,12 +42,19 @@ Route::middleware(['authKey'])->group(function () {
                     if ((new BetHelper)->validateBet($item) === true) {
                         $autoImported++;
                         (new BetHelper)->createBet($item);
-                        $item['is_completed'] = true;
+                        Import::create([
+                            'bookie_id' => $item['bookieId'],
+                            'data' => $item,
+                            'is_completed' => true
+                        ]);
                     } else {
                         $total++;
+                        Import::create([
+                            'bookie_id' => $item['bookieId'],
+                            'data' => $item,
+                            'is_completed' => false
+                        ]);
                     }
-
-                    Import::create(['bookie_id' => $item['bookieId'], 'data' => $item]);
                 } else {
                     $import->update(['data' => $item]);
                     $bet = Bet::where('bookie_id', $item['bookieId'])->first();
