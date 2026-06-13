@@ -29,8 +29,8 @@ class Category
             'Rust/Eindresultaat: ' => 7,
             'Geeft Een Assist (Afgehandeld volgens Opta-gegevens): ' => 319,
             'Totaal Aantal Doelpunten door ' => 5,
-            'Scoort minstens 2 doelpunten: ' => 565,
-            'Scoort minstens 3 doelpunten: ' => 565,
+            'Scoort minstens 2 doelpunten: ' => 86,
+            'Scoort minstens 3 doelpunten: ' => 86,
         ];
 
         foreach ($mapping as $key => $value) {
